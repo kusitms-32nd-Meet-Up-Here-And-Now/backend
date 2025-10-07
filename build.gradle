@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.6'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'com.meetup'
@@ -25,6 +25,7 @@ repositories {
 }
 
 apply from:"gradle/spring.gradle"
+apply from:"gradle/swagger.gradle"
 
 dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

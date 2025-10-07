@@ -3,4 +3,4 @@ spring:
     name: hereandnow
 
   profiles:
-    import: local
+    active: local
