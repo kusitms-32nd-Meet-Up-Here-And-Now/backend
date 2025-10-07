@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController implements TestSwagger {
 
+    @Override
     @GetMapping("/health")
     public ResponseEntity<RestResponse<String>> health() {
         return ResponseEntity.ok(
@@ -19,6 +20,7 @@ public class TestController implements TestSwagger {
         );
     }
 
+    @Override
     @GetMapping("/error")
     public ResponseEntity<RestResponse<String>> error() {
         throw GlobalErrorCode.INTERNAL_SERVER_ERROR.toException();
