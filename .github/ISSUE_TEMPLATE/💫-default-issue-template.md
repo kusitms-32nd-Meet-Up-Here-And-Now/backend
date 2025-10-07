@@ -1,7 +1,7 @@
 ---
 name: "\U0001F4AB Default Issue Template"
 about: Describe this issue template's purpose here.
-title: ''
+title: "[FEAT]"
 labels: ''
 assignees: chyun7114
 
