@@ -1,0 +1,142 @@
+name: CI-CD
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+
+  workflow_dispatch:
+
+jobs:
+  CI-CD:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout with submodule
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PRIVATE_REPO_ACCESS_TOKEN }}
+          submodules: true
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # ---------------------- PROD ----------------------
+      - name: Docker build & push (prod)
+        if: github.ref == 'refs/heads/main'
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          SHORT_SHA=$(echo $SHA | cut -c1-7)
+          IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
+
+          # build
+          docker build -f Dockerfile -t $IMAGE_NAME:prod -t $IMAGE_NAME:prod-$SHORT_SHA .
+
+          # push both tags
+          docker push $IMAGE_NAME:prod
+          docker push $IMAGE_NAME:prod-$SHORT_SHA
+
+          echo "✅ pushed $IMAGE_NAME:prod-$SHORT_SHA"
+
+      - name: Copy docker-compose-main.yml to NCP server
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./docker-compose-main.yml
+          target: /root
+
+      - name: Copy deploy.sh to NCP server (prod)
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./deploy.sh
+          target: /root
+
+      - name: Deploy to prod
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          script: |
+            cd /root
+            chmod +x deploy.sh
+            ./deploy.sh prod $(echo $SHA | cut -c1-7)
+
+      # ---------------------- DEV ----------------------
+      - name: Docker build & push (dev)
+        if: github.ref == 'refs/heads/dev'
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          SHORT_SHA=$(echo $SHA | cut -c1-7)
+          IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
+
+          docker build -f Dockerfile -t $IMAGE_NAME:dev -t $IMAGE_NAME:dev-$SHORT_SHA .
+          docker push $IMAGE_NAME:dev
+          docker push $IMAGE_NAME:dev-$SHORT_SHA
+
+          echo "✅ pushed $IMAGE_NAME:dev-$SHORT_SHA"
+      
+
+      - name: Copy docker-compose-dev.yml to NCP server
+        if: github.ref == 'refs/heads/dev'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./docker-compose-dev.yml
+          target: /root
+
+      - name: Copy deploy.sh to NCP server (dev)
+        if: github.ref == 'refs/heads/dev'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./deploy.sh
+          target: /root
+
+      - name: Deploy to dev
+        if: github.ref == 'refs/heads/dev'
+        uses: appleboy/ssh-action@master
+        env:
+          SHA: ${{ github.sha }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          script: |
+            cd /root
+            chmod +x deploy.sh
+            ./deploy.sh dev $(echo $SHA | cut -c1-7)
