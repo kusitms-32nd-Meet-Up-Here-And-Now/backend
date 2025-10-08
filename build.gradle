@@ -26,6 +26,7 @@ repositories {
 
 apply from:"gradle/spring.gradle"
 apply from:"gradle/swagger.gradle"
+apply from:"gradle/db.gradle"
 
 dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

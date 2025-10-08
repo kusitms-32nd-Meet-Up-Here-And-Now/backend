@@ -2,7 +2,10 @@ name: CI-CD
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "develop" ]
+
+  pull_request:
+    branches: [ "main", "develop" ]
 
   workflow_dispatch:
 
@@ -50,10 +53,9 @@ jobs:
           IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
 
           # build
-          docker build -f Dockerfile -t $IMAGE_NAME:prod -t $IMAGE_NAME:prod-$SHORT_SHA .
+          docker build -f Dockerfile -t $IMAGE_NAME:prod-$SHORT_SHA .
 
           # push both tags
-          docker push $IMAGE_NAME:prod
           docker push $IMAGE_NAME:prod-$SHORT_SHA
 
           echo "✅ pushed $IMAGE_NAME:prod-$SHORT_SHA"
@@ -91,8 +93,8 @@ jobs:
             ./deploy.sh prod $(echo $SHA | cut -c1-7)
 
       # ---------------------- DEV ----------------------
-      - name: Docker build & push (dev)
-        if: github.ref == 'refs/heads/dev'
+      - name: Docker build & push (develop)
+        if: github.ref == 'refs/heads/develop'
         env:
           SHA: ${{ github.sha }}
         run: |
@@ -100,15 +102,23 @@ jobs:
           SHORT_SHA=$(echo $SHA | cut -c1-7)
           IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
 
-          docker build -f Dockerfile -t $IMAGE_NAME:dev -t $IMAGE_NAME:dev-$SHORT_SHA .
-          docker push $IMAGE_NAME:dev
+          docker build -f Dockerfile -t $IMAGE_NAME:dev-$SHORT_SHA .
           docker push $IMAGE_NAME:dev-$SHORT_SHA
 
           echo "✅ pushed $IMAGE_NAME:dev-$SHORT_SHA"
-      
+
+      - name: Copy dev.env to NCP server
+        if: github.ref == 'refs/heads/develop'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./dev.env
+          target: /root
 
       - name: Copy docker-compose-dev.yml to NCP server
-        if: github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/develop'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -118,7 +128,7 @@ jobs:
           target: /root
 
       - name: Copy deploy.sh to NCP server (dev)
-        if: github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/develop'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -128,7 +138,7 @@ jobs:
           target: /root
 
       - name: Deploy to dev
-        if: github.ref == 'refs/heads/dev'
+        if: github.ref == 'refs/heads/develop'
         uses: appleboy/ssh-action@master
         env:
           SHA: ${{ github.sha }}
