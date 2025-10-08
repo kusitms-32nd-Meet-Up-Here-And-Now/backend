@@ -55,12 +55,12 @@ jobs:
           echo "✅ $SHORT_SHA"
           
           # build
-          docker build -f Dockerfile -t $IMAGE_NAME:prod .
+          docker build -f Dockerfile -t $IMAGE_NAME-prod .
 
           # push both tags
-          docker push $IMAGE_NAME:prod
+          docker push $IMAGE_NAME-prod
 
-          echo "✅ pushed $IMAGE_NAME:prod"
+          echo "✅ pushed $IMAGE_NAME-prod"
 
       - name: Copy prod.env to NCP server
         uses: appleboy/scp-action@master
@@ -98,10 +98,10 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
 
-          docker build -f Dockerfile -t $IMAGE_NAME:dev .
-          docker push $IMAGE_NAME:dev
+          docker build -f Dockerfile -t $IMAGE_NAME-dev .
+          docker push $IMAGE_NAME-dev
 
-          echo "✅ pushed $IMAGE_NAME:dev"
+          echo "✅ pushed $IMAGE_NAME-dev"
 
       - name: Copy dev.env to NCP server
         if: github.ref == 'refs/heads/develop'
