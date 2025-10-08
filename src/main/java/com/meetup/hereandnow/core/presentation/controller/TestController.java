@@ -16,7 +16,7 @@ public class TestController implements TestSwagger {
     @GetMapping("/health")
     public ResponseEntity<RestResponse<String>> health() {
         return ResponseEntity.ok(
-                new RestResponse<>("server is OK")
+                new RestResponse<>("OK")
         );
     }
 
