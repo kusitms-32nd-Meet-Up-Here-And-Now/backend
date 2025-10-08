@@ -42,8 +42,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: check files
-        run: ls -al
+      - name: Check all files recursively
+        run: |
+          echo "🔹 Current directory: $(pwd)"
+          ls -R
 
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
