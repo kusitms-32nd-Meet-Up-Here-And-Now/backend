@@ -50,7 +50,10 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           SHORT_SHA=$(echo $SHA | cut -c1-7)
           IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
-
+          
+          echo "✅ $IMAGE_NAME"
+          echo "✅ $SHORT_SHA"
+          
           # build
           docker build -f Dockerfile -t $IMAGE_NAME:prod-$SHORT_SHA .
 
