@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main", "develop" ]
 
+  pull_request:
+    branches: [ "main", "develop" ]
+
   workflow_dispatch:
 
 jobs:
@@ -39,16 +42,31 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Copy secret file to NCP server
+      - name: Copy prod.env to NCP server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PEM_KEY }}
-          source: |
-            ./src/main/resources/secret/prod.env
-            ./src/main/resources/secret/dev.env
-            ./src/main/resources/secret/deploy.sh
+          source: ./src/main/resources/secret/prod.env
+          target: /root
+
+      - name: Copy dev.env to NCP server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./src/main/resources/secret/dev.env
+          target: /root
+
+      - name: Copy deploy.sh to NCP server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./src/main/resources/secret/deploy.sh
           target: /root
 
       # ---------------------- PROD ----------------------
