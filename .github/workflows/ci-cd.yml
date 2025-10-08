@@ -4,9 +4,6 @@ on:
   push:
     branches: [ "main", "develop" ]
 
-  pull_request:
-    branches: [ "main", "develop" ]
-
   workflow_dispatch:
 
 jobs:
@@ -56,7 +53,6 @@ jobs:
 
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
-        if: github.ref == 'refs/heads/main'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           SHORT_SHA=$(echo $SHA | cut -c1-7)
@@ -71,7 +67,6 @@ jobs:
           echo "✅ pushed $IMAGE_NAME-prod"
 
       - name: Deploy to prod
-        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -106,26 +101,6 @@ jobs:
           docker push $IMAGE_NAME-dev
 
           echo "✅ pushed $IMAGE_NAME-dev"
-
-      - name: Copy dev.env to NCP server
-        if: github.ref == 'refs/heads/develop'
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PEM_KEY }}
-          source: ./src/main/resources/secret/dev.env
-          target: /root
-
-      - name: Copy deploy.sh to NCP server (dev)
-        if: github.ref == 'refs/heads/develop'
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PEM_KEY }}
-          source: ./src/main/resources/secret/deploy.sh
-          target: /root
 
       - name: Deploy to dev
         if: github.ref == 'refs/heads/develop'
