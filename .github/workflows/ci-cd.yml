@@ -42,45 +42,36 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
+      - name: Copy secret file to NCP server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: |
+            ./src/main/resources/secret/prod.env
+            ./src/main/resources/secret/dev.env
+            ./src/main/resources/secret/deploy.sh
+          target: /root
+
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
-        env:
-          SHA: ${{ github.sha }}
+        if: github.ref == 'refs/heads/main'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           SHORT_SHA=$(echo $SHA | cut -c1-7)
           IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
           
           echo "✅ $IMAGE_NAME"
-          echo "✅ $SHORT_SHA"
           
-          # build
           docker build -f Dockerfile -t $IMAGE_NAME-prod .
 
-          # push both tags
           docker push $IMAGE_NAME-prod
 
           echo "✅ pushed $IMAGE_NAME-prod"
 
-      - name: Copy prod.env to NCP server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PEM_KEY }}
-          source: ./src/main/resources/secret/prod.env
-          target: /root
-
-      - name: Copy deploy.sh to NCP server (prod)
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PEM_KEY }}
-          source: ./src/main/resources/secret/deploy.sh
-          target: /root
-
       - name: Deploy to prod
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -105,8 +96,13 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           IMAGE_NAME=${{ secrets.DOCKER_REPO }}/${{ secrets.DOCKER_IMAGE_NAME }}
-
+          
+          echo "✅ $IMAGE_NAME"
+          
+          # build
           docker build -f Dockerfile -t $IMAGE_NAME-dev .
+
+          # push both tags
           docker push $IMAGE_NAME-dev
 
           echo "✅ pushed $IMAGE_NAME-dev"

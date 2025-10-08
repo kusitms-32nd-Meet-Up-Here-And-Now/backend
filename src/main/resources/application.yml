@@ -17,5 +17,5 @@ spring:
         format_sql: true
 
 springdoc:
-  server-url: ${SERVER_URL:http://localhost:${SERVER_PORT}}
+  server-url: ${SERVER_URL}
   override-with-generic-response: false
