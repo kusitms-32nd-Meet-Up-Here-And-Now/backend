@@ -92,7 +92,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PEM_KEY }}
           script: |
-            cd /root
+            cd /root/src/main/resources/secret
             chmod +x deploy.sh
             ./deploy.sh prod $(echo $SHA | cut -c1-7)
 
@@ -141,6 +141,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PEM_KEY }}
           script: |
-            cd /root
+            cd /root/src/main/resources/secret
             chmod +x deploy.sh
             ./deploy.sh dev $(echo $SHA | cut -c1-7)
