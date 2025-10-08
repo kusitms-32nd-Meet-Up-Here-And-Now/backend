@@ -94,7 +94,7 @@ jobs:
           script: |
             cd /root/src/main/resources/secret
             chmod +x deploy.sh
-            ./deploy.sh prod $(echo $SHA | cut -c1-7)
+            ./deploy.sh prod "${SHA:0:7}"
 
       # ---------------------- DEV ----------------------
       - name: Docker build & push (develop)
@@ -143,4 +143,4 @@ jobs:
           script: |
             cd /root/src/main/resources/secret
             chmod +x deploy.sh
-            ./deploy.sh dev $(echo $SHA | cut -c1-7)
+            ./deploy.sh dev "${SHA:0:7}"
