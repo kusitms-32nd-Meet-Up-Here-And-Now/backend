@@ -44,7 +44,6 @@ jobs:
 
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
-        if: github.ref == 'refs/heads/main'
         env:
           SHA: ${{ github.sha }}
         run: |
@@ -61,7 +60,6 @@ jobs:
           echo "✅ pushed $IMAGE_NAME:prod-$SHORT_SHA"
 
       - name: Copy prod.env to NCP server
-        if: github.ref == 'refs/heads/main'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -71,7 +69,6 @@ jobs:
           target: /root
 
       - name: Copy deploy.sh to NCP server (prod)
-        if: github.ref == 'refs/heads/main'
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -81,7 +78,6 @@ jobs:
           target: /root
 
       - name: Deploy to prod
-        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
