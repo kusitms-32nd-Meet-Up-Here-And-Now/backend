@@ -42,10 +42,8 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Check all files recursively
-        run: |
-          echo "🔹 Current directory: $(pwd)"
-          ls -R
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
@@ -94,7 +92,7 @@ jobs:
           script: |
             cd /root/src/main/resources/secret
             chmod +x deploy.sh
-            ./deploy.sh prod "${SHA:0:7}"
+            ./deploy.sh prod $SHORT_SHA
 
       # ---------------------- DEV ----------------------
       - name: Docker build & push (develop)
@@ -143,4 +141,4 @@ jobs:
           script: |
             cd /root/src/main/resources/secret
             chmod +x deploy.sh
-            ./deploy.sh dev "${SHA:0:7}"
+            ./deploy.sh dev $SHORT_SHA
