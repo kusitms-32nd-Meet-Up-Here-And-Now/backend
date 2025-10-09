@@ -134,7 +134,7 @@ jobs:
             DEPLOY_SH_CONTENT=$(cat ./src/main/resources/secret/deploy.sh)
             
             echo "🚀 Deploying to DEV server..."
-            echo "DEV_ENV_CONTENT" > /root/dev.env
+            echo "$DEV_ENV_CONTENT" > /root/dev.env
             echo "$DEPLOY_SH_CONTENT" > /root/deploy.sh
 
             # 3. /root 디렉토리에서 deploy.sh 실행

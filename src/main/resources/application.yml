@@ -2,6 +2,9 @@ spring:
   application:
     name: hereandnow
 
+  profiles:
+    active: ${ACTIVE_PROFILE}
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
