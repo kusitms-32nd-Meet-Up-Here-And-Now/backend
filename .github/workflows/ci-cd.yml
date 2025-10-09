@@ -4,11 +4,6 @@ on:
   push:
     branches: [ "main", "develop" ]
 
-  pull_request:
-    branches: [ "main", "develop" ]
-
-  workflow_dispatch:
-
 jobs:
   CI-CD:
     runs-on: ubuntu-latest
@@ -71,6 +66,7 @@ jobs:
 
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
+        if: github.ref == 'refs/heads/main'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           SHORT_SHA=$(echo $SHA | cut -c1-7)
@@ -85,6 +81,7 @@ jobs:
           echo "✅ pushed $IMAGE_NAME-prod"
 
       - name: Deploy to prod
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
