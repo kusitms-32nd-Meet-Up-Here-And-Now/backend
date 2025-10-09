@@ -29,4 +29,4 @@ springdoc:
 
 server:
   servlet:
-    context-path: ${CONTEXT_PATH}
+    context-path: ${CONTEXT_PATH:/}
