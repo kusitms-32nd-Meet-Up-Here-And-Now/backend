@@ -120,7 +120,7 @@ jobs:
 
           echo "✅ pushed $IMAGE_NAME-dev"
 
-      - name: Deploy to dev
+      - name: Deploy to develop
         if: github.ref == 'refs/heads/develop'
         uses: appleboy/ssh-action@master
         env:
