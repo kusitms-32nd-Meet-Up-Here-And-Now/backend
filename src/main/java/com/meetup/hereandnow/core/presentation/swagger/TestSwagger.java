@@ -1,5 +1,6 @@
-package com.meetup.hereandnow.core.presentation;
+package com.meetup.hereandnow.core.presentation.swagger;
 
+import com.meetup.hereandnow.core.presentation.RestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

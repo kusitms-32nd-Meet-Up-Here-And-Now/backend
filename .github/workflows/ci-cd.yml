@@ -4,8 +4,6 @@ on:
   push:
     branches: [ "main", "develop" ]
 
-  workflow_dispatch:
-
 jobs:
   CI-CD:
     runs-on: ubuntu-latest
@@ -39,20 +37,36 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      - name: Copy secret file to NCP server
+      - name: Copy prod.env to NCP server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PEM_KEY }}
-          source: |
-            ./src/main/resources/secret/prod.env
-            ./src/main/resources/secret/dev.env
-            ./src/main/resources/secret/deploy.sh
+          source: ./src/main/resources/secret/prod.env
+          target: /root
+
+      - name: Copy dev.env to NCP server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./src/main/resources/secret/dev.env
+          target: /root
+
+      - name: Copy deploy.sh to NCP server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PEM_KEY }}
+          source: ./src/main/resources/secret/deploy.sh
           target: /root
 
       # ---------------------- PROD ----------------------
       - name: Docker build & push (prod)
+        if: github.ref == 'refs/heads/main'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
           SHORT_SHA=$(echo $SHA | cut -c1-7)
@@ -67,6 +81,7 @@ jobs:
           echo "✅ pushed $IMAGE_NAME-prod"
 
       - name: Deploy to prod
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -102,7 +117,7 @@ jobs:
 
           echo "✅ pushed $IMAGE_NAME-dev"
 
-      - name: Deploy to dev
+      - name: Deploy to develop
         if: github.ref == 'refs/heads/develop'
         uses: appleboy/ssh-action@master
         env:
@@ -112,6 +127,14 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PEM_KEY }}
           script: |
-            cd /root/src/main/resources/secret
+            DEV_ENV_CONTENT=$(cat ./src/main/resources/secret/dev.env)
+            DEPLOY_SH_CONTENT=$(cat ./src/main/resources/secret/deploy.sh)
+            
+            echo "🚀 Deploying to DEV server..."
+            echo "$DEV_ENV_CONTENT" > /root/dev.env
+            echo "$DEPLOY_SH_CONTENT" > /root/deploy.sh
+
+            # 3. /root 디렉토리에서 deploy.sh 실행
+            cd /root
             chmod +x deploy.sh
             ./deploy.sh dev
