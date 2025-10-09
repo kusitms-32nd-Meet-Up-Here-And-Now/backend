@@ -19,3 +19,7 @@ spring:
 springdoc:
   server-url: ${SERVER_URL}
   override-with-generic-response: false
+
+server:
+  servlet:
+    context-path: ${CONTEXT_PATH}

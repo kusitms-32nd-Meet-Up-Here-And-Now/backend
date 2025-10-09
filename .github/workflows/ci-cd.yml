@@ -130,6 +130,14 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PEM_KEY }}
           script: |
-            cd /root/src/main/resources/secret
+            DEV_ENV_CONTENT=$(cat ./src/main/resources/secret/dev.env)
+            DEPLOY_SH_CONTENT=$(cat ./src/main/resources/secret/deploy.sh)
+            
+            echo "🚀 Deploying to DEV server..."
+            echo "DEV_ENV_CONTENT" > /root/dev.env
+            echo "$DEPLOY_SH_CONTENT" > /root/deploy.sh
+
+            # 3. /root 디렉토리에서 deploy.sh 실행
+            cd /root
             chmod +x deploy.sh
             ./deploy.sh dev
