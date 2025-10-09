@@ -21,12 +21,4 @@ spring:
 
 springdoc:
   server-url: ${SERVER_URL}
-  api-docs:
-    path: ${API_DOCS:/v3/api-docs}
-  swagger-ui:
-    path: ${UI_PATH:/swagger-ui.html}
   override-with-generic-response: false
-
-server:
-  servlet:
-    context-path: ${CONTEXT_PATH:/}
