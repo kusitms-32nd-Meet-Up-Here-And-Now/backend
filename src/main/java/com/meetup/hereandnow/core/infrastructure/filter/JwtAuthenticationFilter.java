@@ -1,13 +1,18 @@
 package com.meetup.hereandnow.core.infrastructure.filter;
 
+import com.meetup.hereandnow.auth.exception.JwtErrorCode;
 import com.meetup.hereandnow.auth.infrastructure.TokenProvider;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
@@ -25,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private final TokenProvider tokenProvider;
+    private final UserDetailsService userDetailsService;
 
     private static final List<String> WHITELIST = List.of(
             "/v3/api-docs/**",
@@ -41,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = resolveToken(request);
         if (StringUtils.hasText(token) && tokenProvider.isValid(token)) {
-            Authentication auth = tokenProvider.getAuthentication(token);
+            Authentication auth = createAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(request, response);
@@ -59,5 +65,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return token.substring(BEARER_PREFIX.length());
         }
         return null;
+    }
+
+    // 토큰으로 Authentication 객체 반환
+    private Authentication createAuthentication(String token) {
+        Claims claims = tokenProvider.resolveTokenClaims(token);
+        if (claims.get("type").equals("Refresh")) {
+            throw JwtErrorCode.TOKEN_INVALID.toException();
+        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 }

@@ -6,10 +6,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -21,13 +17,11 @@ public class TokenProvider {
 
     private final Key key;
     private final JwtProperties jwtProperties;
-    private final UserDetailsService userDetailsService;
 
-    public TokenProvider(JwtProperties jwtProperties, UserDetailsService userDetailsService) {
+    public TokenProvider(JwtProperties jwtProperties) {
         this.jwtProperties = jwtProperties;
         byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.secret());
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.userDetailsService = userDetailsService;
     }
 
     // Access 토큰 생성
@@ -69,15 +63,8 @@ public class TokenProvider {
         }
     }
 
-    // 토큰에서 Authentication 추출
-    public Authentication getAuthentication(String token) {
-        Claims claims = resolveToken(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
     // 토큰에서 claim 값 추출
-    private Claims resolveToken(String token) {
+    public Claims resolveTokenClaims(String token) {
         return Jwts.parser().verifyWith((SecretKey) key).build().parseSignedClaims(token).getPayload();
     }
 }
