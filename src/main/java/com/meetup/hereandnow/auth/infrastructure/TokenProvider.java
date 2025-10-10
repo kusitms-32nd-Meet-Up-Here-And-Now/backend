@@ -43,11 +43,10 @@ public class TokenProvider {
     }
 
     // Refresh 토큰 생성
-    public String createRefreshToken(Member member) {
+    public String createRefreshToken() {
         long now = (new Date()).getTime();
         Date expiresIn = new Date(now + jwtProperties.refreshExp() * 1000L);
         return Jwts.builder()
-                .subject(member.getId().toString())
                 .claim("type", "Refresh")
                 .expiration(expiresIn)
                 .signWith(key)
@@ -74,7 +73,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = resolveToken(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // 토큰에서 claim 값 추출
