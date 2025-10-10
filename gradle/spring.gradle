@@ -4,8 +4,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // security
-    implementation 'org.springframework.security:spring-security-core:6.5.5'
-    
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
