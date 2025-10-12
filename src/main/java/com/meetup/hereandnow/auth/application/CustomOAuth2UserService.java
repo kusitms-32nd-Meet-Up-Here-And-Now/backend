@@ -27,6 +27,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(request);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
+        System.out.println(attributes.toString());
+
         KakaoUserInfo kakaoUserInfo = getKakaoUserInfo(attributes);
 
         Member member = memberRepository.findByEmail(kakaoUserInfo.getEmail())
