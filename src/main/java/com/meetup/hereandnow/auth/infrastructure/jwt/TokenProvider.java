@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.auth.infrastructure;
+package com.meetup.hereandnow.auth.infrastructure.jwt;
 
 import com.meetup.hereandnow.auth.exception.JwtErrorCode;
 import com.meetup.hereandnow.member.domain.Member;
