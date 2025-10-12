@@ -46,3 +46,6 @@ cors:
       - "Authorization"
     max-age: 3600
     credentials: true
+
+oauth2:
+  redirect-uri: ${REDIRECT_URI}
