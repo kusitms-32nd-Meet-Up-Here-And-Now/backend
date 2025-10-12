@@ -1,5 +1,7 @@
-package com.meetup.hereandnow.auth.application;
+package com.meetup.hereandnow.auth.application.jwt;
 
+import com.meetup.hereandnow.auth.domain.AuthKeyPrefix;
+import com.meetup.hereandnow.auth.infrastructure.jwt.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import java.time.Duration;
 public class AccessTokenService {
 
     private final StringRedisTemplate redisTemplate;
-    private final String AUTH_TOKEN_PREFIX = "auth:";
+    private final JwtProperties jwtProperties;
 
     public void saveToken(
             String authKey,
@@ -33,7 +35,7 @@ public class AccessTokenService {
         redisTemplate.delete(getAuthTokenKey(authKey));
     }
 
-    private String getAuthTokenKey(String tempAuthKey) {
-        return AUTH_TOKEN_PREFIX + tempAuthKey;
+    private String getAuthTokenKey(String authKey) {
+        return AuthKeyPrefix.AUTH_TOKEN.key(authKey);
     }
 }

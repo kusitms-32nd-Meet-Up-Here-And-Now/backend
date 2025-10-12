@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.core.infrastructure.filter;
 
-import com.meetup.hereandnow.auth.application.AccessTokenService;
-import com.meetup.hereandnow.auth.application.RefreshTokenService;
+import com.meetup.hereandnow.auth.application.jwt.AccessTokenService;
+import com.meetup.hereandnow.auth.application.jwt.RefreshTokenService;
 import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.member.domain.Member;
@@ -17,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.temporal.TemporalUnit;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 

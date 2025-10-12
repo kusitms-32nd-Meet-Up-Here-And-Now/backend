@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.core.config.security;
 
-import com.meetup.hereandnow.auth.application.CustomOAuth2UserService;
+import com.meetup.hereandnow.auth.application.oauth.CustomOAuth2UserService;
 import com.meetup.hereandnow.core.infrastructure.filter.JwtAuthenticationFilter;
 import com.meetup.hereandnow.core.infrastructure.filter.OAuth2FailureHandler;
 import com.meetup.hereandnow.core.infrastructure.filter.OAuth2SuccessHandler;
@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;

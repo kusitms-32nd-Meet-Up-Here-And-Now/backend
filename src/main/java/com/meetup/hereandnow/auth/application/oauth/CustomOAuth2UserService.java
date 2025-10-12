@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.auth.application;
+package com.meetup.hereandnow.auth.application.oauth;
 
 import com.meetup.hereandnow.auth.infrastructure.KakaoUserInfo;
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
@@ -26,8 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(request);
         Map<String, Object> attributes = oAuth2User.getAttributes();
-
-        System.out.println(attributes.toString());
 
         KakaoUserInfo kakaoUserInfo = getKakaoUserInfo(attributes);
 
