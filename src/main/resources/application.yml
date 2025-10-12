@@ -38,8 +38,8 @@ spring:
               - account_email
             client-name: Kakao
             authorization-grant-type: authorization_code
-            client-authentication-method: POST
-            redirect-uri: http://localhost:8880/login/oauth2/code/kakao
+            client-authentication-method: client_secret_post
+            redirect-uri: ${OAUTH_CALLBACK}
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize

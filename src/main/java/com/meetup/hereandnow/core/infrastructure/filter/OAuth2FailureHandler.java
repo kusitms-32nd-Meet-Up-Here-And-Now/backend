@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Log4j2
 @Component
@@ -31,7 +33,10 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
             log.warn("로그인 실패 : {}", exception.getLocalizedMessage());
 
             String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
-                    .queryParam("error", exception.getLocalizedMessage())
+                    .queryParam(
+                            "error",
+                            URLEncoder.encode(exception.getLocalizedMessage(), StandardCharsets.UTF_8)
+                    )
                     .build().toUriString();
 
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
