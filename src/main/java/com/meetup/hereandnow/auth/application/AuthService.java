@@ -13,12 +13,14 @@ import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AuthService {
 
     private final AccessTokenService accessTokenService;

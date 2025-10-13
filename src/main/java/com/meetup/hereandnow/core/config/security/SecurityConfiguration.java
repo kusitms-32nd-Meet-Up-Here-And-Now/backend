@@ -33,7 +33,8 @@ public class SecurityConfiguration {
     private static final String[] WHITELIST = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/test/**"
+            "/test/**",
+            "/auth/token"
     };
 
     @Bean
