@@ -25,18 +25,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(request);
+        return processOAuth2User(oAuth2User);
+    }
+
+    OAuth2User processOAuth2User(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         KakaoUserInfo kakaoUserInfo = getKakaoUserInfo(attributes);
 
         Member member = memberRepository.findByEmail(kakaoUserInfo.getEmail())
-                .orElseGet(() -> {
-                    Member newMember = MemberMapper.toEntity(kakaoUserInfo);
-                    return memberRepository.save(newMember);
-                });
+                .orElseGet(() -> memberRepository.save(MemberMapper.toEntity(kakaoUserInfo)));
 
         return new CustomUserDetails(member, attributes);
     }
+
 
     private KakaoUserInfo getKakaoUserInfo(Map<String, Object> attributes) {
         return new KakaoUserInfo(attributes);
