@@ -8,14 +8,12 @@ import com.meetup.hereandnow.auth.exception.JwtErrorCode;
 import com.meetup.hereandnow.auth.exception.OAuth2ErrorCode;
 import com.meetup.hereandnow.auth.infrastructure.jwt.JwtProperties;
 import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
-import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -44,7 +42,8 @@ public class AuthService {
 
         Claims claims = tokenProvider.resolveTokenClaims(accessToken);
 
-        if(claims.get("type").equals("Refresh")) {
+        if(!claims.get("type").equals("Access")) {
+            accessTokenService.deleteToken(authKey);
             throw JwtErrorCode.TOKEN_INVALID.toException();
         }
 
