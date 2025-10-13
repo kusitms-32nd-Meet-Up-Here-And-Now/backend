@@ -49,6 +49,11 @@ public class AuthService {
 
         String refreshToken = refreshTokenService.getToken(Long.valueOf(claims.getSubject()));
 
+        if(refreshToken == null) {
+            accessTokenService.deleteToken(authKey);
+            throw JwtErrorCode.REFRESH_TOKEN_NOT_FOUND.toException();
+        }
+
         return new TokenResponse(accessToken, refreshToken);
     }
 
@@ -58,7 +63,7 @@ public class AuthService {
      */
     public LogoutResponse logout() {
 
-        Long memberId = getCurrentMember().getId();
+        Long memberId = SecurityUtils.getCurrentMember().getId();
 
         String refreshToken = refreshTokenService.getToken(memberId);
         if (refreshToken == null) {
@@ -77,30 +82,24 @@ public class AuthService {
      */
     public TokenResponse reissue(String refreshToken) {
 
-        Member member = getCurrentMember();
-        if(member == null) {
-            throw MemberErrorCode.MEMBER_NOT_FOUND.toException();
+        Claims claims = tokenProvider.resolveTokenClaims(refreshToken);
+
+        if(!"Refresh".equals(claims.get("type"))) {
+            throw JwtErrorCode.TOKEN_INVALID.toException();
         }
 
-        String storedRefreshToken = refreshTokenService.getToken(member.getId());
+        Long memberId = Long.valueOf(claims.getSubject());
+
+        String storedRefreshToken = refreshTokenService.getToken(memberId);
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
             throw JwtErrorCode.REFRESH_TOKEN_NOT_FOUND.toException();
         }
 
-        String newAccessToken = tokenProvider.createAccessToken(member);
-        String newRefreshToken = tokenProvider.createRefreshToken();
+        String newAccessToken = tokenProvider.createAccessToken(memberId);
+        String newRefreshToken = tokenProvider.createRefreshToken(memberId);
 
-        refreshTokenService.saveToken(member.getId(), newRefreshToken, Duration.ofSeconds(jwtProperties.refreshExp()));
+        refreshTokenService.saveToken(memberId, newRefreshToken, Duration.ofSeconds(jwtProperties.refreshExp()));
 
         return new TokenResponse(newAccessToken, newRefreshToken);
-    }
-
-    /**
-     * 현재 로그인된 멤버 불러오는 유틸 함수
-     * 무분별한 @AuthenticationPrincipal 사용 방지를 위함
-     * @return 현재 로그인된 멤버
-     */
-    public Member getCurrentMember() {
-        return SecurityUtils.getCurrentMember();
     }
 }

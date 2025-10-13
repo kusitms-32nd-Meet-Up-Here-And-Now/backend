@@ -44,7 +44,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         Member member = customUserDetails.member();
 
         String accessToken = tokenProvider.createAccessToken(member);
-        String refreshToken = tokenProvider.createRefreshToken();
+        String refreshToken = tokenProvider.createRefreshToken(member.getId());
 
         String authCode = UUID.randomUUID().toString();
 

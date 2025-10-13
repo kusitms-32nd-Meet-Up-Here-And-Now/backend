@@ -8,6 +8,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
+    /**
+     * Utility class
+     */
+    private SecurityUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * 현재 로그인된 멤버 불러오는 유틸 함수
+     * 무분별한 @AuthenticationPrincipal 사용 방지를 위함
+     * @return 현재 로그인된 멤버
+     */
     public static Member getCurrentMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -10,7 +10,6 @@ import com.meetup.hereandnow.auth.infrastructure.jwt.JwtProperties;
 import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.member.exception.MemberErrorCode;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,6 +109,23 @@ class AuthServiceTest {
             assertThatThrownBy(() -> authService.getAccessTokenByAuthKey(testAuthKey))
                     .isInstanceOf(JwtErrorCode.TOKEN_INVALID.toException().getClass());
         }
+
+        @Test
+        @DisplayName("refreshToken이 레디스에 없는 경우 오류가 발생한다.")
+        void fail_isNotExistsRefreshToken() {
+            // given
+            Claims mockClaims = mock(Claims.class);
+            given(mockClaims.get("type")).willReturn("Access");
+            given(mockClaims.getSubject()).willReturn(String.valueOf(memberId));
+
+            given(accessTokenService.getToken(testAuthKey)).willReturn(accessToken);
+            given(tokenProvider.resolveTokenClaims(accessToken)).willReturn(mockClaims);
+            given(refreshTokenService.getToken(memberId)).willReturn(null);
+
+            // when & then
+            assertThatThrownBy(() -> authService.getAccessTokenByAuthKey(testAuthKey))
+                    .isInstanceOf(JwtErrorCode.REFRESH_TOKEN_NOT_FOUND.toException().getClass());
+        }
     }
 
     @Nested
@@ -137,7 +153,7 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("리프레시 토큰이 없으면 예외를 발생시킨다")
-        void failByNoRefreshToken() {
+        void fail_NoRefreshToken() {
             // given
             Member member = Member.builder().id(memberId).build();
             given(SecurityUtils.getCurrentMember()).willReturn(member);
@@ -161,11 +177,14 @@ class AuthServiceTest {
         @DisplayName("유효한 리프레시 토큰이면 새로운 토큰들을 발급한다")
         void success() {
             // given
-            Member member = Member.builder().id(memberId).build();
-            given(SecurityUtils.getCurrentMember()).willReturn(member);
+            Claims mockClaims = mock(Claims.class);
+            given(mockClaims.get("type")).willReturn("Refresh");
+            given(mockClaims.getSubject()).willReturn(String.valueOf(memberId));
+            given(tokenProvider.resolveTokenClaims(oldRefreshToken)).willReturn(mockClaims);
+
             given(refreshTokenService.getToken(memberId)).willReturn(oldRefreshToken);
-            given(tokenProvider.createAccessToken(member)).willReturn(newAccessToken);
-            given(tokenProvider.createRefreshToken()).willReturn(newRefreshToken);
+            given(tokenProvider.createAccessToken(memberId)).willReturn(newAccessToken);
+            given(tokenProvider.createRefreshToken(memberId)).willReturn(newRefreshToken);
             given(jwtProperties.refreshExp()).willReturn(1000);
 
             // when
@@ -178,22 +197,14 @@ class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("로그인한 사용자를 찾을 수 없으면 예외를 발생시킨다")
-        void failByMemberNotFound() {
-            // given
-            given(SecurityUtils.getCurrentMember()).willReturn(null);
-
-            // when & then
-            assertThatThrownBy(() -> authService.reissue(oldRefreshToken))
-                    .isInstanceOf(MemberErrorCode.MEMBER_NOT_FOUND.toException().getClass());
-        }
-
-        @Test
         @DisplayName("저장된 리프레시 토큰이 없으면 예외를 발생시킨다")
-        void failByNoStoredRefreshToken() {
+        void fail_NoStoredRefreshToken() {
             // given
-            Member member = Member.builder().id(memberId).build();
-            given(SecurityUtils.getCurrentMember()).willReturn(member);
+            Claims mockClaims = mock(Claims.class);
+            given(mockClaims.get("type")).willReturn("Refresh");
+            given(mockClaims.getSubject()).willReturn(String.valueOf(memberId));
+            given(tokenProvider.resolveTokenClaims(oldRefreshToken)).willReturn(mockClaims);
+
             given(refreshTokenService.getToken(memberId)).willReturn(null);
 
             // when & then
@@ -202,11 +213,27 @@ class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("리프레시 토큰이 일치하지 않으면 예외를 발생시킨다")
-        void failByRefreshTokenMismatch() {
+        @DisplayName("refreshToken이 아닌 경우 예외를 발생시킨다.")
+        void fail_isNotExistsClaims() {
             // given
-            Member member = Member.builder().id(memberId).build();
-            given(SecurityUtils.getCurrentMember()).willReturn(member);
+            Claims mockClaims = mock(Claims.class);
+            given(mockClaims.get("type")).willReturn("Access");
+            given(tokenProvider.resolveTokenClaims(oldRefreshToken)).willReturn(mockClaims);
+
+            // when & then
+            assertThatThrownBy(() -> authService.reissue(oldRefreshToken))
+                    .isInstanceOf(JwtErrorCode.TOKEN_INVALID.toException().getClass());
+        }
+
+        @Test
+        @DisplayName("리프레시 토큰이 일치하지 않으면 예외를 발생시킨다")
+        void fail_RefreshTokenMismatch() {
+            // given
+            Claims mockClaims = mock(Claims.class);
+            given(mockClaims.get("type")).willReturn("Refresh");
+            given(mockClaims.getSubject()).willReturn(String.valueOf(memberId));
+            given(tokenProvider.resolveTokenClaims(oldRefreshToken)).willReturn(mockClaims);
+
             given(refreshTokenService.getToken(memberId)).willReturn("differentRefreshToken");
 
             // when & then
