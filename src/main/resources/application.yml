@@ -50,6 +50,7 @@ spring:
 
 springdoc:
   server-url: ${SERVER_URL}
+  ncp-cloud-functions-url: ${NCP_CLOUD_FUNCTIONS_URL}
   override-with-generic-response: false
 
 jwt:
@@ -71,3 +72,10 @@ cors:
 
 oauth2:
   redirect-uri: ${REDIRECT_URI}
+
+ncp:
+  access: ${NCP_STORAGE_ACCESS_KEY}
+  secret: ${NCP_STORAGE_SECRET_KEY}
+  region: ${NCP_STORAGE_REGION}
+  endpoint: "https://kr.object.ncloudstorage.com"
+  bucket-name: ${NCP_BUCKET_NAME}
