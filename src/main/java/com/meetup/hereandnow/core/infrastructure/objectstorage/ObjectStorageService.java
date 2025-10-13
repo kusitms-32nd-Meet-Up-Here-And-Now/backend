@@ -19,13 +19,11 @@ public class ObjectStorageService {
     private final ObjectStorageProperties properties;
 
     public void delete(String key) {
-        if (exists(key)) {
-            DeleteObjectRequest req = DeleteObjectRequest.builder()
-                    .bucket(properties.bucketName())
-                    .key(isUrl(key) ? extractKey(key) : key)
-                    .build();
-            storageClient.deleteObject(req);
-        }
+        DeleteObjectRequest req = DeleteObjectRequest.builder()
+                .bucket(properties.bucketName())
+                .key(isUrl(key) ? extractKey(key) : key)
+                .build();
+        storageClient.deleteObject(req);
     }
 
     public boolean exists(String key) {
@@ -37,6 +35,9 @@ public class ObjectStorageService {
             storageClient.headObject(request);
             return true;
         } catch (AwsServiceException e) {
+            if (e.statusCode() == HttpStatus.NOT_FOUND.value()) {
+                return false;
+            }
             handleAwsError(e);
         }
         return false;
@@ -44,9 +45,7 @@ public class ObjectStorageService {
 
     private void handleAwsError(AwsServiceException e) {
         int code = e.statusCode();
-        if (code == HttpStatus.NOT_FOUND.value()) {
-            throw ObjectStorageErrorCode.OBJECT_NOT_FOUND.toException();
-        } else if (code == HttpStatus.FORBIDDEN.value()) {
+        if (code == HttpStatus.FORBIDDEN.value()) {
             throw ObjectStorageErrorCode.ACCESS_DENIED.toException();
         } else if (code == HttpStatus.BAD_REQUEST.value()) {
             throw ObjectStorageErrorCode.BAD_REQUEST.toException();

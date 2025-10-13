@@ -17,7 +17,7 @@ public class ObjectStorageConfiguration {
 
     private final ObjectStorageProperties properties;
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public S3Client storageClient() {
         return S3Client.builder()
                 .endpointOverride(URI.create(properties.endpoint()))
