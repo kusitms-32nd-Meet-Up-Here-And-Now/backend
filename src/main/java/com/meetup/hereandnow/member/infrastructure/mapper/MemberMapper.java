@@ -2,10 +2,12 @@ package com.meetup.hereandnow.member.infrastructure.mapper;
 
 import com.meetup.hereandnow.auth.domain.OAuth2UserInfo;
 import com.meetup.hereandnow.member.domain.Member;
-import org.springframework.stereotype.Component;
 
-@Component
 public class MemberMapper {
+
+    private MemberMapper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Member toEntity(OAuth2UserInfo oAuth2UserInfo) {
         return Member.builder()

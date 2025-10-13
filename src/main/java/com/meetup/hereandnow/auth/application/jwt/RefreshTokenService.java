@@ -12,7 +12,6 @@ import java.time.Duration;
 public class RefreshTokenService {
 
     private final StringRedisTemplate redisTemplate;
-    private static final String PREFIX = "refreshToken:";
 
     // RefreshToken 저장
     public void saveToken(Long memberId, String refreshToken, Duration duration) {

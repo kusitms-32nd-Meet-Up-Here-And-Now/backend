@@ -42,7 +42,7 @@ public class AuthService {
 
         Claims claims = tokenProvider.resolveTokenClaims(accessToken);
 
-        if(!claims.get("type").equals("Access")) {
+        if(!"Access".equals(claims.get("type"))) {
             accessTokenService.deleteToken(authKey);
             throw JwtErrorCode.TOKEN_INVALID.toException();
         }
