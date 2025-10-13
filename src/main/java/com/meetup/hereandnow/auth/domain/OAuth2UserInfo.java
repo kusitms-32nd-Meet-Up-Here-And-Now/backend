@@ -1,8 +1,10 @@
 package com.meetup.hereandnow.auth.domain;
 
+import com.meetup.hereandnow.member.domain.value.Provider;
+
 public interface OAuth2UserInfo {
 
-    String getProvider();
+    Provider getProvider();
     String getProviderId();
     String getName();
     String getEmail();

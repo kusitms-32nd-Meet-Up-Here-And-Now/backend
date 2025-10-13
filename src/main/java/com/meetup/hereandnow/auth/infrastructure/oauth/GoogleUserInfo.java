@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.auth.infrastructure.oauth;
 
 import com.meetup.hereandnow.auth.domain.OAuth2UserInfo;
+import com.meetup.hereandnow.member.domain.value.Provider;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -11,8 +12,8 @@ public class GoogleUserInfo implements OAuth2UserInfo {
     private final Map<String, Object> attributes;
 
     @Override
-    public String getProvider() {
-        return "Google";
+    public Provider getProvider() {
+        return Provider.GOOGLE;
     }
 
     @Override
