@@ -2,6 +2,7 @@ package com.meetup.hereandnow.core.infrastructure.filter;
 
 import com.meetup.hereandnow.auth.application.jwt.AccessTokenService;
 import com.meetup.hereandnow.auth.application.jwt.RefreshTokenService;
+import com.meetup.hereandnow.auth.infrastructure.jwt.JwtProperties;
 import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.member.domain.Member;
@@ -27,12 +28,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
     private final AccessTokenService accessTokenService;
+    private final JwtProperties jwtProperties;
 
     @Value("${oauth2.redirect-uri}")
     private String redirectUri;
-
-    @Value("${jwt.refresh-exp}")
-    private long refreshExp;
 
     @Override
     public void onAuthenticationSuccess(
@@ -49,7 +48,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String authCode = UUID.randomUUID().toString();
 
         refreshTokenService.saveToken(
-                member.getId(), refreshToken, Duration.of(refreshExp, TimeUnit.SECONDS.toChronoUnit())
+                member.getId(), refreshToken, Duration.of(jwtProperties.refreshExp(), TimeUnit.SECONDS.toChronoUnit())
         );
 
         accessTokenService.saveToken(
