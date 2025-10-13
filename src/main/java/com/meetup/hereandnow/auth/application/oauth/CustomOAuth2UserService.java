@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.auth.application.oauth;
 
-import com.meetup.hereandnow.auth.infrastructure.KakaoUserInfo;
+import com.meetup.hereandnow.auth.infrastructure.oauth.KakaoUserInfo;
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.infrastructure.mapper.MemberMapper;
