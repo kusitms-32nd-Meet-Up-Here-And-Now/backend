@@ -5,11 +5,9 @@ import com.meetup.hereandnow.auth.dto.request.ReIssueTokenRequest;
 import com.meetup.hereandnow.auth.dto.request.TokenIssueRequest;
 import com.meetup.hereandnow.auth.dto.response.LogoutResponse;
 import com.meetup.hereandnow.auth.dto.response.TokenResponse;
-import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +35,10 @@ public class AuthController implements AuthSwagger {
 
     @Override
     @PostMapping("/logout")
-    public ResponseEntity<RestResponse<LogoutResponse>> logout(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
+    public ResponseEntity<RestResponse<LogoutResponse>> logout() {
         return ResponseEntity.ok(
                 new RestResponse<>(
-                        authService.logout(customUserDetails)
+                        authService.logout()
                 )
         );
     }
@@ -50,14 +46,11 @@ public class AuthController implements AuthSwagger {
     @Override
     @PostMapping("/re-issue")
     public ResponseEntity<RestResponse<TokenResponse>> reissueToken(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody ReIssueTokenRequest request
     ) {
         return ResponseEntity.ok(
                 new RestResponse<>(
-                        authService.reissue(
-                                customUserDetails, request.refreshToken()
-                        )
+                        authService.reissue(request.refreshToken())
                 )
         );
     }

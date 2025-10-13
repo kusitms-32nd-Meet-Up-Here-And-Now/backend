@@ -7,13 +7,11 @@ import com.meetup.hereandnow.auth.dto.response.TokenResponse;
 import com.meetup.hereandnow.auth.exception.JwtErrorCode;
 import com.meetup.hereandnow.auth.exception.OAuth2ErrorCode;
 import com.meetup.hereandnow.core.config.swagger.ApiErrorCode;
-import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Auth", description = "로그인 및 토큰 관련 API")
@@ -38,9 +36,7 @@ public interface AuthSwagger {
             operationId = "/auth/logout"
     )
     @ApiErrorCode({JwtErrorCode.class})
-    ResponseEntity<RestResponse<LogoutResponse>> logout(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    );
+    ResponseEntity<RestResponse<LogoutResponse>> logout();
 
     @Operation(
             summary = "토큰 재발행 API",
@@ -49,7 +45,6 @@ public interface AuthSwagger {
     )
     @ApiErrorCode({MemberErrorCode.class, JwtErrorCode.class})
     ResponseEntity<RestResponse<TokenResponse>> reissueToken(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody ReIssueTokenRequest request
-            );
+    );
 }
