@@ -47,3 +47,10 @@ cors:
       - "Authorization"
     max-age: 3600
     credentials: true
+
+ncp:
+  access: ${NCP_STORAGE_ACCESS_KEY}
+  secret: ${NCP_STORAGE_SECRET_KEY}
+  region: ${NCP_STORAGE_REGION}
+  endpoint: "https://kr.object.ncloudstorage.com"
+  bucket-name: ${NCP_BUCKET_NAME}
