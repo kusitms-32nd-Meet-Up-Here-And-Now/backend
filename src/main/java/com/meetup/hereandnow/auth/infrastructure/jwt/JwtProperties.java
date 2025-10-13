@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.auth.infrastructure;
+package com.meetup.hereandnow.auth.infrastructure.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

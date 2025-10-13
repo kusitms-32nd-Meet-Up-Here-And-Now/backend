@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.auth.infrastructure;
+package com.meetup.hereandnow.auth.infrastructure.jwt;
 
 import com.meetup.hereandnow.auth.exception.JwtErrorCode;
 import com.meetup.hereandnow.member.domain.Member;
@@ -36,11 +36,23 @@ public class TokenProvider {
                 .compact();
     }
 
+    public String createAccessToken(Long memberId) {
+        long now = (new Date()).getTime();
+        Date expiresIn = new Date(now + jwtProperties.accessExp() * 1000L);
+        return Jwts.builder()
+                .subject(memberId.toString())
+                .claim("type", "Access")
+                .expiration(expiresIn)
+                .signWith(key)
+                .compact();
+    }
+
     // Refresh 토큰 생성
-    public String createRefreshToken() {
+    public String createRefreshToken(Long memberId) {
         long now = (new Date()).getTime();
         Date expiresIn = new Date(now + jwtProperties.refreshExp() * 1000L);
         return Jwts.builder()
+                .subject(memberId.toString())
                 .claim("type", "Refresh")
                 .expiration(expiresIn)
                 .signWith(key)

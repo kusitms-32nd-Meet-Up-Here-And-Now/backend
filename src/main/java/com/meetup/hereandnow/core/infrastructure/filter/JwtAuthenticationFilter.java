@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.core.infrastructure.filter;
 
 import com.meetup.hereandnow.auth.exception.JwtErrorCode;
-import com.meetup.hereandnow.auth.infrastructure.TokenProvider;
+import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,7 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> WHITELIST = List.of(
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/test/**"
+            "/test/**",
+            "/auth/token"
     );
 
     @Override

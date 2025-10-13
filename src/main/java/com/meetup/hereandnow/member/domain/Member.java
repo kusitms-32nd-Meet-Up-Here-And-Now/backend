@@ -23,11 +23,11 @@ public class Member extends BaseEntity {
     private String email;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private String nickname;
 
     @Column(name = "profile_image")
     private String profileImage;
+
+    @Column(name = "provider_id", nullable = false)
+    private String providerId;
 }
