@@ -28,6 +28,7 @@ spring:
 
 springdoc:
   server-url: ${SERVER_URL}
+  ncp-cloud-functions-url: ${NCP_CLOUD_FUNCTIONS_URL}
   override-with-generic-response: false
 
 jwt:
