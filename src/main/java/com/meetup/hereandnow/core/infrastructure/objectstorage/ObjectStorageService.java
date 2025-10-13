@@ -49,8 +49,10 @@ public class ObjectStorageService {
             throw ObjectStorageErrorCode.ACCESS_DENIED.toException();
         } else if (code == HttpStatus.BAD_REQUEST.value()) {
             throw ObjectStorageErrorCode.BAD_REQUEST.toException();
-        } else if (code == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+        } else if (code == HttpStatus.SERVICE_UNAVAILABLE.value()) {
             throw ObjectStorageErrorCode.AWS_SERVER_ERROR.toException();
+        } else {
+            throw e;
         }
     }
 
