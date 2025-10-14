@@ -50,8 +50,15 @@ spring:
 
 springdoc:
   server-url: ${SERVER_URL}
-  ncp-cloud-functions-url: ${NCP_CLOUD_FUNCTIONS_URL}
   override-with-generic-response: false
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    urls:
+      - name: Here&Now API
+        url: /v3/api-docs
+      - name: NCP CloudFunctions API
+        url: /docs/ncp-api.json
 
 jwt:
   secret: ${JWT_SECRET}
