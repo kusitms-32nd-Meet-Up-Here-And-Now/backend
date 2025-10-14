@@ -4,7 +4,6 @@ import com.meetup.hereandnow.core.exception.error.BaseErrorCode;
 import com.meetup.hereandnow.core.presentation.ErrorResponse;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -15,7 +14,9 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
@@ -25,20 +26,26 @@ import java.util.stream.Collectors;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "Here&Now API", description = "Team 히어앤나우 : 히어앤나우 API 명세서", version = "v1.0.0"),
-        servers = {@Server(url = "${springdoc.server-url}", description = "Https Server URL")}
+        info = @Info(title = "Here&Now API", description = "Team 히어앤나우 : 히어앤나우 API 명세서", version = "v1.0.0")
 )
 public class SwaggerConfiguration {
+
+    @Value("${springdoc.server-url}")
+    private String serverUrl;
+
     @Bean
-    public OpenAPI openAPI(){
+    public OpenAPI openAPI() {
         SecurityScheme securityScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
                 .in(SecurityScheme.In.HEADER).name("Authorization");
         SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
+        Server mainServer = new Server().url(serverUrl).description("Here&Now Main Server");
+
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-                .security(Arrays.asList(securityRequirement));
+                .security(List.of(securityRequirement))
+                .addServersItem(mainServer);
     }
 
     @Bean

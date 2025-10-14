@@ -27,10 +27,12 @@ repositories {
 apply from:"gradle/spring.gradle"
 apply from:"gradle/swagger.gradle"
 apply from:"gradle/db.gradle"
+apply from: "gradle/jwt.gradle"
 
 dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 tasks.named('test') {
