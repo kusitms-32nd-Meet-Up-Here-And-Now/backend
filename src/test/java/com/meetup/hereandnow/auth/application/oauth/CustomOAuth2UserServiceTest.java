@@ -2,6 +2,7 @@ package com.meetup.hereandnow.auth.application.oauth;
 
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.member.domain.Member;
+import com.meetup.hereandnow.member.domain.value.Provider;
 import com.meetup.hereandnow.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,41 +34,39 @@ class CustomOAuth2UserServiceTest {
     private MemberRepository memberRepository;
 
     private OAuth2User oAuth2User;
-    private Map<String, Object> attributes;
-    private Map<String, Object> kakaoAccount;
-    private Map<String, Object> profile;
 
     @BeforeEach
     void setUp() {
         oAuth2User = mock(OAuth2User.class);
-        attributes = new HashMap<>();
-        kakaoAccount = new HashMap<>();
-        profile = new HashMap<>();
+    }
 
+    @DisplayName("신규 카카오 사용자가 로그인하면 회원가입 처리 후 유저 정보를 반환한다")
+    @Test
+    void processNewKakaoUser() {
+        // given
+        Map<String, Object> kakaoAttributes = new HashMap<>();
+        Map<String, Object> kakaoAccount = new HashMap<>();
+        Map<String, Object> profile = new HashMap<>();
         profile.put("nickname", "testuser");
         profile.put("profile_image_url", "test_image.jpg");
         kakaoAccount.put("email", "test@example.com");
         kakaoAccount.put("profile", profile);
-        attributes.put("kakao_account", kakaoAccount);
-        attributes.put("id", 123456789L);
-    }
+        kakaoAttributes.put("kakao_account", kakaoAccount);
+        kakaoAttributes.put("id", 123456789L);
 
-    @DisplayName("신규 사용자가 로그인하면 회원가입 처리 후 유저 정보를 반환한다")
-    @Test
-    void processNewUser() {
-        // given
-        given(oAuth2User.getAttributes()).willReturn(attributes);
-        given(memberRepository.findByEmail("test@example.com")).willReturn(Optional.empty());
+        given(oAuth2User.getAttributes()).willReturn(kakaoAttributes);
+        given(memberRepository.findByEmailAndProvider("test@example.com", Provider.KAKAO)).willReturn(Optional.empty());
 
         Member newMember = Member.builder()
                 .email("test@example.com")
                 .nickname("testuser")
                 .profileImage("test_image.jpg")
+                .provider(Provider.KAKAO)
                 .build();
         given(memberRepository.save(any(Member.class))).willReturn(newMember);
 
         // when
-        OAuth2User result = customOAuth2UserService.processOAuth2User(oAuth2User);
+        OAuth2User result = customOAuth2UserService.processOAuth2User(oAuth2User, "kakao");
 
         // then
         assertThat(result).isInstanceOf(CustomUserDetails.class);
@@ -77,21 +76,32 @@ class CustomOAuth2UserServiceTest {
         verify(memberRepository).save(any(Member.class));
     }
 
-    @DisplayName("기존 사용자가 로그인하면 유저 정보를 반환한다")
+    @DisplayName("기존 카카오 사용자가 로그인하면 유저 정보를 반환한다")
     @Test
-    void processExistingUser() {
+    void processExistingKakaoUser() {
         // given
-        given(oAuth2User.getAttributes()).willReturn(attributes);
+        Map<String, Object> kakaoAttributes = new HashMap<>();
+        Map<String, Object> kakaoAccount = new HashMap<>();
+        Map<String, Object> profile = new HashMap<>();
+        profile.put("nickname", "testuser");
+        profile.put("profile_image_url", "test_image.jpg");
+        kakaoAccount.put("email", "test@example.com");
+        kakaoAccount.put("profile", profile);
+        kakaoAttributes.put("kakao_account", kakaoAccount);
+        kakaoAttributes.put("id", 123456789L);
+
+        given(oAuth2User.getAttributes()).willReturn(kakaoAttributes);
         Member existingMember = Member.builder()
                 .id(1L)
                 .email("test@example.com")
                 .nickname("existingUser")
                 .profileImage("existing_image.jpg")
+                .provider(Provider.KAKAO)
                 .build();
-        given(memberRepository.findByEmail("test@example.com")).willReturn(Optional.of(existingMember));
+        given(memberRepository.findByEmailAndProvider("test@example.com", Provider.KAKAO)).willReturn(Optional.of(existingMember));
 
         // when
-        OAuth2User result = customOAuth2UserService.processOAuth2User(oAuth2User);
+        OAuth2User result = customOAuth2UserService.processOAuth2User(oAuth2User, "kakao");
 
         // then
         assertThat(result).isInstanceOf(CustomUserDetails.class);
@@ -99,6 +109,70 @@ class CustomOAuth2UserServiceTest {
         assertThat(userDetails.getUsername()).isEqualTo("test@example.com");
         assertThat(userDetails.member().getNickname()).isEqualTo("existingUser");
         assertThat(userDetails.member().getId()).isEqualTo(1L);
+        verify(memberRepository, never()).save(any(Member.class));
+    }
+
+    @DisplayName("신규 구글 사용자가 로그인하면 회원가입 처리 후 유저 정보를 반환한다")
+    @Test
+    void processNewGoogleUser() {
+        // given
+        Map<String, Object> googleAttributes = new HashMap<>();
+        googleAttributes.put("sub", "123456789");
+        googleAttributes.put("name", "googleuser");
+        googleAttributes.put("email", "google@example.com");
+        googleAttributes.put("picture", "google_image.jpg");
+
+        given(oAuth2User.getAttributes()).willReturn(googleAttributes);
+        given(memberRepository.findByEmailAndProvider("google@example.com", Provider.GOOGLE)).willReturn(Optional.empty());
+
+        Member newMember = Member.builder()
+                .email("google@example.com")
+                .nickname("googleuser")
+                .profileImage("google_image.jpg")
+                .provider(Provider.GOOGLE)
+                .build();
+        given(memberRepository.save(any(Member.class))).willReturn(newMember);
+
+        // when
+        OAuth2User result = customOAuth2UserService.processOAuth2User(oAuth2User, "google");
+
+        // then
+        assertThat(result).isInstanceOf(CustomUserDetails.class);
+        CustomUserDetails userDetails = (CustomUserDetails) result;
+        assertThat(userDetails.getUsername()).isEqualTo("google@example.com");
+        assertThat(userDetails.member().getNickname()).isEqualTo("googleuser");
+        verify(memberRepository).save(any(Member.class));
+    }
+
+    @DisplayName("기존 구글 사용자가 로그인하면 유저 정보를 반환한다")
+    @Test
+    void processExistingGoogleUser() {
+        // given
+        Map<String, Object> googleAttributes = new HashMap<>();
+        googleAttributes.put("sub", "123456789");
+        googleAttributes.put("name", "googleuser");
+        googleAttributes.put("email", "google@example.com");
+        googleAttributes.put("picture", "google_image.jpg");
+
+        given(oAuth2User.getAttributes()).willReturn(googleAttributes);
+        Member existingMember = Member.builder()
+                .id(2L)
+                .email("google@example.com")
+                .nickname("existingGoogleUser")
+                .profileImage("existing_google_image.jpg")
+                .provider(Provider.GOOGLE)
+                .build();
+        given(memberRepository.findByEmailAndProvider("google@example.com", Provider.GOOGLE)).willReturn(Optional.of(existingMember));
+
+        // when
+        OAuth2User result = customOAuth2UserService.processOAuth2User(oAuth2User, "google");
+
+        // then
+        assertThat(result).isInstanceOf(CustomUserDetails.class);
+        CustomUserDetails userDetails = (CustomUserDetails) result;
+        assertThat(userDetails.getUsername()).isEqualTo("google@example.com");
+        assertThat(userDetails.member().getNickname()).isEqualTo("existingGoogleUser");
+        assertThat(userDetails.member().getId()).isEqualTo(2L);
         verify(memberRepository, never()).save(any(Member.class));
     }
 }

@@ -15,6 +15,7 @@ public class MemberMapper {
                 .nickname(oAuth2UserInfo.getName())
                 .profileImage(oAuth2UserInfo.getProfileImage())
                 .providerId(oAuth2UserInfo.getProviderId())
+                .provider(oAuth2UserInfo.getProvider())
                 .build();
     }
 }
