@@ -33,12 +33,6 @@ public class SwaggerConfiguration {
     @Value("${springdoc.server-url}")
     private String serverUrl;
 
-    private final List<ExternalApiContributor> externalApiContributors;
-
-    public SwaggerConfiguration(List<ExternalApiContributor> externalApiContributors) {
-        this.externalApiContributors = externalApiContributors;
-    }
-
     @Bean
     public OpenAPI openAPI() {
         SecurityScheme securityScheme = new SecurityScheme()
@@ -48,14 +42,10 @@ public class SwaggerConfiguration {
 
         Server mainServer = new Server().url(serverUrl).description("Here&Now Main Server");
 
-        OpenAPI openApi = new OpenAPI()
+        return new OpenAPI()
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(List.of(securityRequirement))
                 .addServersItem(mainServer);
-
-        externalApiContributors.forEach(contributor -> contributor.contribute(openApi));
-
-        return openApi;
     }
 
     @Bean
