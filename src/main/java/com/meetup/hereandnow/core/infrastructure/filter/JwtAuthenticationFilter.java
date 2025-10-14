@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> WHITELIST = List.of(
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/ncp-api.json",
+            "/docs/ncp-api.json",
             "/test/**",
             "/auth/token"
     );
