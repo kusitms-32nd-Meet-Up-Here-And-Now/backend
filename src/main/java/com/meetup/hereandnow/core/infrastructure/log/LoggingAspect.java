@@ -41,7 +41,7 @@ public class LoggingAspect {
             return result;
         } catch(Exception e) {
             long endTime = System.currentTimeMillis();
-            log.info("[FAIL] [{}] {} [Class :{}.{}] time: {}ms",
+            log.error("[FAIL] [{}] {} [Class :{}.{}] time: {}ms",
                     request.getMethod(), decodedUri, controllerName, methodName, endTime - startTime);
 
             throw e;
