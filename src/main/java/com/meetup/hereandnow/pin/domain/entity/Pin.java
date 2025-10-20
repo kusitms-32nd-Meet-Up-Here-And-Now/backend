@@ -1,7 +1,8 @@
-package com.meetup.hereandnow.course.domain.entity;
+package com.meetup.hereandnow.pin.domain.entity;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
-import com.meetup.hereandnow.member.domain.Member;
+import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.place.domain.Place;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -27,42 +29,34 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-@Table(name = "course")
-public class Course extends BaseEntity {
+@Table(name = "pin")
+public class Pin extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "course_title", length = 128)
-    private String courseTitle;
+    @Column(name = "pin_title", length = 128)
+    private String pinTitle;
 
-    @Column(name = "course_thumbnail_image", length = 512)
-    private String courseThumbnailImage;
+    @Column(name = "pin_thumbnail_image", length = 1024)
+    private String pinThumbnailImage;
 
-    @Column(name = "course_rating", precision = 3, scale = 1)
+    @Column(name = "pin_rating", precision = 3, scale = 1)
     @DecimalMin(value = "1.0")
     @DecimalMax(value = "5.0")
     @Digits(integer = 1, fraction = 1)
     @Builder.Default
-    private BigDecimal courseRating = BigDecimal.valueOf(2.5);
+    private BigDecimal pinRating = BigDecimal.valueOf(2.5);
 
-    @Column(name = "course_description", length = 1024)
-    private String courseDescription;
-
-    @Column(name = "is_public")
-    @Builder.Default
-    private Boolean isPublic = false;
-
-    @Column(name = "view_count")
-    @Builder.Default
-    private Integer viewCount = 0;
-
-    @Column(name = "scrap_count")
-    @Builder.Default
-    private Integer scrapCount = 0;
+    @Column(name = "pin_description", length = 1024)
+    private String pinDescription;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id", nullable = false)
+    private Place place;
 }

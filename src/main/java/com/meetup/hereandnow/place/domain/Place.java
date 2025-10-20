@@ -1,17 +1,11 @@
-package com.meetup.hereandnow.course.domain.entity;
+package com.meetup.hereandnow.place.domain;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
-import com.meetup.hereandnow.course.domain.value.CourseTagEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,18 +18,16 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-@Table(name = "course_tag")
-public class CourseTag extends BaseEntity {
+@Table(name = "place")
+public class Place extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "course_tag_name")
-    @Enumerated(EnumType.STRING)
-    private CourseTagEnum courseTagName;
+    @Column(name = "place_name")
+    private String placeName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @Column(name = "place_address")
+    private String placeAddress;
 }

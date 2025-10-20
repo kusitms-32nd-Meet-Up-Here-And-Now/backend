@@ -1,7 +1,6 @@
-package com.meetup.hereandnow.course.domain.entity;
+package com.meetup.hereandnow.pin.domain.entity;
 
-import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
-import com.meetup.hereandnow.course.domain.value.CourseTagEnum;
+import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,18 +23,18 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-@Table(name = "course_tag")
-public class CourseTag extends BaseEntity {
+@Table(name = "pin_tag")
+public class PinTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "course_tag_name")
+    @Column(name = "pin_tag_name")
     @Enumerated(EnumType.STRING)
-    private CourseTagEnum courseTagName;
+    private PinTagEnum pinTagEnum;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @JoinColumn(name = "pin_id", nullable = false)
+    private Pin pin;
 }
