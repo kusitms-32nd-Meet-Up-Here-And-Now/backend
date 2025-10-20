@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
@@ -30,4 +31,7 @@ public class Place extends BaseEntity {
 
     @Column(name = "place_address")
     private String placeAddress;
+
+    @Column(name = "location", columnDefinition = "geography(Point, 4326)")
+    private Point location;
 }

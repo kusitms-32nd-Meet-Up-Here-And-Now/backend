@@ -5,6 +5,10 @@ dependencies {
     // --- PostgreSQL Driver ---
     runtimeOnly 'org.postgresql:postgresql'
 
+    // --- PostGIS ---
+    implementation 'org.hibernate.orm:hibernate-spatial:6.5.2.Final'
+    implementation 'net.postgis:postgis-jdbc:2023.1.0'
+
     // --- Redis ---
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
