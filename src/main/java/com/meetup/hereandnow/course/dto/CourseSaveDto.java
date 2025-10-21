@@ -20,7 +20,7 @@ public record CourseSaveDto(
         Boolean isPublic,
 
         @Schema(description = "코스 태그 리스트", example = "[\"COZY\",\"EXCITED\"]")
-        List<CourseTagEnum> courseTageList,
+        List<CourseTagEnum> courseTagList,
 
         List<PinSaveDto> pinList
 ) {
