@@ -16,7 +16,7 @@ public record PinSaveDto(
         @Schema(description = "핀 설명", example = "커피가 맛있고 분위기가 좋아요")
         String pinDescription,
 
-        @Schema(description = "핀 태그", example = "COZY, EXCITED")
+        @Schema(description = "핀 태그", example = "[\"COZY\",\"EXCITED\"]")
         List<PinTagEnum> pinTags,
 
         PlaceSaveDto place

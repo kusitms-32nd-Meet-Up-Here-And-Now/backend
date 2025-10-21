@@ -19,7 +19,7 @@ public record CourseSaveDto(
         @Schema(description = "코스 공개 여부", example = "true")
         Boolean isPublic,
 
-        @Schema(description = "코스 태그 리스트", example = "[COZY, EXCITED]")
+        @Schema(description = "코스 태그 리스트", example = "[\"COZY\",\"EXCITED\"]")
         List<CourseTagEnum> courseTageList,
 
         List<PinSaveDto> pinList
