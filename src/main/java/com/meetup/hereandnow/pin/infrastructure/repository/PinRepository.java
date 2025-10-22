@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.pin.infrastructure;
+package com.meetup.hereandnow.pin.infrastructure.repository;
 
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import org.springframework.data.jpa.repository.JpaRepository;

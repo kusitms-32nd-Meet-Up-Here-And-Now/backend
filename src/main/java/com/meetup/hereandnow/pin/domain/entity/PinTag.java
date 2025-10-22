@@ -37,4 +37,11 @@ public class PinTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pin_id", nullable = false)
     private Pin pin;
+
+    public static PinTag of(PinTagEnum pinTagEnum, Pin pin) {
+        return PinTag.builder()
+                .pinTagEnum(pinTagEnum)
+                .pin(pin)
+                .build();
+    }
 }

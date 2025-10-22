@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.course.presentation;
 
 import com.meetup.hereandnow.core.presentation.RestResponse;
-import com.meetup.hereandnow.course.application.CourseSaveService;
+import com.meetup.hereandnow.course.application.service.save.CourseSaveService;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import lombok.RequiredArgsConstructor;

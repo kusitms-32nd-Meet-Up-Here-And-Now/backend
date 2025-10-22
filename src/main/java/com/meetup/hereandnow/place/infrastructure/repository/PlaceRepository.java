@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.place.infrastructure;
+package com.meetup.hereandnow.place.infrastructure.repository;
 
 import com.meetup.hereandnow.place.domain.Place;
 import java.util.Optional;

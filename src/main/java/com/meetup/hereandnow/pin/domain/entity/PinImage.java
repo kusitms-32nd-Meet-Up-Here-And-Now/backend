@@ -26,4 +26,11 @@ public class PinImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pin_id")
     private Pin pin;
+
+    public static PinImage of(String objectKey, Pin pin) {
+        return PinImage.builder()
+                .imageUrl(objectKey)
+                .pin(pin)
+                .build();
+    }
 }

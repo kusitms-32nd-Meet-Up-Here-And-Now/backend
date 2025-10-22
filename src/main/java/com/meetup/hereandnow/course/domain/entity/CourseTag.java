@@ -38,4 +38,11 @@ public class CourseTag extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    public static CourseTag of(CourseTagEnum courseTagName, Course course) {
+        return CourseTag.builder()
+                .courseTagName(courseTagName)
+                .course(course)
+                .build();
+    }
 }
