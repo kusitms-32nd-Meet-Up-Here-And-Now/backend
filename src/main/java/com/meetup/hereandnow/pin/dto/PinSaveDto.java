@@ -7,7 +7,7 @@ import java.util.List;
 
 public record PinSaveDto(
 
-        @Schema(description = "핀 제목", example = "연남동 느좋 카페")
+        @Schema(description = "핀 제목", example = "홍대 느좋 카페")
         String pinTitle,
 
         @Schema(description = "핀 평점", example = "4.5")

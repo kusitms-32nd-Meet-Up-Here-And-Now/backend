@@ -2,7 +2,7 @@ package com.meetup.hereandnow.course.application.service.save;
 
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
-import com.meetup.hereandnow.course.dto.CommitSaveCourseRequestDto;
+import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
@@ -23,8 +23,12 @@ public class CourseSaveService {
     private final CourseRedisService redisService;
     private final CoursePersistService persistService;
 
-    public CourseSaveResponseDto saveCourseToRedis(CourseSaveDto courseSaveDto) {
+    public CourseSaveResponseDto saveCourseToRedis(
+            CourseSaveDto courseSaveDto
+    ) {
+
         Member member = SecurityUtils.getCurrentMember();
+
         String courseUUID = UUIDUtils.getUUID();
         String courseDirname = String.format("/course/%s/image", courseUUID);
 
@@ -35,17 +39,25 @@ public class CourseSaveService {
     }
 
     @Transactional
-    public void commitSave(CommitSaveCourseRequestDto commitSaveCourseRequestDto) {
+    public Long commitSave(
+            String courseUuid,
+            CommitSaveCourseRequestDto commitSaveCourseRequestDto
+    ) {
         Member member = SecurityUtils.getCurrentMember();
 
-        CourseSaveDto dto = redisService.getCourse(member, commitSaveCourseRequestDto.courseUuid());
+        CourseSaveDto dto = redisService.getCourse(member, courseUuid);
         if (dto == null) throw CourseErrorCode.NOT_FOUND_COURSE_METADATA.toException();
 
-        persistService.persist(dto, member, commitSaveCourseRequestDto);
-        redisService.deleteCourse(member, commitSaveCourseRequestDto.courseUuid());
+        Long courseId = persistService.persist(dto, member, commitSaveCourseRequestDto);
+        redisService.deleteCourse(member, courseUuid);
+
+        return courseId;
     }
 
-    private List<PinDirnameDto> createPinDirnames(List<PinSaveDto> pins, String uuid) {
+    private List<PinDirnameDto> createPinDirnames(
+            List<PinSaveDto> pins, String uuid
+    ) {
+
         List<PinDirnameDto> dirs = new ArrayList<>();
         for (int i = 0; i < pins.size(); i++) {
             dirs.add(new PinDirnameDto(i, String.format("/course/%s/pins/%s/images", uuid, UUIDUtils.getUUID())));

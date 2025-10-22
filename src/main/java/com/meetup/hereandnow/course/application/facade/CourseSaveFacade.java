@@ -2,8 +2,9 @@ package com.meetup.hereandnow.course.application.facade;
 
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.application.service.save.CourseSaveService;
-import com.meetup.hereandnow.course.dto.CommitSaveCourseRequestDto;
+import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.response.CommitSaveCourseResponseDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
@@ -26,11 +27,16 @@ public class CourseSaveFacade {
     }
 
     @Transactional
-    public void commitSaveCourse(CommitSaveCourseRequestDto requestDto) {
+    public CommitSaveCourseResponseDto commitSaveCourse(
+            String courseUuid,
+            CommitSaveCourseRequestDto requestDto
+    ) {
         validateImagesExist(requestDto);
         validatePinImagesExist(requestDto.pinImageObjectKeyList());
 
-        courseSaveService.commitSave(requestDto);
+        Long savedCourseId = courseSaveService.commitSave(courseUuid, requestDto);
+
+        return CommitSaveCourseResponseDto.of(savedCourseId);
     }
 
     private void validateImagesExist(CommitSaveCourseRequestDto requestDto) {

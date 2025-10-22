@@ -1,12 +1,10 @@
-package com.meetup.hereandnow.course.dto;
+package com.meetup.hereandnow.course.dto.request;
 
 import java.util.List;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CommitSaveCourseRequestDto(
-        @Schema(description = "임시로 받은 UUID", example = "8c442ee0")
-        String courseUuid,
 
         @Schema(description = "코스 이미지 objectKey", example = "/course/{courseUuid}/image/0o1cee2.jpg")
         String courseImageObjectKey,

@@ -9,7 +9,7 @@ public record PinImageObjectKeyDto(
 
         @Schema(
                 description = "핀 이미지 ObjectKey 리스트 (순서대로)",
-                example = "/course/{courseUUID}/pins/{pinUUID}/images/01de32c9.jpg"
+                example = "[\"/course/{courseUUID}/pins/{pinUUID}/images/01de32c9.jpg\"]"
         )
         List<String> objectKeyList
 ) {

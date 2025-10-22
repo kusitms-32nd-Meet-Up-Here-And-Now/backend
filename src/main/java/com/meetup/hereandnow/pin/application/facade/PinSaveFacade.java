@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.pin.application.facade;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.CommitSaveCourseRequestDto;
+import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.pin.application.service.save.PinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.PinSaveService;
 import com.meetup.hereandnow.pin.application.service.save.PinTagSaveService;
