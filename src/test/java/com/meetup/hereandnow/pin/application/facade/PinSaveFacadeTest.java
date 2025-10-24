@@ -81,17 +81,17 @@ class PinSaveFacadeTest {
         PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
 
         Pin savedPin = Pin.builder().id(10L).build();
-        when(pinSaveService.savePins(List.of(pinDto), dummyCourse, Map.of("place|37.0|127.0", dummyPlace)))
+        when(pinSaveService.savePins(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace)))
                 .thenReturn(List.of(savedPin));
 
         PinImageObjectKeyDto imageDto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY));
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(null, List.of(imageDto));
 
         // when
-        pinSaveFacade.savePinEntityToTable(List.of(pinDto), dummyCourse, Map.of("place|37.0|127.0", dummyPlace), commitDto);
+        pinSaveFacade.savePinEntityToTable(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace), commitDto);
 
         // then
-        verify(pinSaveService).savePins(List.of(pinDto), dummyCourse, Map.of("place|37.0|127.0", dummyPlace));
+        verify(pinSaveService).savePins(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace));
         verify(pinTagSaveService).savePinTags(List.of(savedPin), List.of(pinDto));
         verify(pinImageSaveService).savePinImages(List.of(savedPin), List.of(imageDto));
     }

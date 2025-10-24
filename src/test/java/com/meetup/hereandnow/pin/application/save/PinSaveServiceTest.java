@@ -12,6 +12,7 @@ import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.infrastructure.factory.PlaceKeyFactory;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,9 @@ class PinSaveServiceTest {
 
     @Mock
     private PinRepository pinRepository;
+
+    @Mock
+    private PlaceKeyFactory placeKeyFactory;
 
     @InjectMocks
     private PinSaveService pinSaveService;
@@ -81,10 +85,11 @@ class PinSaveServiceTest {
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
         PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
+        Map<String, Place> placeMap = Map.of(TEST_PLACE_NAME + "|" + TEST_LAT + "|" + TEST_LON, dummyPlace);
 
         when(pinRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
-
-        Map<String, Place> placeMap = Map.of("place|37.1|127.1", dummyPlace);
+        when(placeKeyFactory.buildKey(TEST_PLACE_NAME, TEST_LAT, TEST_LON))
+                .thenReturn(TEST_PLACE_NAME + "|" + TEST_LAT + "|" + TEST_LON);
 
         // when
         List<Pin> saved = pinSaveService.savePins(List.of(dto), dummyCourse, placeMap);

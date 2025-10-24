@@ -24,7 +24,7 @@ public interface CourseSaveSwagger {
                     + "코스 저장 방법은 다음과 같습니다.<br>"
                     + "1. /course/save를 호출하여 dirname과 uuid 받아오기<br>"
                     + "2. presigned url을 받아오는 API를 호출하고, 해당 url로 이미지 업로드<br>"
-                    + "3. /course/{courseUuid}/commit를 호출하여 이미지 objerct Key 전달 및 DB 업데이트<br>",
+                    + "3. /course/{courseUuid}/commit를 호출하여 이미지 object Key 전달 및 DB 업데이트<br>",
             operationId = "/course/save"
     )
     @ApiErrorCode({MemberErrorCode.class})

@@ -50,15 +50,15 @@ public class Course extends BaseEntity {
     @Column(name = "course_description", length = 1024)
     private String courseDescription;
 
-    @Column(name = "is_public")
+    @Column(name = "is_public", nullable = false)
     @Builder.Default
     private Boolean isPublic = false;
 
-    @Column(name = "view_count")
+    @Column(name = "view_count", nullable = false)
     @Builder.Default
     private Integer viewCount = 0;
 
-    @Column(name = "scrap_count")
+    @Column(name = "scrap_count", nullable = false)
     @Builder.Default
     private Integer scrapCount = 0;
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 public class PlaceKeyFactory {
 
     public String buildKey(String name, double lat, double lon) {
-        return name + "|" + lat + "|" + lon;
+        String escapeName = name.replace("|", "\\|");
+        return String.format("%s|%.6f|%.6f", escapeName, lat, lon);
     }
 }

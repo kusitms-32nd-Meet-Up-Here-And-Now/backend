@@ -16,6 +16,7 @@ public class CourseTagService {
 
     public void saveTags(List<CourseTagEnum> tagEnums, Course course) {
         List<CourseTag> tags = tagEnums.stream()
+                .distinct()
                 .map(tagEnum -> CourseTag.of(tagEnum, course))
                 .collect(Collectors.toList());
         courseTagRepository.saveAll(tags);

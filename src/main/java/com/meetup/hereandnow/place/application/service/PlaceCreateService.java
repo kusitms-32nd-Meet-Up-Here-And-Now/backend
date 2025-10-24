@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class PlaceCreateService {
 
     private final PlaceRepository placeRepository;
-    private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final GeometryFactory geometryFactory;
 
     public Place createEntity(String name, String address, double lat, double lon) {
         Coordinate coord = new Coordinate(lon, lat);

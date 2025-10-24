@@ -28,6 +28,6 @@ class PlaceKeyFactoryTest {
         String result = placeKeyFactory.buildKey(name, lat, lon);
 
         // then
-        assertThat(result).isEqualTo("테스트 장소|37.5|127.123");
+        assertThat(result).isEqualTo("테스트 장소|37.500000|127.123000");
     }
 }

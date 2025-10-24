@@ -23,7 +23,7 @@ public class UUIDUtils {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 4; i++) {
-            sb.append(String.format("%02x", hashBytes[i]));
+            sb.append(String.format("%02x", hashBytes[i] & 0xFF));
         }
 
         return sb.toString();
