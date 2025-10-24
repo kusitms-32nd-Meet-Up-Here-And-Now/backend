@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.course.presentation;
+package com.meetup.hereandnow.course.presentation.controller;
 
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.course.application.facade.CourseSaveFacade;
@@ -6,6 +6,7 @@ import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.response.CommitSaveCourseResponseDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
+import com.meetup.hereandnow.course.presentation.swagger.CourseSaveSwagger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/courses")
+@RequestMapping("/course")
 @RequiredArgsConstructor
-public class CourseSaveController {
+public class CourseSaveController implements CourseSaveSwagger {
 
     private final CourseSaveFacade courseSaveFacade;
 
+    @Override
     @PostMapping("/save")
     public ResponseEntity<RestResponse<CourseSaveResponseDto>> courseSave(
             @RequestBody CourseSaveDto courseSaveDto
@@ -32,6 +34,7 @@ public class CourseSaveController {
         );
     }
 
+    @Override
     @PostMapping("/{courseUuid}/commit")
     public ResponseEntity<RestResponse<CommitSaveCourseResponseDto>> commitSaveCourse(
             @PathVariable String courseUuid,
