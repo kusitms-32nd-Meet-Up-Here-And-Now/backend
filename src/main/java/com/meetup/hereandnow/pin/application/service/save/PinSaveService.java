@@ -35,13 +35,13 @@ public class PinSaveService {
             Place place = placeMap.get(key);
 
             if (place == null) {
-                throw PinErrorCode.NOT_FOUND_PIN_IMAGE.toException();
+                throw PinErrorCode.NOT_FOUND_PLACE.toException();
             }
 
             Pin pin = Pin.builder()
                     .pinTitle(dto.pinTitle())
                     .pinDescription(dto.pinDescription())
-                    .pinRating(BigDecimal.valueOf(4.5))
+                    .pinRating(BigDecimal.valueOf(dto.pinRating()))
                     .course(course)
                     .place(place)
                     .build();
