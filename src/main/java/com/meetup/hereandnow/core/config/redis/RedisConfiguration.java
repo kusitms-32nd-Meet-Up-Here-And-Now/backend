@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -23,26 +22,20 @@ public class RedisConfiguration {
     @Value("${spring.data.redis.port}")
     private int port;
 
+    @Value("${spring.data.redis.username}")
+    private String username;
+
     @Value("${spring.data.redis.password}")
     private String password;
 
-    @Value("${spring.data.redis.database}")
-    private int database;
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(port);
+        config.setUsername(username);
         config.setPassword(password);
-        config.setDatabase(database);
-
-        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-                .useSsl()
-                .build();
-
-        return new LettuceConnectionFactory(config, clientConfig);
+        return new LettuceConnectionFactory(config);
     }
 
     @Bean
