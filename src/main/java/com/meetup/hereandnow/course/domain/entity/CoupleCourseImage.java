@@ -34,4 +34,11 @@ public class CoupleCourseImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_course_record_id", nullable = false)
     private CoupleCourseRecord coupleCourseRecord;
+
+    public static CoupleCourseImage of(String coupleCourseImageUrl, CoupleCourseRecord coupleCourseRecord) {
+        return CoupleCourseImage.builder()
+                .coupleCourseImageUrl(coupleCourseImageUrl)
+                .coupleCourseRecord(coupleCourseRecord)
+                .build();
+    }
 }

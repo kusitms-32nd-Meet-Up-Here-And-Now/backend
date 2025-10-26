@@ -90,8 +90,7 @@ class CouplePinImageSaveServiceTest {
     @Test
     void shouldHandleIndexMismatchSafely() {
         // given
-        CouplePinRecord record1 = CouplePinRecord.builder().id(1L).build();
-        List<CouplePinRecord> records = List.of(record1);
+        List<CouplePinRecord> records = List.of(couplePinRecord1, couplePinRecord2);
 
         List<PinImageObjectKeyDto> dtoList = List.of(
                 new PinImageObjectKeyDto(0, List.of(), null),

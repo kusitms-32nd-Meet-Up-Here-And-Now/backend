@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -52,6 +53,7 @@ public class CoupleCourseRecord extends BaseEntity {
             mappedBy = "coupleCourseRecord", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true
     )
+    @Builder.Default
     private List<CoupleCourseImage> coupleCourseImages = new ArrayList<>();
 
     public void addCoupleCourseImage(CoupleCourseImage coupleCourseImage) {

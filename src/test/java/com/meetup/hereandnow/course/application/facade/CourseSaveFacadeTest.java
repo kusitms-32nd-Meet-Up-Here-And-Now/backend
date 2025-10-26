@@ -66,8 +66,11 @@ class CourseSaveFacadeTest {
 
         // given
         PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(TEST_COURSE_IMAGE_OBJECT_KEY,
-                List.of(pinDto));
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
+                TEST_COURSE_IMAGE_OBJECT_KEY,
+                null,
+                List.of(pinDto)
+        );
 
         given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).willReturn(true);
@@ -85,7 +88,9 @@ class CourseSaveFacadeTest {
     void fail_course_image_not_found() {
 
         // given
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(TEST_COURSE_IMAGE_OBJECT_KEY, List.of());
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
+                TEST_COURSE_IMAGE_OBJECT_KEY, null, List.of()
+        );
 
         given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(false);
 
@@ -101,8 +106,11 @@ class CourseSaveFacadeTest {
 
         // when
         PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(TEST_COURSE_IMAGE_OBJECT_KEY,
-                List.of(pinDto));
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
+                TEST_COURSE_IMAGE_OBJECT_KEY,
+                null,
+                List.of(pinDto)
+        );
 
         given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).willReturn(false);

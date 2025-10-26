@@ -88,7 +88,7 @@ class PinSaveFacadeTest {
                 .thenReturn(List.of(savedPin));
 
         PinImageObjectKeyDto imageDto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY), null);
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(null, List.of(imageDto));
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(null, null, List.of(imageDto));
 
         // when
         pinSaveFacade.savePinEntityToTable(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace), commitDto);

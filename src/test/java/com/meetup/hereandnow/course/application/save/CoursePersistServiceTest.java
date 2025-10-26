@@ -82,7 +82,11 @@ class CoursePersistServiceTest {
                 TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
                 Boolean.TRUE, List.of(CourseTagEnum.COZY), null, List.of(pinDto)
         );
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto("/course/uuid/image.jpg", List.of());
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
+                "/course/uuid/image.jpg",
+                null,
+                List.of()
+        );
 
         when(placeSaveFacade.findOrCreatePlaces(courseSaveDto.pinList())).thenReturn(
                 Map.of("place|37.1|127.1", Place.builder().id(1L).build()));

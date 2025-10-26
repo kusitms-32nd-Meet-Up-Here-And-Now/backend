@@ -57,6 +57,7 @@ public class Pin extends BaseEntity {
             mappedBy = "pin", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true
     )
+    @Builder.Default
     private List<PinImage> pinImages = new ArrayList<>();
 
     public void addPinImage(PinImage pinImage) {
