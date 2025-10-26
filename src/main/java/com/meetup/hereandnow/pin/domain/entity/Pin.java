@@ -8,6 +8,8 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,4 +52,14 @@ public class Pin extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
+
+    @OneToMany(
+            mappedBy = "pin", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true
+    )
+    private List<PinImage> pinImages = new ArrayList<>();
+
+    public void addPinImage(PinImage pinImage) {
+        this.pinImages.add(pinImage);
+    }
 }

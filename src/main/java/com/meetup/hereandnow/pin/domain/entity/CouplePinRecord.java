@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -52,5 +53,10 @@ public class CouplePinRecord extends BaseEntity {
             mappedBy = "couplePinRecord", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true
     )
+    @Builder.Default
     private List<CouplePinImage> couplePinImages = new ArrayList<>();
+
+    public void addCouplePinImage(CouplePinImage couplePinImage) {
+        this.couplePinImages.add(couplePinImage);
+    }
 }

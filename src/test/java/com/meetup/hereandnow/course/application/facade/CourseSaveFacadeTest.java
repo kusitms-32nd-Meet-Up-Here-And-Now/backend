@@ -47,8 +47,8 @@ class CourseSaveFacadeTest {
     void success_course_metadata_to_redis() {
 
         // given
-        CourseSaveDto dto = new CourseSaveDto(TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC, true, List.of(),
-                List.of());
+        CourseSaveDto dto = new CourseSaveDto(TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
+                true, List.of(), null, List.of());
         CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, TEST_COURSE_DIRNAME, List.of());
         given(courseSaveService.saveCourseToRedis(dto)).willReturn(responseDto);
 
@@ -65,7 +65,7 @@ class CourseSaveFacadeTest {
     void success_save_course_exists_image() {
 
         // given
-        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY));
+        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(TEST_COURSE_IMAGE_OBJECT_KEY,
                 List.of(pinDto));
 
@@ -100,7 +100,7 @@ class CourseSaveFacadeTest {
     void fail_pin_image_not_found() {
 
         // when
-        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY));
+        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(TEST_COURSE_IMAGE_OBJECT_KEY,
                 List.of(pinDto));
 

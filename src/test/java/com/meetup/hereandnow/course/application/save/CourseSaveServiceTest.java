@@ -80,10 +80,13 @@ class CourseSaveServiceTest {
         uuidUtilsMock.when(UUIDUtils::getUUID).thenReturn(FIXED_UUID);
 
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
+        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                List.of(), null, placeDto
+        );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC, Boolean.TRUE, List.of(), List.of(pinDto)
+                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
+                Boolean.TRUE, List.of(), null, List.of(pinDto)
         );
 
         // when

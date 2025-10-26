@@ -34,4 +34,11 @@ public class CouplePinImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_pin_record_id", nullable = false)
     private CouplePinRecord couplePinRecord;
+
+    public static CouplePinImage of(String objectKey, CouplePinRecord couplePinRecord) {
+        return CouplePinImage.builder()
+                .couplePinImageUrl(objectKey)
+                .couplePinRecord(couplePinRecord)
+                .build();
+    }
 }

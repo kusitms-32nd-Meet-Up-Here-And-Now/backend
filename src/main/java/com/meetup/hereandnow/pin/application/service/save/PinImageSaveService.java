@@ -28,7 +28,11 @@ public class PinImageSaveService {
                     }
 
                     return objectKeys.stream()
-                            .map(objectKey -> PinImage.of(objectKey, savedPin));
+                            .map(objectKey -> {
+                                PinImage pinImage = PinImage.of(objectKey, savedPin);
+                                savedPin.addPinImage(pinImage);
+                                return pinImage;
+                            });
                 })
                 .flatMap(Function.identity())
                 .toList();

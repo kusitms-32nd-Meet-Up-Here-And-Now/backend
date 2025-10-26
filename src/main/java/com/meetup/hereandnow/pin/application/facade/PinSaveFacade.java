@@ -2,6 +2,7 @@ package com.meetup.hereandnow.pin.application.facade;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
+import com.meetup.hereandnow.pin.application.service.save.CouplePinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.PinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.PinSaveService;
 import com.meetup.hereandnow.pin.application.service.save.PinTagSaveService;
@@ -20,6 +21,7 @@ public class PinSaveFacade {
     private final PinSaveService pinSaveService;
     private final PinTagSaveService pinTagSaveService;
     private final PinImageSaveService pinImageSaveService;
+    private final CouplePinImageSaveService couplePinImageSaveService;
 
     public void savePinEntityToTable(
             List<PinSaveDto> pinSaveDtos,
@@ -32,5 +34,7 @@ public class PinSaveFacade {
         pinTagSaveService.savePinTags(savedPins, pinSaveDtos);
 
         pinImageSaveService.savePinImages(savedPins, commitSaveCourseRequestDto.pinImageObjectKeyList());
+
+
     }
 }

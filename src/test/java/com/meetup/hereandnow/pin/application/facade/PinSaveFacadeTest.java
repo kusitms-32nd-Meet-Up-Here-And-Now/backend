@@ -78,13 +78,16 @@ class PinSaveFacadeTest {
 
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
+        PinSaveDto pinDto = new PinSaveDto(
+                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                List.of(), null ,placeDto
+        );
 
         Pin savedPin = Pin.builder().id(10L).build();
         when(pinSaveService.savePins(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace)))
                 .thenReturn(List.of(savedPin));
 
-        PinImageObjectKeyDto imageDto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY));
+        PinImageObjectKeyDto imageDto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY), null);
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(null, List.of(imageDto));
 
         // when
