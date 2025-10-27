@@ -22,15 +22,14 @@ public class CouplePinImageSaveService {
             List<CouplePinRecord> couplePinRecords,
             List<PinImageObjectKeyDto> pinImageObjectKeyDtoList
     ) {
-        List<PinImageObjectKeyDto> nonNullDtos = pinImageObjectKeyDtoList.stream()
-                .filter(dto -> dto.coupleImageObjectKeyList() != null && !dto.coupleImageObjectKeyList().isEmpty())
-                .toList();
-
-        List<CouplePinImage> couplePinImages = IntStream.range(0, nonNullDtos.size())
+        List<CouplePinImage> couplePinImages = IntStream.range(0, couplePinRecords.size())
                 .mapToObj(i -> {
-                    List<String> objectKeys = nonNullDtos.get(i).coupleImageObjectKeyList();
+                    List<String> objectKeys = pinImageObjectKeyDtoList.get(i).coupleImageObjectKeyList();
                     CouplePinRecord couplePinRecord = couplePinRecords.get(i);
 
+                    if (objectKeys == null || objectKeys.isEmpty()) {
+                        return Stream.<CouplePinImage>empty();
+                    }
 
                     return objectKeys.stream()
                             .map(objectKey -> {
