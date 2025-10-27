@@ -33,7 +33,7 @@ public class CourseSaveService {
         Member member = SecurityUtils.getCurrentMember();
 
         String courseUUID = UUIDUtils.getUUID();
-        String courseDirname = String.format("/course/%s/image", courseUUID);
+        String courseDirname = String.format("course/%s/image", courseUUID);
 
         List<PinDirnameDto> pinDirs = createPinDirnames(courseSaveDto.pinList(), courseUUID);
         courseRedisService.saveCourse(member, courseUUID, courseSaveDto);
@@ -68,7 +68,7 @@ public class CourseSaveService {
 
         List<PinDirnameDto> dirs = new ArrayList<>();
         for (int i = 0; i < pins.size(); i++) {
-            dirs.add(new PinDirnameDto(i, String.format("/course/%s/pins/%s/images", uuid, UUIDUtils.getUUID())));
+            dirs.add(new PinDirnameDto(i, String.format("course/%s/pins/%s/images", uuid, UUIDUtils.getUUID())));
         }
         return dirs;
     }
