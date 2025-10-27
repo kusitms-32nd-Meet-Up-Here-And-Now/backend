@@ -33,7 +33,7 @@ public class CourseSaveFacade {
             CommitSaveCourseRequestDto requestDto
     ) {
         validateImagesExist(requestDto);
-        validatePinImagesExist(requestDto.pinImageObjectKeyList(), requestDto.coupleCourseImageObjectKeyList());
+        validatePinImagesExist(requestDto.pinImageObjectKeyList());
 
         Long savedCourseId = courseSaveService.commitSave(courseUuid, requestDto);
 
@@ -45,33 +45,45 @@ public class CourseSaveFacade {
             throw CourseErrorCode.NOT_FOUND_COURSE_IMAGE.toException();
         }
 
-        if(requestDto.coupleCourseImageObjectKeyList() != null) {
+        if (requestDto.coupleCourseImageObjectKeyList() != null) {
             validateCoupleCourseImage(requestDto.coupleCourseImageObjectKeyList());
         }
-    }
-
-    private void validatePinImagesExist(List<PinImageObjectKeyDto> pinImageObjectKeyDtoList, List<String> coupleImageObjectKeyList) {
-        Stream<String> pinImageKeys = pinImageObjectKeyDtoList.stream()
-                .map(PinImageObjectKeyDto::objectKeyList)
-                .flatMap(Collection::stream);
-
-        Stream<String> coupleImageKeys = coupleImageObjectKeyList != null ? coupleImageObjectKeyList.stream() : Stream.empty();
-
-        Stream.concat(pinImageKeys, coupleImageKeys)
-                .parallel()
-                .forEach(key -> {
-                    if (!objectStorageService.exists(key)) {
-                        throw PinErrorCode.NOT_FOUND_COUPLE_PIN_IMAGE.toException();
-                    }
-                });
     }
 
     private void validateCoupleCourseImage(List<String> coupleCourseImageObjectKeyList) {
         coupleCourseImageObjectKeyList.stream()
                 .parallel()
                 .forEach(key -> {
-                    if(!objectStorageService.exists(key)){
-                        throw CourseErrorCode.NOT_FOUND_COURSE_IMAGE.toException();
+                    if (!objectStorageService.exists(key)) {
+                        throw CourseErrorCode.NOT_FOUND_COUPLE_COURSE_IMAGE.toException();
+                    }
+                });
+    }
+
+    private void validatePinImagesExist(List<PinImageObjectKeyDto> pinImageObjectKeyDtoList) {
+        List<String> objectKeyList = pinImageObjectKeyDtoList.stream()
+                .map(PinImageObjectKeyDto::objectKeyList)
+                .flatMap(List::stream)
+                .toList();
+
+        objectKeyList.stream()
+                .parallel()
+                .forEach(key -> {
+                    if (!objectStorageService.exists(key)) {
+                        throw PinErrorCode.NOT_FOUND_COUPLE_PIN_IMAGE.toException();
+                    }
+                });
+
+        List<String> couplePinImageObjectKeyList = pinImageObjectKeyDtoList.stream()
+                .map(PinImageObjectKeyDto::coupleImageObjectKeyList)
+                .flatMap(List::stream)
+                .toList();
+
+        couplePinImageObjectKeyList.stream()
+                .parallel()
+                .forEach(key -> {
+                    if (!objectStorageService.exists(key)) {
+                        throw PinErrorCode.NOT_FOUND_COUPLE_PIN_IMAGE.toException();
                     }
                 });
     }
