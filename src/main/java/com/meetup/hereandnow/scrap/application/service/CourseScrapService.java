@@ -29,6 +29,13 @@ public class CourseScrapService {
     public ScrapResponseDto scrap(Member member, Long courseId) {
         Course course = courseRepository.findByIdWithLock(courseId)
                 .orElseThrow(ScrapErrorCode.COURSE_NOT_FOUND::toException);
+
+        Optional<CourseScrap> existingScrap =
+                courseScrapRepository.findByMemberIdAndCourseId(member.getId(), courseId);
+        if (existingScrap.isPresent()) {
+            return ScrapResponseDto.from(existingScrap.get());
+        }
+
         CourseScrap scrap = CourseScrap.builder()
                 .member(member)
                 .course(course)

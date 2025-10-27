@@ -29,6 +29,12 @@ public class PlaceScrapService {
     public ScrapResponseDto scrap(Member member, Long placeId) {
         Optional<Place> place = placeRepository.findById(placeId);
         if (place.isPresent()) {
+            Optional<PlaceScrap> existingScrap =
+                    placeScrapRepository.findByMemberIdAndPlaceId(member.getId(), placeId);
+            if (existingScrap.isPresent()) {
+                return ScrapResponseDto.from(existingScrap.get());
+            }
+
             PlaceScrap scrap = PlaceScrap.builder()
                     .member(member)
                     .place(place.get())
