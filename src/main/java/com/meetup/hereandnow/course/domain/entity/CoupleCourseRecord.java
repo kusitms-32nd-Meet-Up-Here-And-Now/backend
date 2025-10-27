@@ -42,7 +42,7 @@ public class CoupleCourseRecord extends BaseEntity {
     private String descriptionByBoyfriend;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false, unique = true)
     private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)

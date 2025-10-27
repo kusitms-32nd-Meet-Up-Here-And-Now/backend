@@ -61,7 +61,7 @@ public class CourseSaveFacade {
                 .parallel()
                 .forEach(key -> {
                     if (!objectStorageService.exists(key)) {
-                        throw PinErrorCode.NOT_FOUND_PIN_IMAGE.toException();
+                        throw PinErrorCode.NOT_FOUND_COUPLE_PIN_IMAGE.toException();
                     }
                 });
     }

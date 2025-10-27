@@ -42,7 +42,7 @@ public class CouplePinRecord extends BaseEntity {
     private String descriptionByBoyfriend;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pin_id", nullable = false)
+    @JoinColumn(name = "pin_id", nullable = false, unique = true)
     private Pin pin;
 
     @ManyToOne(fetch = FetchType.LAZY)
