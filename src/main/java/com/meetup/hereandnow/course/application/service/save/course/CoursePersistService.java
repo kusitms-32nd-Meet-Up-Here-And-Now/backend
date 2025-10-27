@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.course.application.service.save;
+package com.meetup.hereandnow.course.application.service.save.course;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
@@ -22,7 +22,7 @@ public class CoursePersistService {
     private final PlaceSaveFacade placeSaveFacade;
     private final PinSaveFacade pinSaveFacade;
 
-    public Long persist(CourseSaveDto dto, Member member, CommitSaveCourseRequestDto commitSaveCourseRequestDto) {
+    public Course persist(CourseSaveDto dto, Member member, CommitSaveCourseRequestDto commitSaveCourseRequestDto) {
         Course course = CourseMapper.toEntity(dto, member, commitSaveCourseRequestDto.courseImageObjectKey());
         courseRepository.save(course);
 
@@ -30,8 +30,9 @@ public class CoursePersistService {
 
         Map<String, Place> placeMap = placeSaveFacade.findOrCreatePlaces(dto.pinList());
         pinSaveFacade.savePinEntityToTable(
-                dto.pinList(), course, placeMap, commitSaveCourseRequestDto);
+                dto.pinList(), course, placeMap, commitSaveCourseRequestDto
+        );
 
-        return course.getId();
+        return course;
     }
 }

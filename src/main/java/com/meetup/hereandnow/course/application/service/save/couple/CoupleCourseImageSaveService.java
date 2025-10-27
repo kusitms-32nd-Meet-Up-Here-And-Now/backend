@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.course.application.service.save;
+package com.meetup.hereandnow.course.application.service.save.couple;
 
 import com.meetup.hereandnow.course.domain.entity.CoupleCourseImage;
 import com.meetup.hereandnow.course.domain.entity.CoupleCourseRecord;

@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.course.application.service.save;
+package com.meetup.hereandnow.course.application.service.save.couple;
 
 import com.meetup.hereandnow.course.domain.entity.CoupleCourseRecord;
 import com.meetup.hereandnow.course.domain.entity.Course;
@@ -14,7 +14,7 @@ public class CoupleCourseRecordSaveService {
 
     private final CoupleCourseRecordRepository coupleCourseRecordRepository;
 
-    public CoupleCourseRecord coupleCourseRecords(
+    public CoupleCourseRecord saveCoupleCourseRecords(
             CoupleCourseRecordSaveRequestDto coupleCourseRecordSaveRequestDto,
             Course course,
             Couple couple

@@ -1,7 +1,9 @@
-package com.meetup.hereandnow.course.application.service.save;
+package com.meetup.hereandnow.course.application.service.save.course;
 
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
+import com.meetup.hereandnow.course.application.service.save.couple.CoupleCoursePersistService;
+import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
@@ -20,8 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseSaveService {
 
-    private final CourseRedisService redisService;
-    private final CoursePersistService persistService;
+    private final CourseRedisService courseRedisService;
+    private final CoursePersistService coursePersistService;
+    private final CoupleCoursePersistService coupleCoursePersistService;
 
     public CourseSaveResponseDto saveCourseToRedis(
             CourseSaveDto courseSaveDto
@@ -33,7 +36,7 @@ public class CourseSaveService {
         String courseDirname = String.format("/course/%s/image", courseUUID);
 
         List<PinDirnameDto> pinDirs = createPinDirnames(courseSaveDto.pinList(), courseUUID);
-        redisService.saveCourse(member, courseUUID, courseSaveDto);
+        courseRedisService.saveCourse(member, courseUUID, courseSaveDto);
 
         return new CourseSaveResponseDto(courseUUID, courseDirname, pinDirs);
     }
@@ -45,13 +48,18 @@ public class CourseSaveService {
     ) {
         Member member = SecurityUtils.getCurrentMember();
 
-        CourseSaveDto dto = redisService.getCourse(member, courseUuid);
-        if (dto == null) throw CourseErrorCode.NOT_FOUND_COURSE_METADATA.toException();
+        CourseSaveDto dto = courseRedisService.getCourse(member, courseUuid);
+        if (dto == null) {
+            throw CourseErrorCode.NOT_FOUND_COURSE_METADATA.toException();
+        }
 
-        Long courseId = persistService.persist(dto, member, commitSaveCourseRequestDto);
-        redisService.deleteCourse(member, courseUuid);
+        Course course = coursePersistService.persist(dto, member, commitSaveCourseRequestDto);
 
-        return courseId;
+        coupleCoursePersistService.coupleCourseSavePersist(dto, member, course, commitSaveCourseRequestDto);
+
+        courseRedisService.deleteCourse(member, courseUuid);
+
+        return course.getId();
     }
 
     private List<PinDirnameDto> createPinDirnames(

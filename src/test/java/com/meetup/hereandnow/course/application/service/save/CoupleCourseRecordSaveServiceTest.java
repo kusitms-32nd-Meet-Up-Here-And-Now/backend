@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.application.service.save;
 
+import com.meetup.hereandnow.course.application.service.save.couple.CoupleCourseRecordSaveService;
 import com.meetup.hereandnow.course.domain.entity.CoupleCourseRecord;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
@@ -52,7 +53,7 @@ class CoupleCourseRecordSaveServiceTest {
         given(coupleCourseRecordRepository.save(any(CoupleCourseRecord.class))).willReturn(savedRecord);
 
         // when
-        CoupleCourseRecord result = coupleCourseRecordSaveService.coupleCourseRecords(dto, course, couple);
+        CoupleCourseRecord result = coupleCourseRecordSaveService.saveCoupleCourseRecords(dto, course, couple);
 
         // then
         assertThat(result.getDescriptionByBoyfriend()).isEqualTo("남자친구 설명");
@@ -65,7 +66,7 @@ class CoupleCourseRecordSaveServiceTest {
     @DisplayName("dto가 null인 경우 저장이 이뤄지지 않는다")
     void success_not_save_dto_is_null() {
         // when
-        CoupleCourseRecord result = coupleCourseRecordSaveService.coupleCourseRecords(null, course, couple);
+        CoupleCourseRecord result = coupleCourseRecordSaveService.saveCoupleCourseRecords(null, course, couple);
 
         // then
         assertThat(result).isNull();

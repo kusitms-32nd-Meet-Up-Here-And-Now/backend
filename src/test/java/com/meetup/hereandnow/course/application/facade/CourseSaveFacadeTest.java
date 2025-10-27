@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
-import com.meetup.hereandnow.course.application.service.save.CourseSaveService;
+import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;

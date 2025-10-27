@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.application.service.save;
 
+import com.meetup.hereandnow.course.application.service.save.couple.CoupleCourseImageSaveService;
 import com.meetup.hereandnow.course.domain.entity.CoupleCourseRecord;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.infrastructure.repository.CoupleCourseImageRepository;
