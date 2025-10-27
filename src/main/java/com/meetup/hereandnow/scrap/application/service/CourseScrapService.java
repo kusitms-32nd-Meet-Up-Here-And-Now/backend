@@ -9,7 +9,6 @@ import com.meetup.hereandnow.scrap.exception.ScrapErrorCode;
 import com.meetup.hereandnow.scrap.repository.CourseScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,12 +19,10 @@ public class CourseScrapService {
     private final CourseScrapRepository courseScrapRepository;
     private final CourseRepository courseRepository;
 
-    @Transactional
     public Optional<CourseScrap> findOptional(Member member, Long courseId) {
         return courseScrapRepository.findByMemberIdAndCourseId(member.getId(), courseId);
     }
 
-    @Transactional
     public ScrapResponseDto scrap(Member member, Long courseId) {
         Course course = courseRepository.findByIdWithLock(courseId)
                 .orElseThrow(ScrapErrorCode.COURSE_NOT_FOUND::toException);
@@ -45,7 +42,6 @@ public class CourseScrapService {
         return ScrapResponseDto.from(scrap);
     }
 
-    @Transactional
     public ScrapResponseDto deleteScrap(CourseScrap courseScrap) {
         Course course = courseRepository.findByIdWithLock(courseScrap.getCourse().getId())
                 .orElseThrow(ScrapErrorCode.COURSE_NOT_FOUND::toException);

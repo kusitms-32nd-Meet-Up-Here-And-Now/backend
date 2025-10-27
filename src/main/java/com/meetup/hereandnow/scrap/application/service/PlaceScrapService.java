@@ -9,7 +9,6 @@ import com.meetup.hereandnow.scrap.exception.ScrapErrorCode;
 import com.meetup.hereandnow.scrap.repository.PlaceScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,12 +19,10 @@ public class PlaceScrapService {
     private final PlaceScrapRepository placeScrapRepository;
     private final PlaceRepository placeRepository;
 
-    @Transactional
     public Optional<PlaceScrap> findOptional(Member member, Long placeId) {
         return placeScrapRepository.findByMemberIdAndPlaceId(member.getId(), placeId);
     }
 
-    @Transactional
     public ScrapResponseDto scrap(Member member, Long placeId) {
         Optional<Place> place = placeRepository.findById(placeId);
         if (place.isPresent()) {
@@ -46,7 +43,6 @@ public class PlaceScrapService {
         }
     }
 
-    @Transactional
     public ScrapResponseDto deleteScrap(PlaceScrap placeScrap) {
         placeScrapRepository.delete(placeScrap);
         return ScrapResponseDto.from();
