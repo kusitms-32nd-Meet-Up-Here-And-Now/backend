@@ -70,13 +70,13 @@ public class CourseSaveFacade {
                 .parallel()
                 .forEach(key -> {
                     if (!objectStorageService.exists(key)) {
-                        throw PinErrorCode.NOT_FOUND_COUPLE_PIN_IMAGE.toException();
+                        throw PinErrorCode.NOT_FOUND_PIN_IMAGE.toException();
                     }
                 });
 
         List<String> couplePinImageObjectKeyList = pinImageObjectKeyDtoList.stream()
                 .map(PinImageObjectKeyDto::coupleImageObjectKeyList)
-                .flatMap(List::stream)
+                .flatMap(list -> list != null ? list.stream() : Stream.empty())
                 .toList();
 
         couplePinImageObjectKeyList.stream()

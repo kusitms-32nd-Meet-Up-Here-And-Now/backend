@@ -131,7 +131,7 @@ class CourseSaveFacadeTest {
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
                 TEST_COURSE_IMAGE_OBJECT_KEY,
                 List.of(TEST_COUPLE_COURSE_IMAGE_KEY),
-                null
+                List.of()
         );
 
         given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
