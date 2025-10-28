@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.pin.application.save;
+package com.meetup.hereandnow.pin.application.service.save;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.pin.application.service.save.PinSaveService;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
@@ -84,7 +83,7 @@ class PinSaveServiceTest {
 
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
+        PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), null ,placeDto);
         Map<String, Place> placeMap = Map.of(TEST_PLACE_NAME + "|" + TEST_LAT + "|" + TEST_LON, dummyPlace);
 
         when(pinRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));

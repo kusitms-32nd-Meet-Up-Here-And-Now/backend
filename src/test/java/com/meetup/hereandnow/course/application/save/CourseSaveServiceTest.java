@@ -3,9 +3,10 @@ package com.meetup.hereandnow.course.application.save;
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
-import com.meetup.hereandnow.course.application.service.save.CourseSaveService;
-import com.meetup.hereandnow.course.application.service.save.CourseRedisService;
+import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
+import com.meetup.hereandnow.course.application.service.save.course.CourseRedisService;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
@@ -80,17 +81,55 @@ class CourseSaveServiceTest {
         uuidUtilsMock.when(UUIDUtils::getUUID).thenReturn(FIXED_UUID);
 
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
+        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                List.of(), null, placeDto
+        );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC, Boolean.TRUE, List.of(), List.of(pinDto)
+                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
+                Boolean.TRUE, List.of(), null, List.of(pinDto)
         );
 
         // when
         var response = courseSaveService.saveCourseToRedis(courseSaveDto);
 
+        // then
         assertThat(response.courseKey()).isEqualTo(FIXED_UUID);
-        assertThat(response.courseDirname()).isEqualTo("/course/" + FIXED_UUID + "/image");
+        assertThat(response.courseDirname()).isEqualTo("course/" + FIXED_UUID + "/image");
+        assertThat(response.pinDirname()).hasSize(1);
+        PinDirnameDto pinDir = response.pinDirname().getFirst();
+        assertThat(pinDir.pinIdx()).isZero();
+
+        verify(courseRedisService).saveCourse(dummymember, FIXED_UUID, courseSaveDto);
+    }
+
+    @Test
+    @DisplayName("커플 정보가 포함된 코스가 정상적으로 레디스에 저장된다.")
+    void success_save_course_to_redis_with_couple() {
+
+        // given
+        securityUtilsMock.when(SecurityUtils::getCurrentMember).thenReturn(dummymember);
+        uuidUtilsMock.when(UUIDUtils::getUUID).thenReturn(FIXED_UUID);
+
+        PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
+        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                List.of(), null, placeDto
+        );
+
+        CoupleCourseRecordSaveRequestDto coupleDto = new CoupleCourseRecordSaveRequestDto(
+                "여자친구 설명", "남자친구 설명"
+        );
+        CourseSaveDto courseSaveDto = new CourseSaveDto(
+                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
+                Boolean.TRUE, List.of(), coupleDto, List.of(pinDto)
+        );
+
+        // when
+        var response = courseSaveService.saveCourseToRedis(courseSaveDto);
+
+        // then
+        assertThat(response.courseKey()).isEqualTo(FIXED_UUID);
+        assertThat(response.courseDirname()).isEqualTo("course/" + FIXED_UUID + "/image");
         assertThat(response.pinDirname()).hasSize(1);
         PinDirnameDto pinDir = response.pinDirname().getFirst();
         assertThat(pinDir.pinIdx()).isZero();

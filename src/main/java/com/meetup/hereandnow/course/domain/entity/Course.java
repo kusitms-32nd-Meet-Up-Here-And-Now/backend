@@ -2,10 +2,30 @@ package com.meetup.hereandnow.course.domain.entity;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
 import com.meetup.hereandnow.member.domain.Member;
+import com.meetup.hereandnow.pin.domain.entity.Pin;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -54,6 +74,17 @@ public class Course extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToMany(
+            mappedBy = "course", fetch = FetchType.LAZY,
+            orphanRemoval = true, cascade = CascadeType.ALL
+    )
+    @Builder.Default
+    private List<Pin> pinList = new ArrayList<>();
+
+    public void addPin(Pin pin) {
+        this.pinList.add(pin);
+    }
 
     public void incrementScrapCount() {
         this.scrapCount++;

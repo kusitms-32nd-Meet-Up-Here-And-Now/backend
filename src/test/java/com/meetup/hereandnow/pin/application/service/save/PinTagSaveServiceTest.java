@@ -1,10 +1,9 @@
-package com.meetup.hereandnow.pin.application.save;
+package com.meetup.hereandnow.pin.application.service.save;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.meetup.hereandnow.pin.application.service.save.PinTagSaveService;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinTagRepository;
@@ -48,7 +47,10 @@ class PinTagSaveServiceTest {
 
         // given
         List<Pin> pins = List.of(dummyPin);
-        PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), null);
+        PinSaveDto dto = new PinSaveDto(
+                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                List.of(), null, null
+        );
 
         // when
         pinTagSaveService.savePinTags(pins, List.of(dto));
@@ -62,7 +64,10 @@ class PinTagSaveServiceTest {
 
         // given
         List<Pin> pins = List.of(dummyPin);
-        PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, dummyPinTagList, null);
+        PinSaveDto dto = new PinSaveDto(
+                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                dummyPinTagList, null, null
+        );
 
         when(pinTagRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
 

@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.course.dto;
 
 import com.meetup.hereandnow.course.domain.value.CourseTagEnum;
+import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -21,6 +22,8 @@ public record CourseSaveDto(
 
         @Schema(description = "코스 태그 리스트", example = "[\"COZY\",\"EXCITED\"]")
         List<CourseTagEnum> courseTagList,
+
+        CoupleCourseRecordSaveRequestDto coupleCourseRecordSaveRequestDto,
 
         List<PinSaveDto> pinList
 ) {

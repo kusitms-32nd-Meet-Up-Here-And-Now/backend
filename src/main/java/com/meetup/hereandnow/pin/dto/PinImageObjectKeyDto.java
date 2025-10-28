@@ -11,6 +11,12 @@ public record PinImageObjectKeyDto(
                 description = "핀 이미지 ObjectKey 리스트 (순서대로)",
                 example = "[\"/course/{courseUUID}/pins/{pinUUID}/images/01de32c9.jpg\"]"
         )
-        List<String> objectKeyList
+        List<String> objectKeyList,
+
+        @Schema(
+                description = "핀 이미지 (커플 기록) ObjectKey 리스트 (순서대로)",
+                example = "[\"/course/{courseUUID}/pins/{pinUUID}/images/51de32c9.jpg\"]"
+        )
+        List<String> coupleImageObjectKeyList
 ) {
 }
