@@ -19,6 +19,8 @@ public record PinSaveDto(
         @Schema(description = "핀 태그", example = "[\"COZY\",\"EXCITED\"]")
         List<PinTagEnum> pinTags,
 
+        CouplePinSaveRequestDto couplePinSaveRequestDto,
+
         PlaceSaveDto place
 ) {
 }

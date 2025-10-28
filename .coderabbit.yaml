@@ -1,5 +1,9 @@
 language: "ko-KR"
 early_access: false
+
+trigger:
+  on_comment: true
+
 reviews:
   profile: "chill"
   request_changes_workflow: false

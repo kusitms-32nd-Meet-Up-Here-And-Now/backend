@@ -53,6 +53,9 @@ public class PinSaveService {
             return List.of();
         }
 
-        return pinRepository.saveAll(pinsToSave);
+        List<Pin> pinList = pinRepository.saveAll(pinsToSave);
+        pinList.forEach(course::addPin);
+
+        return pinList;
     }
 }

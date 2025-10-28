@@ -1,10 +1,9 @@
-package com.meetup.hereandnow.pin.application.save;
+package com.meetup.hereandnow.pin.application.service.save;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.meetup.hereandnow.pin.application.service.save.PinImageSaveService;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
@@ -46,7 +45,7 @@ class PinImageSaveServiceTest {
 
         // given
         List<Pin> pins = List.of(dummyPin);
-        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of());
+        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(), null);
 
         // when
         pinImageSaveService.savePinImages(pins, List.of(dto));
@@ -61,7 +60,7 @@ class PinImageSaveServiceTest {
 
         // given
         List<Pin> pins = List.of(dummyPin);
-        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY, TEST_OBJECT_KEY2));
+        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY, TEST_OBJECT_KEY2), null);
 
         when(pinImageRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
 

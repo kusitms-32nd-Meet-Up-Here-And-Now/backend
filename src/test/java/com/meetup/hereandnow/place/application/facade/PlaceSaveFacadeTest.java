@@ -46,8 +46,8 @@ class PlaceSaveFacadeTest {
         // given
         PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", 37.123, 127.123);
         PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", 37.456, 127.456);
-        PinSaveDto pinSaveDto1 = new PinSaveDto("핀 제목 1", 4.5, "핀 설명 1", List.of(PinTagEnum.COZY), placeDto1);
-        PinSaveDto pinSaveDto2 = new PinSaveDto("핀 제목 2", 4.5, "핀 설명 2", List.of(PinTagEnum.EXCITED), placeDto2);
+        PinSaveDto pinSaveDto1 = new PinSaveDto("핀 제목 1", 4.5, "핀 설명 1", List.of(PinTagEnum.COZY), null, placeDto1);
+        PinSaveDto pinSaveDto2 = new PinSaveDto("핀 제목 2", 4.5, "핀 설명 2", List.of(PinTagEnum.EXCITED), null, placeDto2);
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto1, pinSaveDto2);
 
         Point point1 = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
@@ -58,7 +58,8 @@ class PlaceSaveFacadeTest {
 
         given(placeKeyFactory.buildKey("placeName1", 37.123, 127.123)).willReturn("key1");
         given(placeKeyFactory.buildKey("placeName2", 37.456, 127.456)).willReturn("key2");
-        given(placeFindService.findByNameAndCoordinates(anyString(), anyDouble(), anyDouble())).willReturn(Optional.empty());
+        given(placeFindService.findByNameAndCoordinates(anyString(), anyDouble(), anyDouble())).willReturn(
+                Optional.empty());
         given(placeCreateService.createEntity("placeName1", "address1", 37.123, 127.123)).willReturn(newPlace1);
         given(placeCreateService.createEntity("placeName2", "address2", 37.456, 127.456)).willReturn(newPlace2);
         given(placeCreateService.saveAll(placesToSave)).willReturn(placesToSave);
@@ -78,13 +79,14 @@ class PlaceSaveFacadeTest {
     void success_return_existing_place() {
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto("placeName", "address", 37.123, 127.123);
-        PinSaveDto pinSaveDto = new PinSaveDto("핀 제목 1", 4.5, "핀 설명 1", List.of(PinTagEnum.COZY), placeDto);
+        PinSaveDto pinSaveDto = new PinSaveDto("핀 제목 1", 4.5, "핀 설명 1", List.of(PinTagEnum.COZY), null, placeDto);
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto);
         Point point = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
         Place existingPlace = Place.builder().placeName("placeName").placeAddress("address").location(point).build();
 
         given(placeKeyFactory.buildKey("placeName", 37.123, 127.123)).willReturn("key1");
-        given(placeFindService.findByNameAndCoordinates("placeName", 37.123, 127.123)).willReturn(Optional.of(existingPlace));
+        given(placeFindService.findByNameAndCoordinates("placeName", 37.123, 127.123)).willReturn(
+                Optional.of(existingPlace));
 
         // when
         Map<String, Place> result = placeSaveFacade.findOrCreatePlaces(pinSaveDtos);

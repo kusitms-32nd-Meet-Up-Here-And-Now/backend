@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.course.application.save;
 
-import com.meetup.hereandnow.course.application.service.save.CoursePersistService;
-import com.meetup.hereandnow.course.application.service.save.CourseTagService;
+import com.meetup.hereandnow.course.application.service.save.course.CoursePersistService;
+import com.meetup.hereandnow.course.application.service.save.course.CourseTagService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
@@ -73,13 +73,20 @@ class CoursePersistServiceTest {
 
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), placeDto);
+        PinSaveDto pinDto = new PinSaveDto(
+                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
+                List.of(), null, placeDto
+        );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC, Boolean.TRUE, List.of(CourseTagEnum.COZY),
-                List.of(pinDto)
+                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
+                Boolean.TRUE, List.of(CourseTagEnum.COZY), null, List.of(pinDto)
         );
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto("/course/uuid/image.jpg", List.of());
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
+                "/course/uuid/image.jpg",
+                null,
+                List.of()
+        );
 
         when(placeSaveFacade.findOrCreatePlaces(courseSaveDto.pinList())).thenReturn(
                 Map.of("place|37.1|127.1", Place.builder().id(1L).build()));
