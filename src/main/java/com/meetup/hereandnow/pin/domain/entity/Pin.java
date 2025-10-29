@@ -7,15 +7,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
@@ -57,6 +55,7 @@ public class Pin extends BaseEntity {
             mappedBy = "pin", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true
     )
+    @BatchSize(size = 100)
     @Builder.Default
     private List<PinImage> pinImages = new ArrayList<>();
 
