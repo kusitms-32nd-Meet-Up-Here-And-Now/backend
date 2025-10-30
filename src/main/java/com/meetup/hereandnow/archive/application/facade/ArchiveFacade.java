@@ -1,7 +1,9 @@
 package com.meetup.hereandnow.archive.application.facade;
 
 import com.meetup.hereandnow.archive.application.service.ArchiveCourseService;
+import com.meetup.hereandnow.archive.application.service.ArchivePlaceService;
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
+import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 public class ArchiveFacade {
 
     private final ArchiveCourseService archiveCourseService;
+    private final ArchivePlaceService archivePlaceService;
 
     @Transactional(readOnly = true)
     public List<CourseCardDto> getMyScrappedCourses(int page, int size) {
@@ -29,5 +32,12 @@ public class ArchiveFacade {
         Member member = SecurityUtils.getCurrentMember();
         PageRequest pageRequest = PageRequest.of(page, size);
         return archiveCourseService.getMyCreatedCourses(member, pageRequest);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceCardDto> getMyScrappedPlaces(int page, int size) {
+        Member member = SecurityUtils.getCurrentMember();
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return archivePlaceService.getMyScrappedPlaces(member, pageRequest);
     }
 }

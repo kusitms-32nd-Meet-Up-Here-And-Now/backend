@@ -2,6 +2,7 @@ package com.meetup.hereandnow.archive.presentation.controller;
 
 import com.meetup.hereandnow.archive.application.facade.ArchiveFacade;
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
+import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
 import com.meetup.hereandnow.archive.presentation.swagger.ArchiveSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +47,16 @@ public class ArchiveController implements ArchiveSwagger {
         );
     }
 
-//    @Override
-//    @GetMapping("/scrapped/place")
-//    public ResponseEntity<RestResponse<List<PlaceCardDto>>> getScrappedPlace(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size
-//    ) {
-//        return null;
-//    }
+    @Override
+    @GetMapping("/scrapped/place")
+    public ResponseEntity<RestResponse<List<PlaceCardDto>>> getScrappedPlace(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(
+                new RestResponse<>(
+                        archiveFacade.getMyScrappedPlaces(page, size)
+                )
+        );
+    }
 }
