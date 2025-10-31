@@ -81,6 +81,6 @@ class PlaceCardDtoConverterServiceTest {
 
         // then
         assertThat(resultList.getFirst().placeTag()).isEqualTo(List.of());
-        assertThat(resultList.getFirst().placeRating()).isEqualTo(0L);
+        assertThat(resultList.getFirst().placeRating()).isEqualTo(0.0);
     }
 }

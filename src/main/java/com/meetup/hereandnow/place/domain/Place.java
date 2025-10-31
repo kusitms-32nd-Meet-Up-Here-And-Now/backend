@@ -36,7 +36,7 @@ public class Place extends BaseEntity {
     private Point location;
 
     @Column(name = "place_rating", precision = 3, scale = 1)
-    @DecimalMin(value = "1.0")
+    @DecimalMin(value = "0.0")
     @DecimalMax(value = "5.0")
     @Digits(integer = 1, fraction = 1)
     @Builder.Default
