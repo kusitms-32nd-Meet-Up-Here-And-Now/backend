@@ -24,7 +24,7 @@ public record CourseCardDto(
         @Schema(description = "코스 평점", example = "4")
         double courseRating,
 
-        @Schema(description = "코스 사진", example = "[\"/course/8b18/pins/92eb/images/a558.jpg\",\"/course/8b18/pins/t3gs/images/a5eh.jpg\"]")
+        @Schema(description = "코스 사진", example = "[\"course/8b18/pins/92eb/images/a558.jpg\",\"course/8b18/pins/t3gs/images/a5eh.jpg\"]")
         List<String> imageUrl
 ) {
 }
