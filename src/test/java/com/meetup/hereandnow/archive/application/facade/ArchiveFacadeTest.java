@@ -1,7 +1,9 @@
 package com.meetup.hereandnow.archive.application.facade;
 
 import com.meetup.hereandnow.archive.application.service.ArchiveCourseService;
+import com.meetup.hereandnow.archive.application.service.ArchivePlaceService;
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
+import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +28,8 @@ class ArchiveFacadeTest {
 
     @Mock
     private ArchiveCourseService archiveCourseService;
+    @Mock
+    private ArchivePlaceService archivePlaceService;
 
     @InjectMocks
     private ArchiveFacade archiveFacade;
@@ -81,6 +85,31 @@ class ArchiveFacadeTest {
             assertThat(resultList).isEqualTo(expectedList);
             mockedSecurity.verify(SecurityUtils::getCurrentMember);
             then(archiveCourseService).should().getMyCreatedCourses(member, pageRequest);
+        }
+    }
+
+    @Test
+    @DisplayName("내가 스크랩한 장소 조회 시 현재 멤버와 페이지 요청을 서비스에 전달하고 DTO 리스트를 반환한다")
+    void get_my_scrapped_places() {
+        // given
+        int page = 0;
+        int size = 10;
+        Member member = mock(Member.class);
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<PlaceCardDto> expectedList = List.of(mock(PlaceCardDto.class));
+
+        try (MockedStatic<SecurityUtils> mockedSecurity = Mockito.mockStatic(SecurityUtils.class)) {
+            mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(member);
+
+            given(archivePlaceService.getMyScrappedPlaces(member, pageRequest)).willReturn(expectedList);
+
+            // when
+            List<PlaceCardDto> resultList = archiveFacade.getMyScrappedPlaces(page, size);
+
+            // then
+            assertThat(resultList).isEqualTo(expectedList);
+            mockedSecurity.verify(SecurityUtils::getCurrentMember);
+            then(archivePlaceService).should().getMyScrappedPlaces(member, pageRequest);
         }
     }
 }
