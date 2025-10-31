@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.place.domain;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
+import com.meetup.hereandnow.place.infrastructure.converter.PlaceTagListConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -10,6 +11,8 @@ import lombok.experimental.SuperBuilder;
 import org.locationtech.jts.geom.Point;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,6 +42,11 @@ public class Place extends BaseEntity {
     @Builder.Default
     private BigDecimal placeRating = BigDecimal.valueOf(0.0);
 
+    @Column(name = "place_tags")
+    @Convert(converter = PlaceTagListConverter.class)
+    @Builder.Default
+    private List<String> placeTags = new ArrayList<>();
+
     @Column(name = "pin_count")
     @Builder.Default
     private Long pinCount = 0L;
@@ -46,5 +54,9 @@ public class Place extends BaseEntity {
     public void updateRating(BigDecimal placeRating, Long pinCount) {
         this.placeRating = placeRating;
         this.pinCount = pinCount;
+    }
+
+    public void updateTags(List<String> topTags) {
+        this.placeTags = topTags;
     }
 }
