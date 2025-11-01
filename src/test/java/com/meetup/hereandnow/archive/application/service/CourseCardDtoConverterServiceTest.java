@@ -1,7 +1,6 @@
 package com.meetup.hereandnow.archive.application.service;
 
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
-import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageProperties;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.member.domain.Member;
@@ -29,8 +28,6 @@ class CourseCardDtoConverterServiceTest {
 
     @Mock
     private ObjectStorageService objectStorageService;
-    @Mock
-    private ObjectStorageProperties properties;
     @InjectMocks
     private CourseCardDtoConverterService converterService;
 
