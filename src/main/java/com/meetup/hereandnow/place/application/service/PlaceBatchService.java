@@ -72,7 +72,7 @@ public class PlaceBatchService {
             Long placeId = entry.getKey();
             List<String> topTags = entry.getValue().stream()
                     .limit(3)
-                    .map(stat -> stat.tagEnum().getName())
+                    .map(PlaceTagDto::tagName)
                     .toList();
             finalTopTagsMap.put(placeId, topTags);
         }

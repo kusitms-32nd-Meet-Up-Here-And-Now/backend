@@ -21,7 +21,7 @@ public record PlaceCardDto(
         @Schema(description = "장소 태그", example = "[\"뷰가 좋아요\",\"사진이 잘 나와요\"]")
         List<String> placeTag,
 
-        @Schema(description = "장소 사진", example = "[\"course/8b18/pins/92eb/images/a558.jpg\",\"course/8b18/pins/92eb/images/a5eh.jpg\"]")
+        @Schema(description = "장소 사진", example = "[\"https://kr...course/8b18/pins/92eb/images/a558.jpg\",\"https://kr...course/8b18/pins/92eb/images/a5eh.jpg\"]")
         List<String> imageUrl
 ) {
 }

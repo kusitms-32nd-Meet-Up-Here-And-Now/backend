@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.course.domain.entity;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
+import com.meetup.hereandnow.course.application.service.converter.CourseTagListConverter;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import jakarta.persistence.*;
@@ -42,6 +43,11 @@ public class Course extends BaseEntity {
     @Column(name = "course_description", length = 1024)
     private String courseDescription;
 
+    @Column(name = "course_tags")
+    @Convert(converter = CourseTagListConverter.class)
+    @Builder.Default
+    private List<String> courseTags = new ArrayList<>();
+
     @Column(name = "is_public", nullable = false)
     @Builder.Default
     private Boolean isPublic = false;
@@ -67,6 +73,10 @@ public class Course extends BaseEntity {
 
     public void addPin(Pin pin) {
         this.pinList.add(pin);
+    }
+
+    public void updateTags(List<String> topTags) {
+        this.courseTags = topTags;
     }
 
     public void incrementScrapCount() {

@@ -6,7 +6,6 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.CouplePinSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.CouplePinRecordRepository;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.*;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,6 +35,7 @@ class CouplePinRecordSaveServiceTest {
     private static final String TEST_PIN_TITLE = "핀 제목";
     private static final String TEST_PIN_DESC = "핀 설명";
     private static final double TEST_PIN_RATING = 4.5;
+    private static final String TEST_PLACE_CODE = "CT1";
 
     @BeforeEach
     void setUp() {
@@ -50,11 +52,11 @@ class CouplePinRecordSaveServiceTest {
         List<Pin> savedPin = List.of(pin1, pin2);
 
         PinSaveDto dto1 = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), null, null
+                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, TEST_PLACE_CODE, List.of(), null, null
         );
         CouplePinSaveRequestDto coupleDto = new CouplePinSaveRequestDto("여친메모", "남친메모");
         PinSaveDto dto2 = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), coupleDto, null
+                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, TEST_PLACE_CODE, List.of(), coupleDto, null
         );
 
         List<PinSaveDto> pinSaveDtos = List.of(dto1, dto2);

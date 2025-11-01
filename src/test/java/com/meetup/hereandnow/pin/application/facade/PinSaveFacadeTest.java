@@ -1,8 +1,5 @@
 package com.meetup.hereandnow.pin.application.facade;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.pin.application.service.save.PinImageSaveService;
@@ -13,8 +10,6 @@ import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +20,12 @@ import org.locationtech.jts.geom.Point;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PinSaveFacadeTest {
@@ -47,6 +48,7 @@ class PinSaveFacadeTest {
 
     private static final String TEST_PLACE_NAME = "장소 이름";
     private static final String TEST_PLACE_ADDRESS = "장소 주소";
+    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
 
@@ -80,7 +82,7 @@ class PinSaveFacadeTest {
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
         PinSaveDto pinDto = new PinSaveDto(
                 TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                List.of(), null ,placeDto
+                TEST_PLACE_CODE, List.of(), null, placeDto
         );
 
         Pin savedPin = Pin.builder().id(10L).build();

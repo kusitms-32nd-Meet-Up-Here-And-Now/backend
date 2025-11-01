@@ -15,13 +15,13 @@ public interface PinTagRepository extends JpaRepository<PinTag, Long> {
     @Query("""
                 SELECT new com.meetup.hereandnow.place.dto.PlaceTagDto(
                     p.place.id,
-                    pt.pinTagEnum,
+                    pt.tag.tagValue.name,
                     COUNT(pt)
                 )
                 FROM PinTag pt
                 JOIN pt.pin p
                 WHERE p.place.id IN :placeIds
-                GROUP BY p.place.id, pt.pinTagEnum
+                GROUP BY p.place.id, pt.tag.tagValue.name
                 ORDER BY p.place.id ASC, COUNT(pt) DESC
             """)
     List<PlaceTagDto> getPinTagsByPlaceIds(@Param("placeIds") List<Long> placeIds);

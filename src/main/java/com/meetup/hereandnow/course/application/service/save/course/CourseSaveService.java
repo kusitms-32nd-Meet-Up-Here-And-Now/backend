@@ -4,18 +4,18 @@ import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
 import com.meetup.hereandnow.course.application.service.save.couple.CoupleCoursePersistService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +25,7 @@ public class CourseSaveService {
     private final CourseRedisService courseRedisService;
     private final CoursePersistService coursePersistService;
     private final CoupleCoursePersistService coupleCoursePersistService;
+    private final CourseTagSaveService courseTagSaveService;
 
     public CourseSaveResponseDto saveCourseToRedis(
             CourseSaveDto courseSaveDto
@@ -54,6 +55,7 @@ public class CourseSaveService {
         }
 
         Course course = coursePersistService.persist(dto, member, commitSaveCourseRequestDto);
+        courseTagSaveService.saveCourseTag(course, dto.pinList());
 
         coupleCoursePersistService.coupleCourseSavePersist(dto, member, course, commitSaveCourseRequestDto);
 
