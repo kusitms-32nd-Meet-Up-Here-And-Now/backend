@@ -1,6 +1,8 @@
 package com.meetup.hereandnow.archive.application.service;
 
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageProperties;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -17,12 +20,17 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 
 @ExtendWith(MockitoExtension.class)
 class CourseCardDtoConverterServiceTest {
 
+    @Mock
+    private ObjectStorageService objectStorageService;
+    @Mock
+    private ObjectStorageProperties properties;
     @InjectMocks
     private CourseCardDtoConverterService converterService;
 
@@ -74,6 +82,8 @@ class CourseCardDtoConverterServiceTest {
     void convert_to_course_card_dto() {
         // given
         List<Course> courses = List.of(course1, course2);
+        given(objectStorageService.buildImageUrl("url1")).willReturn("domain/url1");
+        given(objectStorageService.buildImageUrl("url3")).willReturn("domain/url3");
 
         // when
         List<CourseCardDto> resultList = converterService.convertToCourseCardDto(courses);
@@ -87,7 +97,7 @@ class CourseCardDtoConverterServiceTest {
         assertThat(dto1.courseDescription()).isEqualTo("설명 1");
         assertThat(dto1.viewCount()).isEqualTo(100);
         assertThat(dto1.courseRating()).isEqualTo(4.5);
-        assertThat(dto1.imageUrl()).containsExactly("url1", "url3");
+        assertThat(dto1.imageUrl()).containsExactly("domain/url1", "domain/url3");
         assertThat(dto1.courseTagList()).containsExactly("tag1", "tag2");
 
         CourseCardDto dto2 = resultList.get(1);
