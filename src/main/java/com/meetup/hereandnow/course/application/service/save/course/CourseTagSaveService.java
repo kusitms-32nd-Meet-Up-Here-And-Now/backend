@@ -28,7 +28,7 @@ public class CourseTagSaveService {
                     if (tagNames == null || tagNames.isEmpty()) {
                         return Stream.empty();
                     }
-                    return pinSaveDto.pinTagNames().stream();
+                    return tagNames.stream();
                 })
                 .collect(Collectors.groupingBy(
                         Function.identity(),
