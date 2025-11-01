@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,13 @@ public class CourseTagSaveService {
 
     private List<String> getCourseTag(List<PinSaveDto> pinTagDtoList) {
         return pinTagDtoList.stream()
-                .flatMap(pinSaveDto -> pinSaveDto.pinTagNames().stream())
+                .flatMap(pinSaveDto -> {
+                    List<String> tagNames = pinSaveDto.pinTagNames();
+                    if (tagNames == null || tagNames.isEmpty()) {
+                        return Stream.empty();
+                    }
+                    return pinSaveDto.pinTagNames().stream();
+                })
                 .collect(Collectors.groupingBy(
                         Function.identity(),
                         Collectors.counting()

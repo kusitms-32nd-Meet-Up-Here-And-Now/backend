@@ -5,19 +5,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Set;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    @Query(value = """
+    @Query("""
             SELECT t
             FROM Tag t
-            JOIN PlaceGroup pg ON pg.id = t.placeGroup.id
-            JOIN TagValue tv ON t.tagValue.id = tv.id
-            WHERE pg.code=(:placeGroupCode) AND tv.name=(:tagName)
+            JOIN FETCH t.placeGroup pg
+            JOIN FETCH t.tagValue tv
+            WHERE pg.code IN (:placeGroupCodes)
+              AND tv.name IN (:tagNames)
             """)
-    Optional<Tag> findByPlaceGroupAndTagName(
-            @Param("placeGroupCode") String placeGroupCode,
-            @Param("tagName") String tagName
+    List<Tag> findByPlaceGroupCodesAndTagNames(
+            @Param("placeGroupCodes") Set<String> placeGroupCodes,
+            @Param("tagNames") Set<String> tagNames
     );
 }

@@ -3,7 +3,9 @@ package com.meetup.hereandnow.pin.application.service.save;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinTagRepository;
+import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
 import com.meetup.hereandnow.tag.domain.entity.Tag;
+import com.meetup.hereandnow.tag.domain.entity.TagValue;
 import com.meetup.hereandnow.tag.infrastructure.repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
@@ -75,11 +78,21 @@ class PinTagSaveServiceTest {
                 TEST_PLACE_CODE, pinTagList, null, null
         );
 
-        when(pinTagRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
-        given(tagRepository.findByPlaceGroupAndTagName(TEST_PLACE_CODE, pinTagList.getFirst()))
-                .willReturn(Optional.of(mock(Tag.class)));
-        given(tagRepository.findByPlaceGroupAndTagName(TEST_PLACE_CODE, pinTagList.get(1)))
-                .willReturn(Optional.of(mock(Tag.class)));
+        List<Tag> mockTags = pinTagList.stream()
+                .map(tagName -> {
+                    Tag mockTag = mock(Tag.class);
+                    PlaceGroup mockPlaceGroup = mock(PlaceGroup.class);
+                    TagValue mockTagValue = mock(TagValue.class);
+                    when(mockPlaceGroup.getCode()).thenReturn(TEST_PLACE_CODE);
+                    when(mockTag.getPlaceGroup()).thenReturn(mockPlaceGroup);
+                    when(mockTagValue.getName()).thenReturn(tagName);
+                    when(mockTag.getTagValue()).thenReturn(mockTagValue);
+                    return mockTag;
+                })
+                .toList();
+
+        given(tagRepository.findByPlaceGroupCodesAndTagNames(Set.of(TEST_PLACE_CODE), new HashSet<>(pinTagList)))
+                .willReturn(mockTags);
 
         // when
         pinTagSaveService.savePinTags(pins, List.of(dto));
