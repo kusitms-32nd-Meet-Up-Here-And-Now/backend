@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.archive.application.service;
 
 import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.pin.dto.PlaceIdWithImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import com.meetup.hereandnow.place.domain.Place;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class PlaceCardDtoConverterService {
 
     private final PinImageRepository pinImageRepository;
+    private final ObjectStorageService objectStorageService;
 
     @Transactional(readOnly = true)
     public List<PlaceCardDto> toPlaceCardDtoList(List<Place> places) {
@@ -41,7 +43,7 @@ public class PlaceCardDtoConverterService {
         return dtoList.stream().collect(Collectors.groupingBy(
                 PlaceIdWithImage::getPlaceId,
                 Collectors.mapping(
-                        PlaceIdWithImage::getImageUrl,
+                        img -> objectStorageService.buildImageUrl(img.getImageUrl()),
                         Collectors.toList()
                 )
         ));

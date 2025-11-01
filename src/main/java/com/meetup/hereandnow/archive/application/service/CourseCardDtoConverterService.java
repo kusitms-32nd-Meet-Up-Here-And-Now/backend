@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.archive.application.service;
 
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CourseCardDtoConverterService {
+
+    private final ObjectStorageService objectStorageService;
 
     public List<CourseCardDto> convertToCourseCardDto(List<Course> courses) {
         if (courses == null || courses.isEmpty()) {
@@ -45,6 +48,6 @@ public class CourseCardDtoConverterService {
     private Optional<String> findFirstPinImageUrl(Pin pin) {
         return pin.getPinImages().stream()
                 .min(Comparator.comparing(PinImage::getId))
-                .map(PinImage::getImageUrl);
+                .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()));
     }
 }

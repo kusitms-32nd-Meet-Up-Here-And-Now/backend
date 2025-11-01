@@ -66,6 +66,15 @@ public class ObjectStorageService {
         }
     }
 
+    public String buildImageUrl(String key) {
+        if (key == null) {
+            throw ObjectStorageErrorCode.OBJECT_URI_ERROR.toException();
+        } else if (!key.startsWith("/")) {
+            key = "/" + key;
+        }
+        return properties.endpoint() + "/" + properties.bucketName() + key;
+    }
+
     private boolean isUrl(String imageUrl) {
         return imageUrl.startsWith("https://") || imageUrl.startsWith("http://");
     }
