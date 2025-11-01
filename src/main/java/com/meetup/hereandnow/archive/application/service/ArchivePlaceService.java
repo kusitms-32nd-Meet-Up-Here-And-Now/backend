@@ -37,7 +37,7 @@ public class ArchivePlaceService {
         return converterService.toPlaceCardDtoList(places);
     }
 
-    @Scheduled(cron = "0 32 3 * * *")
+    @Scheduled(cron = "0 28 16 * * *")
     @Transactional
     public void updatePlaceRatingAndTags() {
         Page<Long> placeIdPage;

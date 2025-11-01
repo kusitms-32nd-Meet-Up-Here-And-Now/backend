@@ -2,35 +2,42 @@ package com.meetup.hereandnow.pin.application.service.save;
 
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinTag;
-import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinTagRepository;
+import com.meetup.hereandnow.tag.domain.entity.Tag;
+import com.meetup.hereandnow.tag.exception.TagErrorCode;
+import com.meetup.hereandnow.tag.infrastructure.repository.TagRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PinTagSaveService {
 
     private final PinTagRepository pinTagRepository;
+    private final TagRepository tagRepository;
 
     public void savePinTags(List<Pin> pinList, List<PinSaveDto> pinSaveDtos) {
         List<PinTag> pinTagsToSave = IntStream.range(0, pinList.size())
                 .boxed()
                 .flatMap(i -> {
                     Pin pin = pinList.get(i);
-                    List<PinTagEnum> tagEnums = pinSaveDtos.get(i).pinTags();
+                    List<String> tagList = pinSaveDtos.get(i).pinTagNames();
 
-                    if (tagEnums == null || tagEnums.isEmpty()) {
-                        return Stream.<PinTag>empty();
+                    if (tagList == null || tagList.isEmpty()) {
+                        return Stream.empty();
                     }
 
-                    return tagEnums.stream()
+                    return tagList.stream()
                             .distinct()
-                            .map(tagEnum -> PinTag.of(tagEnum, pin));
+                            .map(tagName -> PinTag.of(
+                                    getTag(pinSaveDtos.get(i).placeGroupCode(), tagName),
+                                    pin
+                            ));
                 })
                 .toList();
 
@@ -39,5 +46,10 @@ public class PinTagSaveService {
         }
 
         pinTagRepository.saveAll(pinTagsToSave);
+    }
+
+    private Tag getTag(String placeGroupCode, String tagName) {
+        return tagRepository.findByPlaceGroupAndTagName(placeGroupCode, tagName)
+                .orElseThrow(TagErrorCode.NOT_FOUND_TAG_DATA::toException);
     }
 }

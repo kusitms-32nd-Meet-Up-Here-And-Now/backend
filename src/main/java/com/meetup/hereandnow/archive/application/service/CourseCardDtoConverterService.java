@@ -2,50 +2,33 @@ package com.meetup.hereandnow.archive.application.service;
 
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.domain.entity.CourseTag;
-import com.meetup.hereandnow.course.infrastructure.repository.CourseTagRepository;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CourseCardDtoConverterService {
 
-    private final CourseTagRepository courseTagRepository;
-
     public List<CourseCardDto> convertToCourseCardDto(List<Course> courses) {
         if (courses == null || courses.isEmpty()) {
             return Collections.emptyList();
         }
-        List<Long> courseIds = courses.stream().map(Course::getId).toList();
-        Map<Long, List<String>> courseTagMap = getCourseTagMap(courseIds);
-        return courses.stream().map(c ->
-                toCourseCardDto(c, courseTagMap.getOrDefault(c.getId(), Collections.emptyList()))
-        ).toList();
+        return courses.stream().map(this::toCourseCardDto).toList();
     }
 
-    private Map<Long, List<String>> getCourseTagMap(List<Long> courseIds) {
-        List<CourseTag> allTags = courseTagRepository.findAllByCourseIdIn(courseIds);
-        return allTags.stream().collect(Collectors.groupingBy(
-                tag -> tag.getCourse().getId(),
-                Collectors.mapping(
-                        tag -> tag.getCourseTagName().getName(),
-                        Collectors.toList()
-                )
-        ));
-    }
-
-    private CourseCardDto toCourseCardDto(Course course, List<String> tagNames) {
+    private CourseCardDto toCourseCardDto(Course course) {
         return new CourseCardDto(
                 course.getId(),
                 course.getCourseTitle(),
                 course.getCourseDescription(),
-                tagNames,
+                course.getCourseTags(),
                 course.getViewCount(),
                 course.getCourseRating().doubleValue(),
                 getFirstPinImageUrls(course.getPinList())

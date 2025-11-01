@@ -1,17 +1,7 @@
 package com.meetup.hereandnow.pin.domain.entity;
 
-import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.meetup.hereandnow.tag.domain.entity.Tag;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,17 +20,17 @@ public class PinTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "pin_tag_name")
-    @Enumerated(EnumType.STRING)
-    private PinTagEnum pinTagEnum;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_id", nullable = false)
+    private Tag tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pin_id", nullable = false)
     private Pin pin;
 
-    public static PinTag of(PinTagEnum pinTagEnum, Pin pin) {
+    public static PinTag of(Tag tag, Pin pin) {
         return PinTag.builder()
-                .pinTagEnum(pinTagEnum)
+                .tag(tag)
                 .pin(pin)
                 .build();
     }

@@ -1,10 +1,8 @@
 package com.meetup.hereandnow.place.dto;
 
-import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
-
 public record PlaceTagDto(
         Long placeId,
-        PinTagEnum tagEnum,
+        String tagName,
         Long tagCount
 ) {
 }
