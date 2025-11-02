@@ -6,7 +6,7 @@ import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.scrap.domain.CourseScrap;
 import com.meetup.hereandnow.scrap.dto.response.ScrapResponseDto;
 import com.meetup.hereandnow.scrap.exception.ScrapErrorCode;
-import com.meetup.hereandnow.scrap.repository.CourseScrapRepository;
+import com.meetup.hereandnow.scrap.infrastructure.repository.CourseScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

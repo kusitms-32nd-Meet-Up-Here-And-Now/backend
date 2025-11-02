@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.archive.application.service;
 
+import com.meetup.hereandnow.archive.application.service.converter.PlaceCardDtoConverterService;
 import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.pin.dto.PlaceIdWithImage;

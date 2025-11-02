@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.course.application.service.converter;
+package com.meetup.hereandnow.course.infrastructure.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

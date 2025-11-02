@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.scrap.repository;
+package com.meetup.hereandnow.scrap.infrastructure.repository;
 
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.scrap.domain.CourseScrap;

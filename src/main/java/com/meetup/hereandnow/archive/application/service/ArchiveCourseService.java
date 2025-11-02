@@ -1,11 +1,12 @@
 package com.meetup.hereandnow.archive.application.service;
 
+import com.meetup.hereandnow.archive.application.service.converter.CourseCardDtoConverterService;
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.scrap.domain.CourseScrap;
-import com.meetup.hereandnow.scrap.repository.CourseScrapRepository;
+import com.meetup.hereandnow.scrap.infrastructure.repository.CourseScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

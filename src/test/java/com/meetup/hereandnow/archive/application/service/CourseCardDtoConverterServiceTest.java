@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.archive.application.service;
 
+import com.meetup.hereandnow.archive.application.service.converter.CourseCardDtoConverterService;
 import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
