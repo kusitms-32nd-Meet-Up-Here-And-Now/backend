@@ -1,6 +1,8 @@
 package com.meetup.hereandnow.archive.application.service;
 
+import com.meetup.hereandnow.archive.application.service.converter.PlaceCardDtoConverterService;
 import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.pin.dto.PlaceIdWithImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import com.meetup.hereandnow.place.domain.Place;
@@ -25,6 +27,8 @@ class PlaceCardDtoConverterServiceTest {
 
     @Mock
     private PinImageRepository pinImageRepository;
+    @Mock
+    private ObjectStorageService objectStorageService;
 
     @InjectMocks
     private PlaceCardDtoConverterService sut;
@@ -53,14 +57,16 @@ class PlaceCardDtoConverterServiceTest {
 
         given(pinImageRepository.findImageUrlsByPlaceIds(List.of(place1.getId(), place2.getId())))
                 .willReturn(List.of(img1, img2));
+        given(objectStorageService.buildImageUrl("img1")).willReturn("domain/img1");
+        given(objectStorageService.buildImageUrl("img2")).willReturn("domain/img2");
 
         // when
         List<PlaceCardDto> resultList = sut.toPlaceCardDtoList(places);
 
         // then
-        assertThat(resultList.get(0).imageUrl()).isEqualTo(List.of("img1"));
+        assertThat(resultList.get(0).imageUrl()).isEqualTo(List.of("domain/img1"));
         assertThat(resultList.get(0).placeTag()).isEqualTo(List.of("tag1", "tag2"));
-        assertThat(resultList.get(1).imageUrl()).isEqualTo(List.of("img2"));
+        assertThat(resultList.get(1).imageUrl()).isEqualTo(List.of("domain/img2"));
         assertThat(resultList.get(1).placeTag()).isEqualTo(List.of("tag3", "tag4"));
         then(pinImageRepository).should(times(1))
                 .findImageUrlsByPlaceIds(List.of(place1.getId(), place2.getId()));

@@ -1,6 +1,5 @@
 package com.meetup.hereandnow.place.application.service;
 
-import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinTagRepository;
 import com.meetup.hereandnow.place.domain.Place;
@@ -37,12 +36,6 @@ class PlaceBatchServiceTest {
     @InjectMocks
     private PlaceBatchService placeBatchService;
 
-    private PinTagEnum mockTagEnum(String name) {
-        PinTagEnum tag = mock(PinTagEnum.class);
-        given(tag.getName()).willReturn(name);
-        return tag;
-    }
-
     @Test
     @DisplayName("process 호출 시 placeId 리스트가 비어있으면 즉시 빈 리스트 반환한다")
     void process_empty_list() {
@@ -78,12 +71,12 @@ class PlaceBatchServiceTest {
         List<PlaceRatingDto> ratings = List.of(rating1, rating3);
         given(pinRepository.getPlaceRatingsByIds(placeIds)).willReturn(ratings);
 
-        PlaceTagDto tag1_1 = new PlaceTagDto(1L, mockTagEnum("TagA"), 1L);
-        PlaceTagDto tag1_2 = new PlaceTagDto(1L, mockTagEnum("TagB"), 1L);
-        PlaceTagDto tag2_1 = new PlaceTagDto(2L, mockTagEnum("TagC"), 1L);
-        PlaceTagDto tag2_2 = new PlaceTagDto(2L, mockTagEnum("TagD"), 1L);
-        PlaceTagDto tag2_3 = new PlaceTagDto(2L, mockTagEnum("TagE"), 1L);
-        PlaceTagDto tag2_4 = new PlaceTagDto(2L, mock(PinTagEnum.class), 1L);
+        PlaceTagDto tag1_1 = new PlaceTagDto(1L, "분위기 맛집", 1L);
+        PlaceTagDto tag1_2 = new PlaceTagDto(1L, "사진 찍기 좋아요", 1L);
+        PlaceTagDto tag2_1 = new PlaceTagDto(2L, "이색 데이트", 1L);
+        PlaceTagDto tag2_2 = new PlaceTagDto(2L, "건물이 멋져요", 1L);
+        PlaceTagDto tag2_3 = new PlaceTagDto(2L, "사진 찍기 좋아요", 1L);
+        PlaceTagDto tag2_4 = new PlaceTagDto(2L, "산책하기 좋아요", 1L);
         List<PlaceTagDto> tags = List.of(tag1_1, tag1_2, tag2_1, tag2_2, tag2_3, tag2_4);
         given(pinTagRepository.getPinTagsByPlaceIds(placeIds)).willReturn(tags);
 
@@ -95,10 +88,10 @@ class PlaceBatchServiceTest {
                 BigDecimal.valueOf(4.5).setScale(1, RoundingMode.HALF_UP),
                 10L
         );
-        then(place1).should(times(1)).updateTags(List.of("TagA", "TagB"));
+        then(place1).should(times(1)).updateTags(List.of("분위기 맛집", "사진 찍기 좋아요"));
 
         then(place2).should(times(1)).updateRating(BigDecimal.ZERO, 0L);
-        then(place2).should(times(1)).updateTags(List.of("TagC", "TagD", "TagE"));
+        then(place2).should(times(1)).updateTags(List.of("이색 데이트", "건물이 멋져요", "사진 찍기 좋아요"));
 
         then(place3).should(times(1)).updateRating(
                 BigDecimal.valueOf(3.2).setScale(1, RoundingMode.HALF_UP),

@@ -1,12 +1,13 @@
 package com.meetup.hereandnow.archive.application.service;
 
+import com.meetup.hereandnow.archive.application.service.converter.PlaceCardDtoConverterService;
 import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.place.application.service.PlaceBatchService;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
 import com.meetup.hereandnow.scrap.domain.PlaceScrap;
-import com.meetup.hereandnow.scrap.repository.PlaceScrapRepository;
+import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

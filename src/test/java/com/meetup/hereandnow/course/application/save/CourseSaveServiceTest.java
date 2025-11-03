@@ -3,15 +3,14 @@ package com.meetup.hereandnow.course.application.save;
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
-import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
 import com.meetup.hereandnow.course.application.service.save.course.CourseRedisService;
+import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
+import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
-import com.meetup.hereandnow.member.domain.Member;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,9 +21,12 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CourseSaveServiceTest {
@@ -52,6 +54,7 @@ class CourseSaveServiceTest {
 
     private static final String TEST_PIN_TITLE = "핀 제목";
     private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
@@ -82,12 +85,12 @@ class CourseSaveServiceTest {
 
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
         PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                List.of(), null, placeDto
+                TEST_PLACE_CODE, List.of(), null, placeDto
         );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, List.of(), null, List.of(pinDto)
+                Boolean.TRUE, null, List.of(pinDto)
         );
 
         // when
@@ -113,7 +116,7 @@ class CourseSaveServiceTest {
 
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
         PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                List.of(), null, placeDto
+                TEST_PLACE_CODE, List.of(), null, placeDto
         );
 
         CoupleCourseRecordSaveRequestDto coupleDto = new CoupleCourseRecordSaveRequestDto(
@@ -121,7 +124,7 @@ class CourseSaveServiceTest {
         );
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, List.of(), coupleDto, List.of(pinDto)
+                Boolean.TRUE, coupleDto, List.of(pinDto)
         );
 
         // when

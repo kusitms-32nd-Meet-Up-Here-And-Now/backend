@@ -1,14 +1,12 @@
 package com.meetup.hereandnow.pin.application.service.save;
 
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinTagRepository;
-import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
-import java.util.List;
+import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
+import com.meetup.hereandnow.tag.domain.entity.Tag;
+import com.meetup.hereandnow.tag.domain.entity.TagValue;
+import com.meetup.hereandnow.tag.infrastructure.repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,11 +15,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class PinTagSaveServiceTest {
 
     @Mock
     private PinTagRepository pinTagRepository;
+    @Mock
+    private TagRepository tagRepository;
 
     @InjectMocks
     private PinTagSaveService pinTagSaveService;
@@ -30,15 +38,16 @@ class PinTagSaveServiceTest {
 
     private static final String TEST_PIN_TITLE = "핀 제목";
     private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     private Pin dummyPin;
-    private List<PinTagEnum> dummyPinTagList;
+    private List<String> pinTagList;
 
     @BeforeEach
     void setUP() {
         dummyPin = Pin.builder().id(TEST_ID).build();
-        dummyPinTagList = List.of(PinTagEnum.EXCITED, PinTagEnum.COZY);
+        pinTagList = List.of("분위기 맛집", "산책하기 좋아요");
     }
 
     @Test
@@ -49,7 +58,7 @@ class PinTagSaveServiceTest {
         List<Pin> pins = List.of(dummyPin);
         PinSaveDto dto = new PinSaveDto(
                 TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                List.of(), null, null
+                TEST_PLACE_CODE, List.of(), null, null
         );
 
         // when
@@ -66,10 +75,24 @@ class PinTagSaveServiceTest {
         List<Pin> pins = List.of(dummyPin);
         PinSaveDto dto = new PinSaveDto(
                 TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                dummyPinTagList, null, null
+                TEST_PLACE_CODE, pinTagList, null, null
         );
 
-        when(pinTagRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
+        List<Tag> mockTags = pinTagList.stream()
+                .map(tagName -> {
+                    Tag mockTag = mock(Tag.class);
+                    PlaceGroup mockPlaceGroup = mock(PlaceGroup.class);
+                    TagValue mockTagValue = mock(TagValue.class);
+                    when(mockPlaceGroup.getCode()).thenReturn(TEST_PLACE_CODE);
+                    when(mockTag.getPlaceGroup()).thenReturn(mockPlaceGroup);
+                    when(mockTagValue.getName()).thenReturn(tagName);
+                    when(mockTag.getTagValue()).thenReturn(mockTagValue);
+                    return mockTag;
+                })
+                .toList();
+
+        given(tagRepository.findByPlaceGroupCodesAndTagNames(Set.of(TEST_PLACE_CODE), new HashSet<>(pinTagList)))
+                .willReturn(mockTags);
 
         // when
         pinTagSaveService.savePinTags(pins, List.of(dto));

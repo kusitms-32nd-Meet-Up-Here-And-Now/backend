@@ -1,25 +1,26 @@
 package com.meetup.hereandnow.course.application.facade;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
+import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.exception.PinErrorCode;
-import com.meetup.hereandnow.course.exception.CourseErrorCode;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CourseSaveFacadeTest {
@@ -50,7 +51,7 @@ class CourseSaveFacadeTest {
 
         // given
         CourseSaveDto dto = new CourseSaveDto(TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                true, List.of(), null, List.of());
+                true, null, List.of());
         CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, TEST_COURSE_DIRNAME, List.of());
         given(courseSaveService.saveCourseToRedis(dto)).willReturn(responseDto);
 

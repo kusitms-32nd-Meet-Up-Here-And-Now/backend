@@ -1,20 +1,12 @@
 package com.meetup.hereandnow.pin.application.service.save;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
-import com.meetup.hereandnow.place.dto.PlaceSaveDto;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.PlaceSaveDto;
 import com.meetup.hereandnow.place.infrastructure.factory.PlaceKeyFactory;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +17,15 @@ import org.locationtech.jts.geom.Point;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PinSaveServiceTest {
@@ -49,6 +50,7 @@ class PinSaveServiceTest {
 
     private static final String TEST_PIN_TITLE = "핀 제목";
     private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     @BeforeEach
@@ -83,7 +85,7 @@ class PinSaveServiceTest {
 
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, List.of(), null ,placeDto);
+        PinSaveDto dto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, TEST_PLACE_CODE, List.of(), null, placeDto);
         Map<String, Place> placeMap = Map.of(TEST_PLACE_NAME + "|" + TEST_LAT + "|" + TEST_LON, dummyPlace);
 
         when(pinRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));

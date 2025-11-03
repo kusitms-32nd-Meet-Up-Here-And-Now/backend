@@ -1,12 +1,13 @@
 package com.meetup.hereandnow.archive.application.service;
 
+import com.meetup.hereandnow.archive.application.service.converter.PlaceCardDtoConverterService;
 import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.place.application.service.PlaceBatchService;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
 import com.meetup.hereandnow.scrap.domain.PlaceScrap;
-import com.meetup.hereandnow.scrap.repository.PlaceScrapRepository;
+import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +38,7 @@ public class ArchivePlaceService {
         return converterService.toPlaceCardDtoList(places);
     }
 
-    @Scheduled(cron = "0 32 3 * * *")
+    @Scheduled(cron = "0 37 4 * * *")
     @Transactional
     public void updatePlaceRatingAndTags() {
         Page<Long> placeIdPage;

@@ -1,22 +1,23 @@
 package com.meetup.hereandnow.course.application.service.save.couple;
 
+import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
-import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.member.domain.Couple;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.repository.CoupleRepository;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinRecordSaveService;
 import com.meetup.hereandnow.pin.domain.entity.CouplePinRecord;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -48,7 +49,7 @@ class CoupleCoursePersistServiceTest {
         // given
         Member member = mock(Member.class);
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                "title", 4.5, "desc", true, null,
+                "title", 4.5, "desc", true,
                 new CoupleCourseRecordSaveRequestDto("gDesc", "bDesc"),
                 List.of()
         );
@@ -88,7 +89,7 @@ class CoupleCoursePersistServiceTest {
         // given
         Member member = mock(Member.class);
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                "title", 4.5, "desc", true, null,
+                "title", 4.5, "desc", true,
                 null,
                 List.of()
         );
