@@ -55,7 +55,7 @@ public class PlaceCardDtoConverterService {
         return new PlaceCardDto(
                 place.getId(),
                 place.getPlaceName(),
-                place.getPlaceAddress(),
+                place.getPlaceStreetNameAddress(),
                 placeRating,
                 placeTags,
                 imageUrls

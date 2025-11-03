@@ -22,7 +22,7 @@ public class PlaceCreateService {
 
         return Place.builder()
                 .placeName(name)
-                .placeAddress(address)
+                .placeStreetNameAddress(address)
                 .location(point)
                 .build();
     }

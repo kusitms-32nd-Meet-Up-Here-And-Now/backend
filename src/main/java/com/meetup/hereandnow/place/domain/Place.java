@@ -26,11 +26,14 @@ public class Place extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "place_name")
+    @Column(name = "place_name", nullable = false)
     private String placeName;
 
-    @Column(name = "place_address")
-    private String placeAddress;
+    @Column(name = "place_street_name_address", nullable = false)
+    private String placeStreetNameAddress;
+
+    @Column(name = "place_number_address", nullable = false)
+    private String placeNumberAddress;
 
     @Column(name = "location", columnDefinition = "geography(Point, 4326)")
     private Point location;
