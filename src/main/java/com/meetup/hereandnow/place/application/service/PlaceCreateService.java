@@ -16,13 +16,14 @@ public class PlaceCreateService {
     private final PlaceRepository placeRepository;
     private final GeometryFactory geometryFactory;
 
-    public Place createEntity(String name, String address, double lat, double lon) {
+    public Place createEntity(String name, String streetAddress, String numberAddress, double lat, double lon) {
         Coordinate coord = new Coordinate(lon, lat);
         Point point = geometryFactory.createPoint(coord);
 
         return Place.builder()
                 .placeName(name)
-                .placeStreetNameAddress(address)
+                .placeStreetNameAddress(streetAddress)
+                .placeNumberAddress(numberAddress)
                 .location(point)
                 .build();
     }
