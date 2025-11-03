@@ -16,7 +16,6 @@ public class CourseMapper {
                 .courseTitle(dto.courseTitle())
                 .courseRating(BigDecimal.valueOf(dto.courseRating()))
                 .courseDescription(dto.courseDescription())
-                .courseThumbnailImage(courseThumbnailImage)
                 .isPublic(dto.isPublic())
                 .member(member)
                 .build();
