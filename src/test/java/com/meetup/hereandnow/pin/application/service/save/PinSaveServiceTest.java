@@ -49,8 +49,8 @@ class PinSaveServiceTest {
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
 
-    private static final String TEST_PIN_TITLE = "핀 제목";
-    private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
+    private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
     private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
@@ -93,9 +93,16 @@ class PinSaveServiceTest {
                 TEST_LAT,
                 TEST_LON
         );
+
         PinSaveDto dto = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, TEST_PLACE_CODE, List.of(),
-                null, placeDto);
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                null,
+                placeDto
+        );
         Map<String, Place> placeMap = Map.of(TEST_PLACE_NAME + "|" + TEST_LAT + "|" + TEST_LON, dummyPlace);
 
         when(pinRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
@@ -108,8 +115,6 @@ class PinSaveServiceTest {
         // then
         assertThat(saved).hasSize(1);
         Pin pin = saved.getFirst();
-        assertThat(pin.getPinTitle()).isEqualTo(TEST_PIN_TITLE);
-        assertThat(pin.getPinDescription()).isEqualTo(TEST_PIN_DESC);
         assertThat(pin.getPinRating()).isEqualByComparingTo(BigDecimal.valueOf(4.5));
         assertThat(pin.getCourse()).isSameAs(dummyCourse);
         assertThat(pin.getPlace()).isSameAs(dummyPlace);

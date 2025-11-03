@@ -36,8 +36,8 @@ class PinTagSaveServiceTest {
 
     private static final Long TEST_ID = 1L;
 
-    private static final String TEST_PIN_TITLE = "핀 제목";
-    private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
+    private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
     private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
@@ -57,8 +57,13 @@ class PinTagSaveServiceTest {
         // given
         List<Pin> pins = List.of(dummyPin);
         PinSaveDto dto = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                TEST_PLACE_CODE, List.of(), null, null
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                null,
+                null
         );
 
         // when
@@ -74,8 +79,13 @@ class PinTagSaveServiceTest {
         // given
         List<Pin> pins = List.of(dummyPin);
         PinSaveDto dto = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                TEST_PLACE_CODE, pinTagList, null, null
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                pinTagList,
+                null,
+                null
         );
 
         List<Tag> mockTags = pinTagList.stream()

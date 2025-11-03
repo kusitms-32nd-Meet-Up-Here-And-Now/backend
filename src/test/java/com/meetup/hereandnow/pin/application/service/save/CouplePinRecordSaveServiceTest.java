@@ -32,10 +32,10 @@ class CouplePinRecordSaveServiceTest {
     private Pin pin1;
     private Pin pin2;
 
-    private static final String TEST_PIN_TITLE = "핀 제목";
-    private static final String TEST_PIN_DESC = "핀 설명";
-    private static final double TEST_PIN_RATING = 4.5;
+    private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
+    private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
     private static final String TEST_PLACE_CODE = "CT1";
+    private static final double TEST_PIN_RATING = 4.5;
 
     @BeforeEach
     void setUp() {
@@ -52,11 +52,25 @@ class CouplePinRecordSaveServiceTest {
         List<Pin> savedPin = List.of(pin1, pin2);
 
         PinSaveDto dto1 = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, TEST_PLACE_CODE, List.of(), null, null
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                null,
+                null
         );
+
         CouplePinSaveRequestDto coupleDto = new CouplePinSaveRequestDto("여친메모", "남친메모");
+
         PinSaveDto dto2 = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC, TEST_PLACE_CODE, List.of(), coupleDto, null
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                coupleDto,
+                null
         );
 
         List<PinSaveDto> pinSaveDtos = List.of(dto1, dto2);

@@ -47,12 +47,13 @@ class CoursePersistServiceTest {
     private static final Long TEST_MEMBER_ID = 1L;
 
     private static final String TEST_PLACE_NAME = "장소 이름";
-    private static final String TEST_PLACE_ADDRESS = "장소 주소";
+    private static final String TEST_PLACE_STREET_ADDRESS = "장소 도로명 주소";
+    private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
 
-    private static final String TEST_PIN_TITLE = "핀 제목";
-    private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
+    private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
     private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
@@ -70,10 +71,22 @@ class CoursePersistServiceTest {
     void success_persist_saves_course() {
 
         // given
-        PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
+        PlaceSaveDto placeDto = new PlaceSaveDto(
+                TEST_PLACE_NAME,
+                TEST_PLACE_STREET_ADDRESS,
+                TEST_PLACE_NUMBER_ADDRESS,
+                TEST_LAT,
+                TEST_LON
+        );
+
         PinSaveDto pinDto = new PinSaveDto(
-                TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                TEST_PLACE_CODE, List.of(), null, placeDto
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                null,
+                placeDto
         );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
