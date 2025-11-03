@@ -27,12 +27,6 @@ public class Pin extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "pin_title", length = 128)
-    private String pinTitle;
-
-    @Column(name = "pin_thumbnail_image", length = 1024)
-    private String pinThumbnailImage;
-
     @Column(name = "pin_rating", precision = 3, scale = 1)
     @DecimalMin(value = "1.0")
     @DecimalMax(value = "5.0")
@@ -40,8 +34,11 @@ public class Pin extends BaseEntity {
     @Builder.Default
     private BigDecimal pinRating = BigDecimal.valueOf(2.5);
 
-    @Column(name = "pin_description", length = 1024)
-    private String pinDescription;
+    @Column(name = "pin_positive", nullable = false)
+    private String pinPositive;
+
+    @Column(name = "pin_negative", nullable = false)
+    private String pinNegative;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)

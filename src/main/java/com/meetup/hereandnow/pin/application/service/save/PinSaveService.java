@@ -39,8 +39,6 @@ public class PinSaveService {
             }
 
             Pin pin = Pin.builder()
-                    .pinTitle(dto.pinTitle())
-                    .pinDescription(dto.pinDescription())
                     .pinRating(BigDecimal.valueOf(dto.pinRating()))
                     .course(course)
                     .place(place)
