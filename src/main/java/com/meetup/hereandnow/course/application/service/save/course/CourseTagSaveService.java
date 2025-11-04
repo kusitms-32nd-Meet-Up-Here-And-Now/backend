@@ -36,7 +36,7 @@ public class CourseTagSaveService {
                 ))
                 .entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .limit(2)
+                .limit(3)
                 .map(Map.Entry::getKey)
                 .toList();
     }
