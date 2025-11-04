@@ -11,7 +11,7 @@ public class CourseMapper {
         throw new UnsupportedOperationException("this is util class and cannot be instantiated");
     }
 
-    public static Course toEntity(CourseSaveDto dto, Member member, String courseThumbnailImage) {
+    public static Course toEntity(CourseSaveDto dto, Member member) {
         return Course.builder()
                 .courseTitle(dto.courseTitle())
                 .courseRating(BigDecimal.valueOf(dto.courseRating()))

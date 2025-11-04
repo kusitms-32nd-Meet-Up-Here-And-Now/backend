@@ -94,7 +94,6 @@ class CoursePersistServiceTest {
                 Boolean.TRUE, null, List.of(pinDto)
         );
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                "/course/uuid/image.jpg",
                 null,
                 List.of()
         );
