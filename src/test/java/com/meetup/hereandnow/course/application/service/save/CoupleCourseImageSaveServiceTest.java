@@ -38,7 +38,7 @@ class CoupleCourseImageSaveServiceTest {
 
         // given
         CommitSaveCourseRequestDto commitSaveCourseRequestDto = new CommitSaveCourseRequestDto(
-                null, List.of("/course/1/1.jpg"), null
+                List.of("/course/1/1.jpg"), null
         );
 
         // when
@@ -54,7 +54,7 @@ class CoupleCourseImageSaveServiceTest {
     void fail_no_images_in_list() {
         // given
         CommitSaveCourseRequestDto commitSaveCourseRequestDto = new CommitSaveCourseRequestDto(
-                null, null, null
+                null, null
         );
 
         // when

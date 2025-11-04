@@ -11,13 +11,16 @@ public class CourseMapper {
         throw new UnsupportedOperationException("this is util class and cannot be instantiated");
     }
 
-    public static Course toEntity(CourseSaveDto dto, Member member, String courseThumbnailImage) {
+    public static Course toEntity(CourseSaveDto dto, Member member) {
         return Course.builder()
+                .courseVisitDate(dto.courseVisitDate())
+                .courseVisitMember(dto.courseWith())
+                .courseRegion(dto.courseRegion())
                 .courseTitle(dto.courseTitle())
-                .courseRating(BigDecimal.valueOf(dto.courseRating()))
                 .courseDescription(dto.courseDescription())
-                .courseThumbnailImage(courseThumbnailImage)
                 .isPublic(dto.isPublic())
+                .coursePositive(dto.coursePositive())
+                .courseNegative(dto.courseNegative())
                 .member(member)
                 .build();
     }

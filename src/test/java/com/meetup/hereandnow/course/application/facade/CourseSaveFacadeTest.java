@@ -8,6 +8,7 @@ import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.exception.PinErrorCode;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,12 +37,15 @@ class CourseSaveFacadeTest {
 
     private static final String TEST_PIN_IMAGE_OBJECT_KEY = "course/uuid/pins/1/images/1.jpg";
     private static final String TEST_COUPLE_PIN_IMAGE_KEY = "course/uuid/pins/1/images/couple.jpg";
-    private static final String TEST_COURSE_IMAGE_OBJECT_KEY = "course/uuid/image.jpg";
     private static final String TEST_COUPLE_COURSE_IMAGE_KEY = "course/uuid/couple.jpg";
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
     private static final String TEST_COURSE_DESC = "코스 설명";
-    private static final double TEST_COURSE_RATING = 4.5;
+    private static final String TEST_COURSE_POSITIVE = "코스 좋은 점";
+    private static final String TEST_COURSE_NEGATIVE = "코스 아쉬운 점";
+    private static final LocalDate TEST_COURSE_VISIT_DATE = LocalDate.now();
+    private static final String TEST_COURSE_WITH = "친구";
+    private static final String TEST_COURSE_REGION = "마포";
     private static final String TEST_COURSE_UUID = "uuid";
     private static final String TEST_COURSE_DIRNAME = "/course/uuid/image";
 
@@ -50,8 +54,17 @@ class CourseSaveFacadeTest {
     void success_course_metadata_to_redis() {
 
         // given
-        CourseSaveDto dto = new CourseSaveDto(TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                true, null, List.of());
+        CourseSaveDto dto = new CourseSaveDto(
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                null,
+                List.of()
+        );
         CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, TEST_COURSE_DIRNAME, List.of());
         given(courseSaveService.saveCourseToRedis(dto)).willReturn(responseDto);
 
@@ -70,12 +83,10 @@ class CourseSaveFacadeTest {
         // given
         PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                TEST_COURSE_IMAGE_OBJECT_KEY,
                 null,
                 List.of(pinDto)
         );
 
-        given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).willReturn(true);
         given(courseSaveService.commitSave(TEST_COURSE_UUID, commitDto)).willReturn(123L);
 
@@ -87,35 +98,16 @@ class CourseSaveFacadeTest {
     }
 
     @Test
-    @DisplayName("코스 이미지가 존재하지 않는 경우 오류가 발생한다.")
-    void fail_course_image_not_found() {
-
-        // given
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                TEST_COURSE_IMAGE_OBJECT_KEY, null, List.of()
-        );
-
-        given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(false);
-
-        // when & then
-        assertThatThrownBy(() -> courseSaveFacade.commitSaveCourse(TEST_COURSE_UUID, commitDto))
-                .isInstanceOf(CourseErrorCode.NOT_FOUND_COURSE_IMAGE.toException().getClass())
-                .hasMessageContaining("저장된 코스 이미지를 찾을 수 없습니다.");
-    }
-
-    @Test
     @DisplayName("핀 이미지가 존재하지 않는 경우 오류가 발생한다.")
     void fail_pin_image_not_found() {
 
         // given
         PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                TEST_COURSE_IMAGE_OBJECT_KEY,
                 null,
                 List.of(pinDto)
         );
 
-        given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).willReturn(false);
 
         // when & then
@@ -130,12 +122,10 @@ class CourseSaveFacadeTest {
 
         // when
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                TEST_COURSE_IMAGE_OBJECT_KEY,
                 List.of(TEST_COUPLE_COURSE_IMAGE_KEY),
                 List.of()
         );
 
-        given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_COUPLE_COURSE_IMAGE_KEY)).willReturn(false);
 
         // when & then
@@ -153,12 +143,10 @@ class CourseSaveFacadeTest {
                 0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), List.of(TEST_COUPLE_PIN_IMAGE_KEY)
         );
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                TEST_COURSE_IMAGE_OBJECT_KEY,
                 List.of(TEST_COUPLE_COURSE_IMAGE_KEY),
                 List.of(pinDto)
         );
 
-        given(objectStorageService.exists(TEST_COURSE_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_COUPLE_COURSE_IMAGE_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).willReturn(true);
         given(objectStorageService.exists(TEST_COUPLE_PIN_IMAGE_KEY)).willReturn(false);

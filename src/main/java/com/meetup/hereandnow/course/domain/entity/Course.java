@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -27,11 +29,26 @@ public class Course extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "course_visit_date", nullable = false)
+    private LocalDate courseVisitDate;
+
+    @Column(name = "course_visit_member", length = 128, nullable = false)
+    private String courseVisitMember;
+
+    @Column(name = "course_region", length = 128, nullable = false)
+    private String courseRegion;
+
     @Column(name = "course_title", length = 128)
     private String courseTitle;
 
-    @Column(name = "course_thumbnail_image", length = 512)
-    private String courseThumbnailImage;
+    @Column(name = "course_description", length = 1024, nullable = false)
+    private String courseDescription;
+
+    @Column(name = "course_positive", length = 1024)
+    private String coursePositive;
+
+    @Column(name = "course_negative", length = 1024)
+    private String courseNegative;
 
     @Column(name = "course_rating", precision = 3, scale = 1)
     @DecimalMin(value = "1.0")
@@ -39,9 +56,6 @@ public class Course extends BaseEntity {
     @Digits(integer = 1, fraction = 1)
     @Builder.Default
     private BigDecimal courseRating = BigDecimal.valueOf(2.5);
-
-    @Column(name = "course_description", length = 1024)
-    private String courseDescription;
 
     @Column(name = "course_tags")
     @Convert(converter = CourseTagListConverter.class)

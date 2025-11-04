@@ -29,10 +29,11 @@ class PlaceCreateServiceTest {
     @InjectMocks
     private PlaceCreateService placeCreateService;
 
-    private static final String TEST_NAME = "테스트 장소";
-    private static final String TEST_ADDRESS = "테스트 주소";
-    private static final double TEST_LAT = 37.5665;
-    private static final double TEST_LON = 127.9780;
+    private static final String TEST_PLACE_NAME = "장소 이름";
+    private static final String TEST_PLACE_STREET_ADDRESS = "장소 도로명 주소";
+    private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
+    private static final double TEST_LAT = 37.1;
+    private static final double TEST_LON = 127.1;
 
     @Test
     @DisplayName("주어진 정보를 통해 place 엔티티를 성공적으로 생성한다.")
@@ -45,12 +46,18 @@ class PlaceCreateServiceTest {
         when(geometryFactory.createPoint(any(Coordinate.class))).thenReturn(point);
 
         // when
-        Place result = placeCreateService.createEntity(TEST_NAME, TEST_ADDRESS, TEST_LAT, TEST_LON);
+        Place result = placeCreateService.createEntity(
+                TEST_PLACE_NAME,
+                TEST_PLACE_STREET_ADDRESS,
+                TEST_PLACE_NUMBER_ADDRESS,
+                TEST_LAT,
+                TEST_LON
+        );
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getPlaceName()).isEqualTo(TEST_NAME);
-        assertThat(result.getPlaceAddress()).isEqualTo(TEST_ADDRESS);
+        assertThat(result.getPlaceName()).isEqualTo(TEST_PLACE_NAME);
+        assertThat(result.getPlaceStreetNameAddress()).isEqualTo(TEST_PLACE_STREET_ADDRESS);
 
         Point location = result.getLocation();
         assertThat(location.getX()).isEqualTo(TEST_LON);
@@ -63,14 +70,17 @@ class PlaceCreateServiceTest {
     void success_return_place_list() {
         // given
         Place place1 = Place.builder()
-                .placeName(TEST_NAME)
-                .placeAddress(TEST_ADDRESS)
+                .placeName(TEST_PLACE_NAME)
+                .placeStreetNameAddress(TEST_PLACE_STREET_ADDRESS)
+                .placeNumberAddress(TEST_PLACE_NUMBER_ADDRESS)
                 .build();
 
         Place place2 = Place.builder()
                 .placeName("장소 2")
-                .placeAddress("주소 2")
+                .placeStreetNameAddress("장소 2 도로명 주소")
+                .placeNumberAddress("장소 2 지번 주소")
                 .build();
+
         List<Place> placesToSave = List.of(place1, place2);
 
         when(placeRepository.saveAll(placesToSave)).thenReturn(placesToSave);
@@ -82,7 +92,7 @@ class PlaceCreateServiceTest {
         assertThat(result).isNotNull();
         assertThat(result).hasSize(2);
 
-        assertThat(result.getFirst().getPlaceName()).isEqualTo(TEST_NAME);
-        assertThat(result.getFirst().getPlaceAddress()).isEqualTo(TEST_ADDRESS);
+        assertThat(result.getFirst().getPlaceName()).isEqualTo(TEST_PLACE_NAME);
+        assertThat(result.getFirst().getPlaceStreetNameAddress()).isEqualTo(TEST_PLACE_STREET_ADDRESS);
     }
 }

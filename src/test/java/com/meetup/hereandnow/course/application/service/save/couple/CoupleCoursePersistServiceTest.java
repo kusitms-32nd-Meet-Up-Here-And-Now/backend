@@ -10,6 +10,7 @@ import com.meetup.hereandnow.member.repository.CoupleRepository;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinRecordSaveService;
 import com.meetup.hereandnow.pin.domain.entity.CouplePinRecord;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,14 +44,28 @@ class CoupleCoursePersistServiceTest {
     @InjectMocks
     private CoupleCoursePersistService coupleCoursePersistService;
 
+    private static final String TEST_COURSE_TITLE = "코스 제목";
+    private static final String TEST_COURSE_DESC = "코스 설명";
+    private static final String TEST_COURSE_POSITIVE = "코스 좋은 점";
+    private static final String TEST_COURSE_NEGATIVE = "코스 아쉬운 점";
+    private static final LocalDate TEST_COURSE_VISIT_DATE = LocalDate.now();
+    private static final String TEST_COURSE_WITH = "친구";
+    private static final String TEST_COURSE_REGION = "마포";
+
     @Test
     @DisplayName("커플 기록이 정상적으로 저장된다.")
     void success_couple_course_save() {
         // given
         Member member = mock(Member.class);
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                "title", 4.5, "desc", true,
-                new CoupleCourseRecordSaveRequestDto("gDesc", "bDesc"),
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                new CoupleCourseRecordSaveRequestDto("gDesc", "mDesc"),
                 List.of()
         );
         Course course = mock(Course.class);
@@ -89,7 +104,13 @@ class CoupleCoursePersistServiceTest {
         // given
         Member member = mock(Member.class);
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                "title", 4.5, "desc", true,
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
                 null,
                 List.of()
         );

@@ -23,7 +23,7 @@ public class CoursePersistService {
     private final PinSaveFacade pinSaveFacade;
 
     public Course persist(CourseSaveDto dto, Member member, CommitSaveCourseRequestDto commitSaveCourseRequestDto) {
-        Course course = CourseMapper.toEntity(dto, member, commitSaveCourseRequestDto.courseImageObjectKey());
+        Course course = CourseMapper.toEntity(dto, member);
         courseRepository.save(course);
 
         Map<String, Place> placeMap = placeSaveFacade.findOrCreatePlaces(dto.pinList());

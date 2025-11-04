@@ -44,7 +44,8 @@ public class PlaceSaveFacade {
                     () -> {
                         Place newPlace = placeCreateService.createEntity(
                                 placeDto.placeName(),
-                                placeDto.placeAddress(),
+                                placeDto.placeStreetNameAddress(),
+                                placeDto.placeNumberAddress(),
                                 placeDto.placeLatitude(),
                                 placeDto.placeLongitude()
                         );

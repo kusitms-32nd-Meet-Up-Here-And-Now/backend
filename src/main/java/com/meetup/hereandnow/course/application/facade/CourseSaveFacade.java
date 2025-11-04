@@ -41,10 +41,6 @@ public class CourseSaveFacade {
     }
 
     private void validateImagesExist(CommitSaveCourseRequestDto requestDto) {
-        if (!objectStorageService.exists(requestDto.courseImageObjectKey())) {
-            throw CourseErrorCode.NOT_FOUND_COURSE_IMAGE.toException();
-        }
-
         if (requestDto.coupleCourseImageObjectKeyList() != null) {
             validateCoupleCourseImage(requestDto.coupleCourseImageObjectKeyList());
         }

@@ -27,10 +27,11 @@ class PlaceFindServiceTest {
 
     private GeometryFactory geometryFactory = new GeometryFactory();
 
-    private final String TEST_NAME = "테스트 장소";
-    private final String TEST_ADDRESS = "테스트 주소";
-    private final double TEST_LAT = 37.5665;
-    private final double TEST_LON = 127.9780;
+    private static final String TEST_PLACE_NAME = "장소 이름";
+    private static final String TEST_PLACE_STREET_ADDRESS = "장소 도로명 주소";
+    private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
+    private static final double TEST_LAT = 37.1;
+    private static final double TEST_LON = 127.1;
 
     @Test
     @DisplayName("Place 객체 1개가 정상적으로 반환된다.")
@@ -40,15 +41,16 @@ class PlaceFindServiceTest {
         Point point = geometryFactory.createPoint(coord);
 
         Place expected = Place.builder()
-                .placeName(TEST_NAME)
-                .placeAddress(TEST_ADDRESS)
+                .placeName(TEST_PLACE_NAME)
+                .placeStreetNameAddress(TEST_PLACE_STREET_ADDRESS)
+                .placeNumberAddress(TEST_PLACE_NUMBER_ADDRESS)
                 .location(point)
                 .build();
 
-        when(placeRepository.findByNameAndCoordinates(TEST_NAME, TEST_LAT, TEST_LON)).thenReturn(Optional.of(expected));
+        when(placeRepository.findByNameAndCoordinates(TEST_PLACE_NAME, TEST_LAT, TEST_LON)).thenReturn(Optional.of(expected));
 
         // when
-        Optional<Place> result = placeFindService.findByNameAndCoordinates(TEST_NAME, TEST_LAT, TEST_LON);
+        Optional<Place> result = placeFindService.findByNameAndCoordinates(TEST_PLACE_NAME, TEST_LAT, TEST_LON);
 
         // then
         assertThat(result).isPresent();

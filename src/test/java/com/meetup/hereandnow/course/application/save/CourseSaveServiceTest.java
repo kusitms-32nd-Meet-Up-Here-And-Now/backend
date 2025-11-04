@@ -11,6 +11,7 @@ import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,18 +49,23 @@ class CourseSaveServiceTest {
     private static final String WRONG_UUID = "wrong-uuid";
 
     private static final String TEST_PLACE_NAME = "장소 이름";
-    private static final String TEST_PLACE_ADDRESS = "장소 주소";
+    private static final String TEST_PLACE_STREET_ADDRESS = "장소 도로명 주소";
+    private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
 
-    private static final String TEST_PIN_TITLE = "핀 제목";
-    private static final String TEST_PIN_DESC = "핀 설명";
+    private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
+    private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
     private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
     private static final String TEST_COURSE_DESC = "코스 설명";
-    private static final double TEST_COURSE_RATING = 4.5;
+    private static final String TEST_COURSE_POSITIVE = "코스 좋은 점";
+    private static final String TEST_COURSE_NEGATIVE = "코스 아쉬운 점";
+    private static final LocalDate TEST_COURSE_VISIT_DATE = LocalDate.now();
+    private static final String TEST_COURSE_WITH = "친구";
+    private static final String TEST_COURSE_REGION = "마포";
 
     @BeforeEach
     void setUp() {
@@ -83,14 +89,34 @@ class CourseSaveServiceTest {
         securityUtilsMock.when(SecurityUtils::getCurrentMember).thenReturn(dummymember);
         uuidUtilsMock.when(UUIDUtils::getUUID).thenReturn(FIXED_UUID);
 
-        PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                TEST_PLACE_CODE, List.of(), null, placeDto
+        PlaceSaveDto placeDto = new PlaceSaveDto(
+                TEST_PLACE_NAME,
+                TEST_PLACE_STREET_ADDRESS,
+                TEST_PLACE_NUMBER_ADDRESS,
+                TEST_LAT,
+                TEST_LON
+        );
+
+        PinSaveDto pinDto = new PinSaveDto(
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                null,
+                placeDto
         );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, null, List.of(pinDto)
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                null,
+                List.of(pinDto)
         );
 
         // when
@@ -114,17 +140,38 @@ class CourseSaveServiceTest {
         securityUtilsMock.when(SecurityUtils::getCurrentMember).thenReturn(dummymember);
         uuidUtilsMock.when(UUIDUtils::getUUID).thenReturn(FIXED_UUID);
 
-        PlaceSaveDto placeDto = new PlaceSaveDto(TEST_PLACE_NAME, TEST_PLACE_ADDRESS, TEST_LAT, TEST_LON);
-        PinSaveDto pinDto = new PinSaveDto(TEST_PIN_TITLE, TEST_PIN_RATING, TEST_PIN_DESC,
-                TEST_PLACE_CODE, List.of(), null, placeDto
+        PlaceSaveDto placeDto = new PlaceSaveDto(
+                TEST_PLACE_NAME,
+                TEST_PLACE_STREET_ADDRESS,
+                TEST_PLACE_NUMBER_ADDRESS,
+                TEST_LAT,
+                TEST_LON
+        );
+
+        PinSaveDto pinDto = new PinSaveDto(
+                TEST_PIN_RATING,
+                TEST_PIN_POSITIVE,
+                TEST_PIN_NEGATIVE,
+                TEST_PLACE_CODE,
+                List.of(),
+                null,
+                placeDto
         );
 
         CoupleCourseRecordSaveRequestDto coupleDto = new CoupleCourseRecordSaveRequestDto(
                 "여자친구 설명", "남자친구 설명"
         );
+
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, coupleDto, List.of(pinDto)
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                coupleDto,
+                List.of(pinDto)
         );
 
         // when
