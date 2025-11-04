@@ -8,6 +8,7 @@ import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.exception.PinErrorCode;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,11 @@ class CourseSaveFacadeTest {
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
     private static final String TEST_COURSE_DESC = "코스 설명";
-    private static final double TEST_COURSE_RATING = 4.5;
+    private static final String TEST_COURSE_POSITIVE = "코스 좋은 점";
+    private static final String TEST_COURSE_NEGATIVE = "코스 아쉬운 점";
+    private static final LocalDate TEST_COURSE_VISIT_DATE = LocalDate.now();
+    private static final String TEST_COURSE_WITH = "친구";
+    private static final String TEST_COURSE_REGION = "마포";
     private static final String TEST_COURSE_UUID = "uuid";
     private static final String TEST_COURSE_DIRNAME = "/course/uuid/image";
 
@@ -49,8 +54,17 @@ class CourseSaveFacadeTest {
     void success_course_metadata_to_redis() {
 
         // given
-        CourseSaveDto dto = new CourseSaveDto(TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                true, null, null, null ,List.of());
+        CourseSaveDto dto = new CourseSaveDto(
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                null,
+                List.of()
+        );
         CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, TEST_COURSE_DIRNAME, List.of());
         given(courseSaveService.saveCourseToRedis(dto)).willReturn(responseDto);
 

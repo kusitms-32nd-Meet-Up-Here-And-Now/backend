@@ -11,6 +11,7 @@ import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.application.facade.PlaceSaveFacade;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,11 @@ class CoursePersistServiceTest {
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
     private static final String TEST_COURSE_DESC = "코스 설명";
-    private static final double TEST_COURSE_RATING = 4.5;
+    private static final String TEST_COURSE_POSITIVE = "코스 좋은 점";
+    private static final String TEST_COURSE_NEGATIVE = "코스 아쉬운 점";
+    private static final LocalDate TEST_COURSE_VISIT_DATE = LocalDate.now();
+    private static final String TEST_COURSE_WITH = "친구";
+    private static final String TEST_COURSE_REGION = "마포";
 
     @BeforeEach
     void setUp() {
@@ -90,9 +95,17 @@ class CoursePersistServiceTest {
         );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, null, null, null, List.of(pinDto)
+                TEST_COURSE_TITLE,
+                TEST_COURSE_DESC,
+                TEST_COURSE_POSITIVE,
+                TEST_COURSE_NEGATIVE,
+                true,
+                TEST_COURSE_VISIT_DATE,
+                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                null,
+                List.of(pinDto)
         );
+
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
                 null,
                 List.of()

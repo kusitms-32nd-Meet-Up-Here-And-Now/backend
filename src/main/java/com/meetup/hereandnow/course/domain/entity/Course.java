@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,7 +30,7 @@ public class Course extends BaseEntity {
     private Long id;
 
     @Column(name = "course_visit_date", nullable = false)
-    private LocalDateTime courseVisitDate;
+    private LocalDate courseVisitDate;
 
     @Column(name = "course_visit_member", length = 128, nullable = false)
     private String courseVisitMember;

@@ -13,8 +13,10 @@ public class CourseMapper {
 
     public static Course toEntity(CourseSaveDto dto, Member member) {
         return Course.builder()
+                .courseVisitDate(dto.courseVisitDate())
+                .courseVisitMember(dto.courseWith())
+                .courseRegion(dto.courseRegion())
                 .courseTitle(dto.courseTitle())
-                .courseRating(BigDecimal.valueOf(dto.courseRating()))
                 .courseDescription(dto.courseDescription())
                 .isPublic(dto.isPublic())
                 .coursePositive(dto.coursePositive())
