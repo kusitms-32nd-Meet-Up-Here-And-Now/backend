@@ -8,12 +8,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +83,7 @@ public class Course extends BaseEntity {
             orphanRemoval = true, cascade = CascadeType.ALL
     )
     @Builder.Default
+    @BatchSize(size = 100)
     private List<Pin> pinList = new ArrayList<>();
 
     public void addPin(Pin pin) {

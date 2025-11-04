@@ -1,8 +1,8 @@
 package com.meetup.hereandnow.archive.presentation.controller;
 
 import com.meetup.hereandnow.archive.application.facade.ArchiveFacade;
-import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
-import com.meetup.hereandnow.archive.dto.response.PlaceCardDto;
+import com.meetup.hereandnow.archive.dto.response.CourseFolderResponseDto;
+import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.archive.presentation.swagger.ArchiveSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,40 +22,24 @@ public class ArchiveController implements ArchiveSwagger {
     private final ArchiveFacade archiveFacade;
 
     @Override
+    @GetMapping("/recent")
+    public ResponseEntity<RestResponse<RecentArchiveResponseDto>> getCreatedCourse() {
+        return ResponseEntity.ok(
+                new RestResponse<>(
+                        archiveFacade.getRecentArchive()
+                )
+        );
+    }
+
+    @Override
     @GetMapping("/created")
-    public ResponseEntity<RestResponse<List<CourseCardDto>>> getCreatedCourse(
+    public ResponseEntity<RestResponse<List<CourseFolderResponseDto>>> getMyCreatedCourses(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(
                 new RestResponse<>(
                         archiveFacade.getMyCreatedCourses(page, size)
-                )
-        );
-    }
-
-    @Override
-    @GetMapping("/scrapped/course")
-    public ResponseEntity<RestResponse<List<CourseCardDto>>> getScrappedCourse(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        return ResponseEntity.ok(
-                new RestResponse<>(
-                        archiveFacade.getMyScrappedCourses(page, size)
-                )
-        );
-    }
-
-    @Override
-    @GetMapping("/scrapped/place")
-    public ResponseEntity<RestResponse<List<PlaceCardDto>>> getScrappedPlace(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        return ResponseEntity.ok(
-                new RestResponse<>(
-                        archiveFacade.getMyScrappedPlaces(page, size)
                 )
         );
     }
