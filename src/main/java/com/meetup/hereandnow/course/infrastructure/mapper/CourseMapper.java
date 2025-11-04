@@ -17,6 +17,8 @@ public class CourseMapper {
                 .courseRating(BigDecimal.valueOf(dto.courseRating()))
                 .courseDescription(dto.courseDescription())
                 .isPublic(dto.isPublic())
+                .coursePositive(dto.coursePositive())
+                .courseNegative(dto.courseNegative())
                 .member(member)
                 .build();
     }
