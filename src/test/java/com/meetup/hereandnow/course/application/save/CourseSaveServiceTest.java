@@ -104,7 +104,7 @@ class CourseSaveServiceTest {
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, null, List.of(pinDto)
+                Boolean.TRUE, null, null, null, List.of(pinDto)
         );
 
         // when
@@ -151,7 +151,7 @@ class CourseSaveServiceTest {
         );
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, coupleDto, List.of(pinDto)
+                Boolean.TRUE, null, null, coupleDto, List.of(pinDto)
         );
 
         // when

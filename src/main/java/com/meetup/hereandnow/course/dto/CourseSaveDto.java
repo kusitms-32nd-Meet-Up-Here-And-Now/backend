@@ -20,6 +20,12 @@ public record CourseSaveDto(
         @Schema(description = "코스 공개 여부", example = "true")
         Boolean isPublic,
 
+        @Schema(description = "코스 좋았던 점", example = "너무 느좋이에요")
+        String coursePositive,
+
+        @Schema(description = "코스 나빴던 점", example = "도로가 너무 좁아요")
+        String courseNegative,
+
         CoupleCourseRecordSaveRequestDto coupleCourseRecordSaveRequestDto,
 
         List<PinSaveDto> pinList

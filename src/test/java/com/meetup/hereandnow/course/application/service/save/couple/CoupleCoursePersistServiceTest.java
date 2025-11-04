@@ -50,7 +50,7 @@ class CoupleCoursePersistServiceTest {
         Member member = mock(Member.class);
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 "title", 4.5, "desc", true,
-                new CoupleCourseRecordSaveRequestDto("gDesc", "bDesc"),
+                null, null, new CoupleCourseRecordSaveRequestDto("gDesc", "bDesc"),
                 List.of()
         );
         Course course = mock(Course.class);
@@ -90,7 +90,7 @@ class CoupleCoursePersistServiceTest {
         Member member = mock(Member.class);
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 "title", 4.5, "desc", true,
-                null,
+                null, null, null,
                 List.of()
         );
         Course course = mock(Course.class);

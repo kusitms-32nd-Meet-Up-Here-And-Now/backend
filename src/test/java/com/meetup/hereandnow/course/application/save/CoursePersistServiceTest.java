@@ -91,7 +91,7 @@ class CoursePersistServiceTest {
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
                 TEST_COURSE_TITLE, TEST_COURSE_RATING, TEST_COURSE_DESC,
-                Boolean.TRUE, null, List.of(pinDto)
+                Boolean.TRUE, null, null, null, List.of(pinDto)
         );
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
                 null,
