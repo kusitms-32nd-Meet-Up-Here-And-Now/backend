@@ -6,7 +6,6 @@ import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record CourseSaveDto(
@@ -27,7 +26,7 @@ public record CourseSaveDto(
         Boolean isPublic,
 
         @Schema(description = "코스 방문 날짜", example = "2025.11.02")
-        @JsonFormat(pattern = "yyyy.mm.dd")
+        @JsonFormat(pattern = "yyyy.MM.dd")
         LocalDate courseVisitDate,
 
         @Schema(description = "코스 함께한 사람", example = "연인")

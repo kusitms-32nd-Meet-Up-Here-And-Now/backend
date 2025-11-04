@@ -32,7 +32,7 @@ public class Place extends BaseEntity {
     @Column(name = "place_street_name_address", nullable = false)
     private String placeStreetNameAddress;
 
-    @Column(name = "place_number_address", nullable = false)
+    @Column(name = "place_number_address")
     private String placeNumberAddress;
 
     @Column(name = "location", columnDefinition = "geography(Point, 4326)")
