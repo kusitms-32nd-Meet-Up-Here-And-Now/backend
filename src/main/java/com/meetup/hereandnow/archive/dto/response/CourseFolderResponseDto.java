@@ -1,6 +1,5 @@
 package com.meetup.hereandnow.archive.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -17,8 +16,7 @@ public record CourseFolderResponseDto(
         @Schema(description = "코스 댓글 수", example = "4")
         Integer commentCount,
 
-        @Schema(description = "코스 방문 날짜", example = "2025. 11. 05")
-        @JsonFormat(pattern = "yyyy. MM. dd")
+        @Schema(description = "코스 방문 날짜", example = "2025-11-05")
         LocalDate courseVisitDate
 ) {
     public static CourseFolderResponseDto from(Course course) {

@@ -1,6 +1,5 @@
 package com.meetup.hereandnow.archive.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -12,8 +11,7 @@ public record RecentArchiveResponseDto(
         @Schema(description = "코스 ID", example = "1")
         Long courseId,
 
-        @Schema(description = "코스 방문 날짜", example = "2025. 11. 05")
-        @JsonFormat(pattern = "yyyy. MM. dd")
+        @Schema(description = "코스 방문 날짜", example = "2025-11-05")
         LocalDate courseVisitDate,
 
         @Schema(description = "코스 제목", example = "성수동 주말, 오랜만에 만난 친구와 완벽한 하루")
