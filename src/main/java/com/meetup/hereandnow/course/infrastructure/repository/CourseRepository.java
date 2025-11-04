@@ -19,4 +19,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     Optional<Course> findByIdWithLock(@Param("id") Long id);
 
     Page<Course> findByMemberOrderByCreatedAtDesc(Member member, Pageable pageable);
+
+    Optional<Course> findByMemberOrderByCreatedAtDesc(Member member);
 }

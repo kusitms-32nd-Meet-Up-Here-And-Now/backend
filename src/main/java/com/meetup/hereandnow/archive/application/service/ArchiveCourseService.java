@@ -1,12 +1,10 @@
 package com.meetup.hereandnow.archive.application.service;
 
-import com.meetup.hereandnow.archive.application.service.converter.CourseCardDtoConverterService;
-import com.meetup.hereandnow.archive.dto.response.CourseCardDto;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.scrap.domain.CourseScrap;
-import com.meetup.hereandnow.scrap.infrastructure.repository.CourseScrapRepository;
+import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,33 +12,33 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ArchiveCourseService {
 
     private final CourseRepository courseRepository;
-    private final CourseScrapRepository courseScrapRepository;
-    private final CourseCardDtoConverterService converterService;
+    private final PinImageRepository pinImageRepository;
+    private final ObjectStorageService objectStorageService;
 
-    public List<CourseCardDto> getMyScrappedCourses(Member member, PageRequest pageRequest) {
-        Page<CourseScrap> scrapPage = courseScrapRepository
-                .findByMemberWithCourse(member, pageRequest);
-        List<Course> courses = scrapPage.stream()
-                .map(CourseScrap::getCourse)
-                .toList();
-        if (courses.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return converterService.convertToCourseCardDto(courses);
+    public Optional<Course> getRecentCourseByMember(Member member) {
+        return courseRepository.findByMemberOrderByCreatedAtDesc(member);
     }
 
-    public List<CourseCardDto> getMyCreatedCourses(Member member, PageRequest pageRequest) {
-        Page<Course> coursePage = courseRepository.findByMemberOrderByCreatedAtDesc(member, pageRequest);
-        List<Course> courses = coursePage.getContent();
-        if (courses.isEmpty()) {
-            return Collections.emptyList();
+    public List<String> getCourseImages(Long courseId) {
+        List<String> courseImages = pinImageRepository.findImageUrlsByCourseId(courseId);
+        if (!courseImages.isEmpty()) {
+            Collections.shuffle(courseImages);
+            courseImages = courseImages.stream()
+                    .map(objectStorageService::buildImageUrl)
+                    .limit(3)
+                    .toList();
         }
-        return converterService.convertToCourseCardDto(courses);
+        return courseImages;
+    }
+
+    public Page<Course> getCoursePageByMember(Member member, PageRequest pageRequest) {
+        return courseRepository.findByMemberOrderByCreatedAtDesc(member, pageRequest);
     }
 }
