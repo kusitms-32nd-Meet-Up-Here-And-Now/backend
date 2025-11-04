@@ -34,15 +34,14 @@ public class ArchiveFacade {
 
     @Transactional(readOnly = true)
     public List<CourseFolderResponseDto> getMyCreatedCourses(int page, int size) {
-        Page<Course> coursePage = archiveCourseService.getCoursePageByMember(
+        Page<Long> idPage = archiveCourseService.getCourseIdsByMember(
                 SecurityUtils.getCurrentMember(),
                 PageRequest.of(page, size)
         );
-        if (coursePage.hasContent()) {
-            List<Course> courses = coursePage.getContent();
-            return courses.stream().map(CourseFolderResponseDto::from).toList();
-        } else {
+        if (!idPage.hasContent()) {
             return Collections.emptyList();
         }
+        List<Course> courses = archiveCourseService.getCoursesWithPins(idPage.getContent());
+        return courses.stream().map(CourseFolderResponseDto::from).toList();
     }
 }

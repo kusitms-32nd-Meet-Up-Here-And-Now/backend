@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -18,7 +19,13 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT c FROM Course c WHERE c.id = :id")
     Optional<Course> findByIdWithLock(@Param("id") Long id);
 
-    Page<Course> findByMemberOrderByCreatedAtDesc(Member member, Pageable pageable);
+    @Query("SELECT c.id FROM Course c WHERE c.member = :member ORDER BY c.createdAt DESC")
+    Page<Long> findCourseIdsByMember(Member member, Pageable pageable);
 
-    Optional<Course> findByMemberOrderByCreatedAtDesc(Member member);
+    @Query("SELECT DISTINCT c FROM Course c LEFT JOIN FETCH c.pinList WHERE c.id IN :ids ORDER BY c.createdAt DESC")
+    List<Course> findWithPinsByIds(@Param("ids") List<Long> ids);
+
+    @Query(value = "SELECT * FROM course c WHERE c.member_id = (:memberId) ORDER BY c.created_at DESC LIMIT 1",
+            nativeQuery = true)
+    Optional<Course> findByMemberOrderByCreatedAtDesc(@Param("memberId") Long memberId);
 }

@@ -23,7 +23,7 @@ public class ArchiveCourseService {
     private final ObjectStorageService objectStorageService;
 
     public Optional<Course> getRecentCourseByMember(Member member) {
-        return courseRepository.findByMemberOrderByCreatedAtDesc(member);
+        return courseRepository.findByMemberOrderByCreatedAtDesc(member.getId());
     }
 
     public List<String> getCourseImages(Long courseId) {
@@ -38,7 +38,11 @@ public class ArchiveCourseService {
         return courseImages;
     }
 
-    public Page<Course> getCoursePageByMember(Member member, PageRequest pageRequest) {
-        return courseRepository.findByMemberOrderByCreatedAtDesc(member, pageRequest);
+    public Page<Long> getCourseIdsByMember(Member member, PageRequest pageRequest) {
+        return courseRepository.findCourseIdsByMember(member, pageRequest);
+    }
+
+    public List<Course> getCoursesWithPins(List<Long> pinIds) {
+        return courseRepository.findWithPinsByIds(pinIds);
     }
 }
