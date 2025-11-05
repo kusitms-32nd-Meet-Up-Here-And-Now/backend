@@ -4,6 +4,7 @@ import com.meetup.hereandnow.archive.application.service.ArchiveCourseService;
 import com.meetup.hereandnow.archive.dto.response.CourseFolderResponseDto;
 import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.core.util.SecurityUtils;
+import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.member.domain.Member;
 import org.junit.jupiter.api.*;
@@ -16,7 +17,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,14 +29,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ArchiveFacadeTest {
 
     @Mock
     private ArchiveCourseService archiveCourseService;
+
+    @Mock
+    private CourseSearchService courseSearchService;
 
     @InjectMocks
     private ArchiveFacade archiveFacade;
@@ -152,6 +158,96 @@ class ArchiveFacadeTest {
             assertThat(response).isEmpty();
             then(archiveCourseService).should(times(1)).getCourseIdsByMember(mockMember, pageRequest);
             then(archiveCourseService).should(never()).getCoursesWithPins(anyList());
+        }
+    }
+
+    @Nested
+    @DisplayName("getFilteredArchiveCourses")
+    class getFilteredArchiveCourses {
+
+        @Test
+        @DisplayName("필터링된 아카이브 코스 조회 시 코스가 존재하면 DTO 리스트를 반환한다")
+        void get_filtered_recent_archive_when_exists() {
+
+            // given
+            int page = 0;
+            int size = 32;
+            Integer rating = 4;
+            List<String> keywords = List.of("카페");
+            LocalDate date = LocalDate.of(2025, 11, 5);
+            String with = "친구";
+            String region = "강남";
+            List<String> tags = List.of("태그");
+
+            PageRequest expectedPageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+            Course course1 = mock(Course.class);
+            Course course2 = mock(Course.class);
+            CourseFolderResponseDto dto1 = mock(CourseFolderResponseDto.class);
+            CourseFolderResponseDto dto2 = mock(CourseFolderResponseDto.class);
+
+            List<Course> courseList = List.of(course1, course2);
+            Page<Course> mockedPage = new PageImpl<>(courseList, expectedPageRequest, courseList.size());
+
+            try (MockedStatic<CourseFolderResponseDto> mockedDto = mockStatic(CourseFolderResponseDto.class)) {
+
+                mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+                mockedDto.when(() -> CourseFolderResponseDto.from(course1)).thenReturn(dto1);
+                mockedDto.when(() -> CourseFolderResponseDto.from(course2)).thenReturn(dto2);
+
+                given(courseSearchService.searchCourses(
+                        eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
+                )).willReturn(mockedPage);
+
+                // when
+                List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
+                        page, size, rating, keywords, date, with, region, tags
+                );
+
+                // then
+                assertThat(result).isNotNull();
+                assertThat(result).hasSize(2);
+                assertThat(result).containsExactly(dto1, dto2);
+
+                verify(courseSearchService).searchCourses(
+                        eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
+                );
+                mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
+                mockedDto.verify(() -> CourseFolderResponseDto.from(course1));
+                mockedDto.verify(() -> CourseFolderResponseDto.from(course2));
+            }
+        }
+
+        @Test
+        @DisplayName("필터링된 아카이브 코스 조회 시 코스가 없으면 빈 리스트를 반환한다")
+        void get_filtered_recent_archive_when_not_exists() {
+
+            // given
+            int page = 0;
+            int size = 10;
+            PageRequest expectedPageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+            Page<Course> emptyPage = new PageImpl<>(Collections.emptyList(), expectedPageRequest, 0);
+
+            mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+
+            given(courseSearchService.searchCourses(
+                    eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
+            )).willReturn(emptyPage);
+
+            // when
+            List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
+                    page, size, null, null, null, null, null, null
+            );
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result).isEmpty();
+
+            verify(courseSearchService).searchCourses(
+                    eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
+            );
+            mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
         }
     }
 }
