@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.course.domain.entity;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
-import com.meetup.hereandnow.member.domain.Couple;
+import com.meetup.hereandnow.connect.domain.Couple;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

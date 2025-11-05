@@ -1,6 +1,6 @@
-package com.meetup.hereandnow.pin.infrastructure.repository;
+package com.meetup.hereandnow.connect.infrastructure.repository;
 
-import com.meetup.hereandnow.pin.domain.entity.CouplePinImage;
+import com.meetup.hereandnow.connect.domain.CouplePinImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CouplePinImageRepository extends JpaRepository<CouplePinImage, Long> {
