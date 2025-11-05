@@ -195,7 +195,7 @@ class ArchiveFacadeTest {
                 mockedDto.when(() -> CourseFolderResponseDto.from(course1)).thenReturn(dto1);
                 mockedDto.when(() -> CourseFolderResponseDto.from(course2)).thenReturn(dto2);
 
-                given(courseSearchService.searchCourses(
+                given(courseSearchService.searchCoursesByMember(
                         eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
                 )).willReturn(mockedPage);
 
@@ -209,7 +209,7 @@ class ArchiveFacadeTest {
                 assertThat(result).hasSize(2);
                 assertThat(result).containsExactly(dto1, dto2);
 
-                verify(courseSearchService).searchCourses(
+                verify(courseSearchService).searchCoursesByMember(
                         eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
                 );
                 mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
@@ -231,7 +231,7 @@ class ArchiveFacadeTest {
 
             mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
 
-            given(courseSearchService.searchCourses(
+            given(courseSearchService.searchCoursesByMember(
                     eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
             )).willReturn(emptyPage);
 
@@ -244,7 +244,7 @@ class ArchiveFacadeTest {
             assertThat(result).isNotNull();
             assertThat(result).isEmpty();
 
-            verify(courseSearchService).searchCourses(
+            verify(courseSearchService).searchCoursesByMember(
                     eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
             );
             mockSecurityUtils.verify(SecurityUtils::getCurrentMember);

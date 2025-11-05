@@ -35,7 +35,8 @@ public interface ArchiveSwagger {
             operationId = "/archive/search"
     )
     ResponseEntity<RestResponse<List<CourseFolderResponseDto>>> getFilteredArchiveCourses(
-            int page, int size,
+            @RequestParam int page,
+            @RequestParam int size,
 
             @Schema(description = "별점", example = "5")
             Integer rating,

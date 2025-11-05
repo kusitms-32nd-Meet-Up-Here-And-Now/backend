@@ -63,7 +63,7 @@ public class ArchiveFacade {
     ) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Member member = SecurityUtils.getCurrentMember();
-        Page<Course> coursePage = courseSearchService.searchCourses(
+        Page<Course> coursePage = courseSearchService.searchCoursesByMember(
                 member, rating, keyword, date, with, region, tag, pageRequest
         );
         if (coursePage.hasContent()) {

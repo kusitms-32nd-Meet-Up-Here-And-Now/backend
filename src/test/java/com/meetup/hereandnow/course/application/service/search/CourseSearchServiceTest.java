@@ -46,13 +46,13 @@ class CourseSearchServiceTest {
 
     @Test
     @DisplayName("기본 검색 (멤버와 페이징만) 시 올바르게 호출된다")
-    void searchCourses_withOnlyMemberAndPageable_shouldCallRepository() {
+    void search_courses_by_member() {
         // given
         Page<Course> expectedPage = new PageImpl<>(List.of());
         given(courseRepository.findAll(any(Specification.class), eq(pageable))).willReturn(expectedPage);
 
         // when
-        Page<Course> result = courseSearchService.searchCourses(
+        Page<Course> result = courseSearchService.searchCoursesByMember(
                 testMember, null, null, null, null, null, null, pageable
         );
 
@@ -63,7 +63,7 @@ class CourseSearchServiceTest {
 
     @Test
     @DisplayName("모든 검색 필터 적용 시 올바르게 호출된다")
-    void searchCourses_withAllFilters_shouldCallRepository() {
+    void search_courses_by_member_all_filters() {
         // given
         Integer rating = 4;
         List<String> keywords = List.of("키워드1", "키워드2");
@@ -77,7 +77,7 @@ class CourseSearchServiceTest {
                 .willReturn(expectedPage);
 
         // when
-        Page<Course> result = courseSearchService.searchCourses(
+        Page<Course> result = courseSearchService.searchCoursesByMember(
                 testMember, rating, keywords, date, with, region, tags, pageable
         );
 
@@ -88,7 +88,7 @@ class CourseSearchServiceTest {
 
     @Test
     @DisplayName("빈 값/null 필터는 무시된다")
-    void searchCourses_withEmptyOrBlankFilters_shouldIgnoreFilters() {
+    void search_courses_by_member_all_filters_null() {
         // given
         Integer rating = 0;
         List<String> keywords = Collections.emptyList();
@@ -101,7 +101,7 @@ class CourseSearchServiceTest {
                 .willReturn(expectedPage);
 
         // when
-        Page<Course> result = courseSearchService.searchCourses(
+        Page<Course> result = courseSearchService.searchCoursesByMember(
                 testMember, rating, keywords, null, with, region, tags, pageable
         );
 

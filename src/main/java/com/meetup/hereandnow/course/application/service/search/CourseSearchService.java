@@ -19,7 +19,7 @@ public class CourseSearchService {
 
     private final CourseRepository courseRepository;
 
-    public Page<Course> searchCourses(
+    public Page<Course> searchCoursesByMember(
             Member member,
             Integer rating,
             List<String> keywords,
@@ -33,29 +33,29 @@ public class CourseSearchService {
         Specification<Course> spec = Specification.where(CourseSpecifications.hasMember(member));
 
         if (rating != null && rating > 0) {
-            spec = spec.or(CourseSpecifications.isRatingInRange(rating));
+            spec = spec.and(CourseSpecifications.isRatingInRange(rating));
         }
 
         if (keywords != null && !keywords.isEmpty()) {
-            spec = spec.or(CourseSpecifications.containsKeywords(keywords));
+            spec = spec.and(CourseSpecifications.containsKeywords(keywords));
         }
 
         if (date != null) {
-            spec = spec.or(CourseSpecifications.hasVisitDate(date));
+            spec = spec.and(CourseSpecifications.hasVisitDate(date));
         }
 
         if (with != null && !with.isBlank()) {
-            spec = spec.or(CourseSpecifications.visitedWith(with));
+            spec = spec.and(CourseSpecifications.visitedWith(with));
         }
 
         if (region != null && !region.isBlank()) {
-            spec = spec.or(CourseSpecifications.inRegion(region));
+            spec = spec.and(CourseSpecifications.inRegion(region));
         }
 
         // TODO: 업종 코드 추가
 
         if (tags != null && !tags.isEmpty()) {
-            spec = spec.or(CourseSpecifications.hasTagIn(tags));
+            spec = spec.and(CourseSpecifications.hasTagIn(tags));
         }
 
         return courseRepository.findAll(spec, pageable);
