@@ -6,17 +6,21 @@ import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.archive.presentation.swagger.ArchiveSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/archive")
+@Slf4j
 public class ArchiveController implements ArchiveSwagger {
 
     private final ArchiveFacade archiveFacade;
@@ -35,11 +39,42 @@ public class ArchiveController implements ArchiveSwagger {
     @GetMapping("/created")
     public ResponseEntity<RestResponse<List<CourseFolderResponseDto>>> getMyCreatedCourses(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "32") int size
     ) {
         return ResponseEntity.ok(
                 new RestResponse<>(
                         archiveFacade.getMyCreatedCourses(page, size)
+                )
+        );
+    }
+
+    @Override
+    @GetMapping("/search")
+    public ResponseEntity<RestResponse<List<CourseFolderResponseDto>>> getFilteredArchiveCourses(
+            @RequestParam(defaultValue = "0")
+            int page,
+            @RequestParam(defaultValue = "32")
+            int size,
+            @RequestParam(required = false)
+            Integer rating,
+            @RequestParam(required = false)
+            List<String> keyword,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate date,
+            @RequestParam(required = false)
+            String with,
+            @RequestParam(required = false)
+            String region,
+//            @RequestParam(required = false)
+//            List<String> placeCode, // TODO: 업종 코드 추가
+            @RequestParam(required = false)
+            List<String> tag
+    ) {
+        return ResponseEntity.ok(
+                new RestResponse<>(
+                        archiveFacade.getFilteredArchiveCourses(
+                                page, size, rating, keyword, date, with, region, tag
+                        )
                 )
         );
     }
