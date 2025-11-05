@@ -6,7 +6,7 @@ import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
 import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
+import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinRecordSaveService;
 import com.meetup.hereandnow.connect.domain.CouplePinRecord;

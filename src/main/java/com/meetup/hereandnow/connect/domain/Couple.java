@@ -36,10 +36,10 @@ public class Couple extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boyfriend_member_id", nullable = false)
-    private Member boyfriendMember;
+    @JoinColumn(name = "member_1", nullable = false)
+    private Member member1;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "girlfriend_member_id", nullable = false)
-    private Member girlfriendMember;
+    @JoinColumn(name = "member_2", nullable = false)
+    private Member member2;
 }

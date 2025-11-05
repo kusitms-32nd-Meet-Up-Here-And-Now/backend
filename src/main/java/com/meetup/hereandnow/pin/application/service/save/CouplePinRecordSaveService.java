@@ -5,7 +5,7 @@ import com.meetup.hereandnow.connect.domain.CouplePinRecord;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.CouplePinSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
-import com.meetup.hereandnow.connect.infrastructure.repository.CouplePinRecordRepository;
+import com.meetup.hereandnow.connect.repository.CouplePinRecordRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;

@@ -3,7 +3,7 @@ package com.meetup.hereandnow.pin.application.service.save;
 import com.meetup.hereandnow.connect.domain.CouplePinImage;
 import com.meetup.hereandnow.connect.domain.CouplePinRecord;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
-import com.meetup.hereandnow.connect.infrastructure.repository.CouplePinImageRepository;
+import com.meetup.hereandnow.connect.repository.CouplePinImageRepository;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;

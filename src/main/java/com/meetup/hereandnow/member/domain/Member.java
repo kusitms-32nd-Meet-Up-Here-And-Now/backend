@@ -1,10 +1,12 @@
 package com.meetup.hereandnow.member.domain;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
+import com.meetup.hereandnow.core.util.UUIDUtils;
 import com.meetup.hereandnow.member.domain.value.Provider;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -35,4 +37,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Provider provider;
+
+    @Column(name = "username", unique = true)
+    private String username;
 }
