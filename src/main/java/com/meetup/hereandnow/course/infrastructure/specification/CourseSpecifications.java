@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.course.infrastructure.specification;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.member.domain.Member;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -11,10 +12,25 @@ import java.util.List;
 
 public class CourseSpecifications {
 
-    // 평점
-    public static Specification<Course> hasRatingGreaterThanOrEqual(int rating) {
+    // 코스 작성자
+    public static Specification<Course> hasMember(Member member) {
         return (root, query, cb) ->
-                cb.greaterThanOrEqualTo(root.get("courseRating"), BigDecimal.valueOf(rating));
+                cb.equal(root.get("member"), member);
+    }
+
+    // 평점
+    public static Specification<Course> isRatingInRange(int rating) {
+        return (root, query, cb) -> {
+
+            // if 3점이면 3.0 이상 4.0 미만 조회되도록
+            BigDecimal lowerBound = BigDecimal.valueOf(rating);
+            BigDecimal upperBound = BigDecimal.valueOf(rating + 1);
+
+            Predicate gte = cb.greaterThanOrEqualTo(root.get("courseRating"), lowerBound);
+            Predicate lt = cb.lessThan(root.get("courseRating"), upperBound);
+
+            return cb.and(gte, lt);
+        };
     }
 
     // 키워드
