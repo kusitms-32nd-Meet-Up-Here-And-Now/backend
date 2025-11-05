@@ -33,29 +33,29 @@ public class CourseSearchService {
         Specification<Course> spec = Specification.where(CourseSpecifications.hasMember(member));
 
         if (rating != null && rating > 0) {
-            spec = spec.and(CourseSpecifications.isRatingInRange(rating));
+            spec = spec.or(CourseSpecifications.isRatingInRange(rating));
         }
 
         if (keywords != null && !keywords.isEmpty()) {
-            spec = spec.and(CourseSpecifications.containsKeywords(keywords));
+            spec = spec.or(CourseSpecifications.containsKeywords(keywords));
         }
 
         if (date != null) {
-            spec = spec.and(CourseSpecifications.hasVisitDate(date));
+            spec = spec.or(CourseSpecifications.hasVisitDate(date));
         }
 
         if (with != null && !with.isBlank()) {
-            spec = spec.and(CourseSpecifications.visitedWith(with));
+            spec = spec.or(CourseSpecifications.visitedWith(with));
         }
 
         if (region != null && !region.isBlank()) {
-            spec = spec.and(CourseSpecifications.inRegion(region));
+            spec = spec.or(CourseSpecifications.inRegion(region));
         }
 
         // TODO: 업종 코드 추가
 
         if (tags != null && !tags.isEmpty()) {
-            spec = spec.and(CourseSpecifications.hasTagIn(tags));
+            spec = spec.or(CourseSpecifications.hasTagIn(tags));
         }
 
         return courseRepository.findAll(spec, pageable);
