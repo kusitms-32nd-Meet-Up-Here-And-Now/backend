@@ -10,6 +10,7 @@ import com.meetup.hereandnow.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +61,7 @@ public class ArchiveFacade {
 //            List<String> placeCode, // TODO: 업종 코드 추가
             List<String> tag
     ) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Member member = SecurityUtils.getCurrentMember();
         Page<Course> coursePage = courseSearchService.searchCourses(
                 member, rating, keyword, date, with, region, tag, pageRequest

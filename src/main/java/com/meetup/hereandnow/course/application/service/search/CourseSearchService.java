@@ -6,9 +6,7 @@ import com.meetup.hereandnow.course.infrastructure.specification.CourseSpecifica
 import com.meetup.hereandnow.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -60,12 +58,6 @@ public class CourseSearchService {
             spec = spec.and(CourseSpecifications.hasTagIn(tags));
         }
 
-        Pageable sortedPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                Sort.by(Sort.Direction.DESC, "createdAt")
-        );
-
-        return courseRepository.findAll(spec, sortedPageable);
+        return courseRepository.findAll(spec, pageable);
     }
 }
