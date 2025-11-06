@@ -51,10 +51,11 @@ class PinSaveFacadeTest {
     private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
+    private static final String TEST_PLACE_CODE = "P03";
+    private static final String TEST_PLACE_CATEGORY = "여행 > 공원 > 도시근린공원";
 
     private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
     private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
-    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     private static final String TEST_OBJECT_KEY = "/img/1.jpg";
@@ -86,14 +87,15 @@ class PinSaveFacadeTest {
                 TEST_PLACE_STREET_ADDRESS,
                 TEST_PLACE_NUMBER_ADDRESS,
                 TEST_LAT,
-                TEST_LON
+                TEST_LON,
+                TEST_PLACE_CODE,
+                TEST_PLACE_CATEGORY
         );
 
         PinSaveDto pinDto = new PinSaveDto(
                 TEST_PIN_RATING,
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
-                TEST_PLACE_CODE,
                 List.of(),
                 null,
                 placeDto

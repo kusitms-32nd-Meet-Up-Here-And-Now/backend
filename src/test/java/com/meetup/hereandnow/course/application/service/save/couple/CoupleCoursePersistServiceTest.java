@@ -1,16 +1,15 @@
 package com.meetup.hereandnow.course.application.service.save.couple;
 
+import com.meetup.hereandnow.connect.domain.Couple;
+import com.meetup.hereandnow.connect.domain.CouplePinRecord;
+import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
-import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinImageSaveService;
 import com.meetup.hereandnow.pin.application.service.save.CouplePinRecordSaveService;
-import com.meetup.hereandnow.connect.domain.CouplePinRecord;
-import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -64,7 +64,7 @@ class CoupleCoursePersistServiceTest {
                 TEST_COURSE_NEGATIVE,
                 true,
                 TEST_COURSE_VISIT_DATE,
-                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                TEST_COURSE_WITH, TEST_COURSE_REGION, 4,
                 new CoupleCourseRecordSaveRequestDto("gDesc", "mDesc"),
                 List.of()
         );
@@ -110,7 +110,7 @@ class CoupleCoursePersistServiceTest {
                 TEST_COURSE_NEGATIVE,
                 true,
                 TEST_COURSE_VISIT_DATE,
-                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                TEST_COURSE_WITH, TEST_COURSE_REGION, 4,
                 null,
                 List.of()
         );
