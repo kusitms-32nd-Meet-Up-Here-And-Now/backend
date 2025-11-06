@@ -5,7 +5,7 @@ import com.meetup.hereandnow.course.domain.entity.CoupleCourseRecord;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
 import com.meetup.hereandnow.course.infrastructure.repository.CoupleCourseRecordRepository;
-import com.meetup.hereandnow.member.domain.Couple;
+import com.meetup.hereandnow.connect.domain.Couple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

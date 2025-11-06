@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.pin.domain.entity;
+package com.meetup.hereandnow.connect.domain;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
 import jakarta.persistence.Column;

@@ -1,9 +1,9 @@
 package com.meetup.hereandnow.pin.application.service.save;
 
-import com.meetup.hereandnow.pin.domain.entity.CouplePinImage;
-import com.meetup.hereandnow.pin.domain.entity.CouplePinRecord;
+import com.meetup.hereandnow.connect.domain.CouplePinImage;
+import com.meetup.hereandnow.connect.domain.CouplePinRecord;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
-import com.meetup.hereandnow.pin.infrastructure.repository.CouplePinImageRepository;
+import com.meetup.hereandnow.connect.repository.CouplePinImageRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

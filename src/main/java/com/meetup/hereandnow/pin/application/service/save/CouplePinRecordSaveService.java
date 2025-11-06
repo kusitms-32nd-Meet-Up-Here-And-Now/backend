@@ -1,12 +1,11 @@
 package com.meetup.hereandnow.pin.application.service.save;
 
-import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
-import com.meetup.hereandnow.member.domain.Couple;
-import com.meetup.hereandnow.pin.domain.entity.CouplePinRecord;
+import com.meetup.hereandnow.connect.domain.Couple;
+import com.meetup.hereandnow.connect.domain.CouplePinRecord;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.CouplePinSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
-import com.meetup.hereandnow.pin.infrastructure.repository.CouplePinRecordRepository;
+import com.meetup.hereandnow.connect.repository.CouplePinRecordRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
