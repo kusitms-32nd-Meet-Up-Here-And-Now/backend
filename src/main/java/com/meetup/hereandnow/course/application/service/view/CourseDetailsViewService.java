@@ -27,7 +27,7 @@ public class CourseDetailsViewService {
     private final ObjectStorageService objectStorageService;
 
     public Optional<Course> getCourseById(Long courseId) {
-        return courseRepository.findById(courseId);
+        return courseRepository.findCourseDetailsById(courseId);
     }
 
     // 코스 내 장소 중 저장한 장소들의 id만 리턴

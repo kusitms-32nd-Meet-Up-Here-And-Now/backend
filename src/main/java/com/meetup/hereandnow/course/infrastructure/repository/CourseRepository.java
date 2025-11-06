@@ -34,7 +34,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
             SELECT DISTINCT c FROM Course c
             LEFT JOIN FETCH c.pinList p
             LEFT JOIN FETCH p.place pl
-            LEFT JOIN FETCH p.pinImages pi
             WHERE c.id = :courseId
             ORDER BY p.id ASC
             """)
