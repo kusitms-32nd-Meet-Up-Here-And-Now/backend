@@ -17,6 +17,12 @@ public record PlaceSaveDto(
         double placeLatitude,
 
         @Schema(description = "장소 경도", example = "126.92367663863469")
-        double placeLongitude
+        double placeLongitude,
+
+        @Schema(description = "장소의 분류 코드", example = "CT1")
+        String placeGroupCode,
+
+        @Schema(description = "장소의 세부 카테고리", example = "여행 > 공원 > 도시근린공원")
+        String placeCategory
 ) {
 }
