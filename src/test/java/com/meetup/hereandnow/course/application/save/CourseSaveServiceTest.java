@@ -126,7 +126,6 @@ class CourseSaveServiceTest {
 
         // then
         assertThat(response.courseKey()).isEqualTo(FIXED_UUID);
-        assertThat(response.courseDirname()).isEqualTo("course/" + FIXED_UUID + "/image");
         assertThat(response.pinDirname()).hasSize(1);
         PinDirnameDto pinDir = response.pinDirname().getFirst();
         assertThat(pinDir.pinIdx()).isZero();
@@ -182,7 +181,6 @@ class CourseSaveServiceTest {
 
         // then
         assertThat(response.courseKey()).isEqualTo(FIXED_UUID);
-        assertThat(response.courseDirname()).isEqualTo("course/" + FIXED_UUID + "/image");
         assertThat(response.pinDirname()).hasSize(1);
         PinDirnameDto pinDir = response.pinDirname().getFirst();
         assertThat(pinDir.pinIdx()).isZero();

@@ -47,7 +47,6 @@ class CourseSaveFacadeTest {
     private static final String TEST_COURSE_WITH = "친구";
     private static final String TEST_COURSE_REGION = "마포";
     private static final String TEST_COURSE_UUID = "uuid";
-    private static final String TEST_COURSE_DIRNAME = "/course/uuid/image";
     private static final Integer TEST_COURSE_RATING = 4;
 
     @Test
@@ -67,7 +66,7 @@ class CourseSaveFacadeTest {
                 null,
                 List.of()
         );
-        CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, TEST_COURSE_DIRNAME, List.of());
+        CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, List.of());
         given(courseSaveService.saveCourseToRedis(dto)).willReturn(responseDto);
 
         // when
