@@ -1,8 +1,10 @@
 package com.meetup.hereandnow.place.application.service;
 
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.PlaceSaveDto;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
-import java.util.List;
+import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
+import com.meetup.hereandnow.tag.infrastructure.repository.PlaceGroupRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PlaceCreateServiceTest {
@@ -26,6 +33,9 @@ class PlaceCreateServiceTest {
     @Mock
     private GeometryFactory geometryFactory;
 
+    @Mock
+    private PlaceGroupRepository placeGroupRepository;
+
     @InjectMocks
     private PlaceCreateService placeCreateService;
 
@@ -34,6 +44,9 @@ class PlaceCreateServiceTest {
     private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
+    private static final String TEST_PLACE_CODE = "P03";
+    private static final String TEST_PLACE_CATEGORY = "여행 > 공원 > 도시근린공원";
+    private static final String TEST_PLACE_URL = "http://place.map.kakao.com/16618597";
 
     @Test
     @DisplayName("주어진 정보를 통해 place 엔티티를 성공적으로 생성한다.")
@@ -42,17 +55,24 @@ class PlaceCreateServiceTest {
         GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
         Coordinate coordinate = new Coordinate(TEST_LON, TEST_LAT);
         Point point = gf.createPoint(coordinate);
-
-        when(geometryFactory.createPoint(any(Coordinate.class))).thenReturn(point);
-
-        // when
-        Place result = placeCreateService.createEntity(
+        PlaceSaveDto dto = new PlaceSaveDto(
                 TEST_PLACE_NAME,
                 TEST_PLACE_STREET_ADDRESS,
                 TEST_PLACE_NUMBER_ADDRESS,
                 TEST_LAT,
-                TEST_LON
+                TEST_LON,
+                TEST_PLACE_CODE,
+                TEST_PLACE_CATEGORY,
+                TEST_PLACE_URL
         );
+
+        when(geometryFactory.createPoint(any(Coordinate.class))).thenReturn(point);
+        given(placeGroupRepository.findByCode("P03")).willReturn(
+                Optional.ofNullable(PlaceGroup.builder().id(1L).code("P03").name("공공기관").build())
+        );
+
+        // when
+        Place result = placeCreateService.createEntity(dto);
 
         // then
         assertThat(result).isNotNull();

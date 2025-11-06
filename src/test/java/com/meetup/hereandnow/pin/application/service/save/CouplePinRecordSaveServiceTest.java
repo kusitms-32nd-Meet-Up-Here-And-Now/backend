@@ -2,10 +2,10 @@ package com.meetup.hereandnow.pin.application.service.save;
 
 import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.connect.domain.CouplePinRecord;
+import com.meetup.hereandnow.connect.repository.CouplePinRecordRepository;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.CouplePinSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
-import com.meetup.hereandnow.connect.repository.CouplePinRecordRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,6 @@ class CouplePinRecordSaveServiceTest {
 
     private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
     private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
-    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     @BeforeEach
@@ -55,7 +54,6 @@ class CouplePinRecordSaveServiceTest {
                 TEST_PIN_RATING,
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
-                TEST_PLACE_CODE,
                 List.of(),
                 null,
                 null
@@ -67,7 +65,6 @@ class CouplePinRecordSaveServiceTest {
                 TEST_PIN_RATING,
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
-                TEST_PLACE_CODE,
                 List.of(),
                 coupleDto,
                 null

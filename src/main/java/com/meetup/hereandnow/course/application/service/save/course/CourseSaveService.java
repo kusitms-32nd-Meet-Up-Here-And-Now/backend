@@ -34,12 +34,11 @@ public class CourseSaveService {
         Member member = SecurityUtils.getCurrentMember();
 
         String courseUUID = UUIDUtils.getUUID();
-        String courseDirname = String.format("course/%s/image", courseUUID);
 
         List<PinDirnameDto> pinDirs = createPinDirnames(courseSaveDto.pinList(), courseUUID);
         courseRedisService.saveCourse(member, courseUUID, courseSaveDto);
 
-        return new CourseSaveResponseDto(courseUUID, courseDirname, pinDirs);
+        return new CourseSaveResponseDto(courseUUID, pinDirs);
     }
 
     @Transactional
