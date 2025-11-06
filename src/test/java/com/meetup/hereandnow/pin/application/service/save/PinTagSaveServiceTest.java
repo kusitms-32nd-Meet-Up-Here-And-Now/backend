@@ -62,7 +62,6 @@ class PinTagSaveServiceTest {
                 TEST_PIN_NEGATIVE,
                 TEST_PLACE_CODE,
                 List.of(),
-                null,
                 null
         );
 
@@ -84,7 +83,6 @@ class PinTagSaveServiceTest {
                 TEST_PIN_NEGATIVE,
                 TEST_PLACE_CODE,
                 pinTagList,
-                null,
                 null
         );
 

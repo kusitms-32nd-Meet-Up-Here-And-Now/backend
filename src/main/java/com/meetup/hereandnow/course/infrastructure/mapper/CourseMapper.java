@@ -1,9 +1,8 @@
 package com.meetup.hereandnow.course.infrastructure.mapper;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.member.domain.Member;
-import java.math.BigDecimal;
 
 public class CourseMapper {
 

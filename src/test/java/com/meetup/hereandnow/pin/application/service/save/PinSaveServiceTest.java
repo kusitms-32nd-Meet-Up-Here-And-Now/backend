@@ -100,7 +100,6 @@ class PinSaveServiceTest {
                 TEST_PIN_NEGATIVE,
                 TEST_PLACE_CODE,
                 List.of(),
-                null,
                 placeDto
         );
         Map<String, Place> placeMap = Map.of(TEST_PLACE_NAME + "|" + TEST_LAT + "|" + TEST_LON, dummyPlace);

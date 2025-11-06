@@ -2,9 +2,8 @@ package com.meetup.hereandnow.course.application.service.save.course;
 
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
-import com.meetup.hereandnow.course.application.service.save.couple.CoupleCoursePersistService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
@@ -24,7 +23,6 @@ public class CourseSaveService {
 
     private final CourseRedisService courseRedisService;
     private final CoursePersistService coursePersistService;
-    private final CoupleCoursePersistService coupleCoursePersistService;
     private final CourseTagSaveService courseTagSaveService;
 
     public CourseSaveResponseDto saveCourseToRedis(
@@ -56,8 +54,6 @@ public class CourseSaveService {
 
         Course course = coursePersistService.persist(dto, member, commitSaveCourseRequestDto);
         courseTagSaveService.saveCourseTag(course, dto.pinList());
-
-        coupleCoursePersistService.coupleCourseSavePersist(dto, member, course, commitSaveCourseRequestDto);
 
         courseRedisService.deleteCourse(member, courseUuid);
 

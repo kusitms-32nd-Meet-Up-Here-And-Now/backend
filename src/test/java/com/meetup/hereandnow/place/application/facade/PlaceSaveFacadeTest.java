@@ -45,8 +45,8 @@ class PlaceSaveFacadeTest {
         // given
         PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123);
         PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", "number addess 2", 37.456, 127.456);
-        PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", "CT1", List.of("야경이 예뻐요"), null, placeDto1);
-        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1","P03", List.of("이색 데이트"), null, placeDto2);
+        PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", "CT1", List.of("야경이 예뻐요"), placeDto1);
+        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1","P03", List.of("이색 데이트"),  placeDto2);
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto1, pinSaveDto2);
 
         Point point1 = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
@@ -78,7 +78,7 @@ class PlaceSaveFacadeTest {
     void success_return_existing_place() {
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto("placeName", "address", "number addess", 37.123, 127.123);
-        PinSaveDto pinSaveDto = new PinSaveDto(4.5, "핀 좋은 점", "핀 나쁜점", "CT1", List.of("야경이 예뻐요"), null, placeDto);
+        PinSaveDto pinSaveDto = new PinSaveDto(4.5, "핀 좋은 점", "핀 나쁜점", "CT1", List.of("야경이 예뻐요"), placeDto);
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto);
         Point point = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
         Place existingPlace = Place.builder().placeName("placeName").placeStreetNameAddress("address").location(point).build();

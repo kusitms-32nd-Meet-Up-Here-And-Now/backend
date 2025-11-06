@@ -1,8 +1,8 @@
-package com.meetup.hereandnow.course.application.save;
+package com.meetup.hereandnow.course.application.service.save;
 
 import com.meetup.hereandnow.course.application.service.save.course.CoursePersistService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
@@ -90,7 +90,6 @@ class CoursePersistServiceTest {
                 TEST_PIN_NEGATIVE,
                 TEST_PLACE_CODE,
                 List.of(),
-                null,
                 placeDto
         );
 
@@ -102,12 +101,10 @@ class CoursePersistServiceTest {
                 true,
                 TEST_COURSE_VISIT_DATE,
                 TEST_COURSE_WITH,TEST_COURSE_REGION,
-                null,
                 List.of(pinDto)
         );
 
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                null,
                 List.of()
         );
 

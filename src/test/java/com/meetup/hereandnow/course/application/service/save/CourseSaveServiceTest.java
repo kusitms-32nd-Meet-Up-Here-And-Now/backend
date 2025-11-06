@@ -1,12 +1,11 @@
-package com.meetup.hereandnow.course.application.save;
+package com.meetup.hereandnow.course.application.service.save;
 
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
 import com.meetup.hereandnow.course.application.service.save.course.CourseRedisService;
 import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
-import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
@@ -103,7 +102,6 @@ class CourseSaveServiceTest {
                 TEST_PIN_NEGATIVE,
                 TEST_PLACE_CODE,
                 List.of(),
-                null,
                 placeDto
         );
 
@@ -115,62 +113,6 @@ class CourseSaveServiceTest {
                 true,
                 TEST_COURSE_VISIT_DATE,
                 TEST_COURSE_WITH,TEST_COURSE_REGION,
-                null,
-                List.of(pinDto)
-        );
-
-        // when
-        var response = courseSaveService.saveCourseToRedis(courseSaveDto);
-
-        // then
-        assertThat(response.courseKey()).isEqualTo(FIXED_UUID);
-        assertThat(response.courseDirname()).isEqualTo("course/" + FIXED_UUID + "/image");
-        assertThat(response.pinDirname()).hasSize(1);
-        PinDirnameDto pinDir = response.pinDirname().getFirst();
-        assertThat(pinDir.pinIdx()).isZero();
-
-        verify(courseRedisService).saveCourse(dummymember, FIXED_UUID, courseSaveDto);
-    }
-
-    @Test
-    @DisplayName("커플 정보가 포함된 코스가 정상적으로 레디스에 저장된다.")
-    void success_save_course_to_redis_with_couple() {
-
-        // given
-        securityUtilsMock.when(SecurityUtils::getCurrentMember).thenReturn(dummymember);
-        uuidUtilsMock.when(UUIDUtils::getUUID).thenReturn(FIXED_UUID);
-
-        PlaceSaveDto placeDto = new PlaceSaveDto(
-                TEST_PLACE_NAME,
-                TEST_PLACE_STREET_ADDRESS,
-                TEST_PLACE_NUMBER_ADDRESS,
-                TEST_LAT,
-                TEST_LON
-        );
-
-        PinSaveDto pinDto = new PinSaveDto(
-                TEST_PIN_RATING,
-                TEST_PIN_POSITIVE,
-                TEST_PIN_NEGATIVE,
-                TEST_PLACE_CODE,
-                List.of(),
-                null,
-                placeDto
-        );
-
-        CoupleCourseRecordSaveRequestDto coupleDto = new CoupleCourseRecordSaveRequestDto(
-                "여자친구 설명", "남자친구 설명"
-        );
-
-        CourseSaveDto courseSaveDto = new CourseSaveDto(
-                TEST_COURSE_TITLE,
-                TEST_COURSE_DESC,
-                TEST_COURSE_POSITIVE,
-                TEST_COURSE_NEGATIVE,
-                true,
-                TEST_COURSE_VISIT_DATE,
-                TEST_COURSE_WITH,TEST_COURSE_REGION,
-                coupleDto,
                 List.of(pinDto)
         );
 

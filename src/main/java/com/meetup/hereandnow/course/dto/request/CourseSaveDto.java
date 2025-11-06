@@ -1,7 +1,6 @@
-package com.meetup.hereandnow.course.dto;
+package com.meetup.hereandnow.course.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -34,8 +33,6 @@ public record CourseSaveDto(
 
         @Schema(description = "코스 지역", example = "마포")
         String courseRegion,
-
-        CoupleCourseRecordSaveRequestDto coupleCourseRecordSaveRequestDto,
 
         List<PinSaveDto> pinList
 ) {
