@@ -1,10 +1,10 @@
-package com.meetup.hereandnow.connect.presentation.controller;
+package com.meetup.hereandnow.connect.presentation.controller.comment;
 
-import com.meetup.hereandnow.connect.application.CoupleCourseCommentSaveService;
+import com.meetup.hereandnow.connect.application.comment.CoupleCourseCommentSaveService;
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseImageCommentRequestDto;
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseTextCommentRequestDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseCommentPresignedUrlResponseDto;
-import com.meetup.hereandnow.connect.presentation.swagger.CoupleCourseCommentSaveSwagger;
+import com.meetup.hereandnow.connect.presentation.swagger.comment.CoupleCourseCommentSaveSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/couple")
+@RequestMapping("/couple/comment")
 @RequiredArgsConstructor
 public class CoupleCourseCommentSaveController implements CoupleCourseCommentSaveSwagger {
 
     private final CoupleCourseCommentSaveService coupleCourseCommentSaveService;
 
     @Override
-    @PostMapping("/comment/text")
+    @PostMapping("/text")
     public ResponseEntity<Void> saveTextComment(
             @RequestBody CoupleCourseTextCommentRequestDto coupleCourseTextCommentRequestDto
     ) {
@@ -34,7 +34,7 @@ public class CoupleCourseCommentSaveController implements CoupleCourseCommentSav
     }
 
     @Override
-    @PostMapping("/comment/image")
+    @PostMapping("/image")
     public ResponseEntity<Void> saveImageComment(
             @RequestBody CoupleCourseImageCommentRequestDto coupleCourseImageCommentRequestDto
     ) {
@@ -44,7 +44,7 @@ public class CoupleCourseCommentSaveController implements CoupleCourseCommentSav
     }
 
     @Override
-    @GetMapping("/comment/pre-signed/{courseId}")
+    @GetMapping("/pre-signed/{courseId}")
     public ResponseEntity<RestResponse<CoupleCourseCommentPresignedUrlResponseDto>> getPresignedUrl(
             @PathVariable Long courseId
     ) {

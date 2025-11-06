@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.connect.application;
+package com.meetup.hereandnow.connect.application.comment;
 
 import com.meetup.hereandnow.connect.domain.CoupleCourseImageComment;
 import com.meetup.hereandnow.connect.domain.CoupleCourseTextComment;

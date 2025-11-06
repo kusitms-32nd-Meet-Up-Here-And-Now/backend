@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.connect.presentation.swagger;
+package com.meetup.hereandnow.connect.presentation.swagger.comment;
 
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseImageCommentRequestDto;
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseTextCommentRequestDto;
