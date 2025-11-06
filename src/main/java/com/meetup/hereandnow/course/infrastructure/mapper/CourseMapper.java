@@ -3,6 +3,7 @@ package com.meetup.hereandnow.course.infrastructure.mapper;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.CourseSaveDto;
 import com.meetup.hereandnow.member.domain.Member;
+
 import java.math.BigDecimal;
 
 public class CourseMapper {
@@ -22,6 +23,7 @@ public class CourseMapper {
                 .coursePositive(dto.coursePositive())
                 .courseNegative(dto.courseNegative())
                 .member(member)
+                .courseRating(BigDecimal.valueOf(dto.courseRating()))
                 .build();
     }
 }
