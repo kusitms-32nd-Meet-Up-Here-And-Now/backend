@@ -50,6 +50,7 @@ class PinSaveServiceTest {
     private static final double TEST_LON = 127.1;
     private static final String TEST_PLACE_CODE = "P03";
     private static final String TEST_PLACE_CATEGORY = "여행 > 공원 > 도시근린공원";
+    private static final String TEST_PLACE_URL = "http://place.map.kakao.com/16618597";
 
     private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
     private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
@@ -94,7 +95,8 @@ class PinSaveServiceTest {
                 TEST_LAT,
                 TEST_LON,
                 TEST_PLACE_CODE,
-                TEST_PLACE_CATEGORY
+                TEST_PLACE_CATEGORY,
+                TEST_PLACE_URL
         );
 
         PinSaveDto dto = new PinSaveDto(

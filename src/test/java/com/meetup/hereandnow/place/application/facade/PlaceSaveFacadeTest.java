@@ -43,8 +43,8 @@ class PlaceSaveFacadeTest {
     @Test
     void success_new_place_create_and_return() {
         // given
-        PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원");
-        PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", "number addess 2", 37.456, 127.456, "P03", "여행 > 수목원");
+        PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원", "http://place.map.kakao.com/16618597");
+        PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", "number addess 2", 37.456, 127.456, "P03", "여행 > 수목원", "http://place.map.kakao.com/16618597");
         PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("야경이 예뻐요"), null, placeDto1);
         PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("이색 데이트"), null, placeDto2);
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto1, pinSaveDto2);
@@ -77,7 +77,7 @@ class PlaceSaveFacadeTest {
     @Test
     void success_return_existing_place() {
         // given
-        PlaceSaveDto placeDto = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원");
+        PlaceSaveDto placeDto = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원", "http://place.map.kakao.com/16618597");
         PinSaveDto pinSaveDto = new PinSaveDto(4.5, "핀 좋은 점", "핀 나쁜점", List.of("야경이 예뻐요"), null, placeDto);
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto);
         Point point = geometryFactory.createPoint(new Coordinate(127.123, 37.123));

@@ -46,6 +46,7 @@ class PlaceCreateServiceTest {
     private static final double TEST_LON = 127.1;
     private static final String TEST_PLACE_CODE = "P03";
     private static final String TEST_PLACE_CATEGORY = "여행 > 공원 > 도시근린공원";
+    private static final String TEST_PLACE_URL = "http://place.map.kakao.com/16618597";
 
     @Test
     @DisplayName("주어진 정보를 통해 place 엔티티를 성공적으로 생성한다.")
@@ -61,7 +62,8 @@ class PlaceCreateServiceTest {
                 TEST_LAT,
                 TEST_LON,
                 TEST_PLACE_CODE,
-                TEST_PLACE_CATEGORY
+                TEST_PLACE_CATEGORY,
+                TEST_PLACE_URL
         );
 
         when(geometryFactory.createPoint(any(Coordinate.class))).thenReturn(point);
