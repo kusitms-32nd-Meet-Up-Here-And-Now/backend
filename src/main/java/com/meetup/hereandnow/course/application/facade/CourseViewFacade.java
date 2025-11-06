@@ -27,6 +27,9 @@ public class CourseViewFacade {
         Member member = SecurityUtils.getCurrentMember();
         Course course = courseDetailsViewService.getCourseById(courseId)
                 .orElseThrow(CourseErrorCode.NOT_FOUND_COURSE::toException);
+        if (course.getIsPublic() == false && !course.getMember().getId().equals(member.getId())) {
+            throw CourseErrorCode.COURSE_NOT_PUBLIC.toException();
+        }
         return CourseDetailsResponseDto.of(member, course, getPinDtoList(member, course));
     }
 
