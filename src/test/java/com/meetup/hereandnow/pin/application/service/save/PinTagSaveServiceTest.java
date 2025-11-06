@@ -9,6 +9,7 @@ import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
 import com.meetup.hereandnow.tag.domain.entity.Tag;
 import com.meetup.hereandnow.tag.domain.entity.TagValue;
 import com.meetup.hereandnow.tag.infrastructure.repository.TagRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,11 +40,11 @@ class PinTagSaveServiceTest {
     private Pin pin1, pin2;
     private PinSaveDto pinDto1, pinDto2;
     private Tag tagA_CT1, tagB_CT1, tagC_FD6;
-    private final MockedStatic<PinTag> mockedPinTag = mockStatic(PinTag.class);
+    private MockedStatic<PinTag> mockedPinTag;
 
     @BeforeEach
     void setUp() {
-
+        mockedPinTag = mockStatic(PinTag.class);
         pin1 = mock(Pin.class);
         pin2 = mock(Pin.class);
 
@@ -63,6 +64,11 @@ class PinTagSaveServiceTest {
         tagA_CT1 = mockTag("CT1", "태그A");
         tagB_CT1 = mockTag("CT1", "태그B");
         tagC_FD6 = mockTag("FD6", "태그C");
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedPinTag.close();
     }
 
     private Tag mockTag(String groupCode, String tagName) {
