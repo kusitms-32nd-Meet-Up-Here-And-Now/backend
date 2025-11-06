@@ -2,7 +2,7 @@ package com.meetup.hereandnow.connect.application;
 
 
 import com.meetup.hereandnow.connect.domain.Couple;
-import com.meetup.hereandnow.connect.domain.CoupleStatus;
+import com.meetup.hereandnow.connect.domain.value.CoupleStatus;
 import com.meetup.hereandnow.connect.dto.response.CoupleConnectingResponseDto;
 import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.core.util.SecurityUtils;

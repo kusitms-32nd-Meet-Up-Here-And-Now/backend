@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.connect.domain;
 
+import com.meetup.hereandnow.connect.domain.value.CoupleStatus;
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
 import com.meetup.hereandnow.member.domain.Member;
 import jakarta.persistence.Column;

@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.connect.domain;
+package com.meetup.hereandnow.connect.domain.value;
 
 public enum CoupleStatus {
     ACCEPTED, WAITING
