@@ -29,4 +29,14 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
     @Query(value = "SELECT * FROM course c WHERE c.member_id = (:memberId) ORDER BY c.created_at DESC LIMIT 1",
             nativeQuery = true)
     Optional<Course> findByMemberOrderByCreatedAtDesc(@Param("memberId") Long memberId);
+
+    @Query("""
+            SELECT DISTINCT c FROM Course c
+            LEFT JOIN FETCH c.pinList p
+            LEFT JOIN FETCH p.place pl
+            LEFT JOIN FETCH p.pinImages pi
+            WHERE c.id = :courseId
+            ORDER BY p.id ASC
+            """)
+    Optional<Course> findCourseDetailsById(@Param("courseId") Long courseId);
 }
