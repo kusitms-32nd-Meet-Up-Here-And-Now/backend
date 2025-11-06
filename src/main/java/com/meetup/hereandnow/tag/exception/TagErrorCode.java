@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum TagErrorCode implements BaseErrorCode<DomainException> {
+
     NOT_FOUND_TAG_DATA(HttpStatus.NOT_FOUND, "요청한 장소 분류 및 태그 이름에 맞는 태그를 찾을 수 없습니다."),
+    PLACE_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 코드에 맞는 장소 분류를 찾을 수 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

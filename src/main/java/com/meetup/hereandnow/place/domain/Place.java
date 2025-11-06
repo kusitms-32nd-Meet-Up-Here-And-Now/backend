@@ -2,6 +2,7 @@ package com.meetup.hereandnow.place.domain;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
 import com.meetup.hereandnow.place.infrastructure.converter.PlaceTagListConverter;
+import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -37,6 +38,13 @@ public class Place extends BaseEntity {
 
     @Column(name = "location", columnDefinition = "geography(Point, 4326)")
     private Point location;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_group_id", nullable = false)
+    private PlaceGroup placeGroup;
+
+    @Column(name = "place_category")
+    private String placeCategory;
 
     @Column(name = "place_rating", precision = 3, scale = 1)
     @DecimalMin(value = "0.0")
