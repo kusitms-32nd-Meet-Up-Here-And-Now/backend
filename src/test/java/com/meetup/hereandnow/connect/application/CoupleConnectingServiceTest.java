@@ -87,7 +87,8 @@ class CoupleConnectingServiceTest {
         // given
         mockCurrentMember(current);
         given(memberRepository.findByUsername("you")).willReturn(Optional.of(opponent));
-        given(coupleRepository.findBymember1OrMember2(current, opponent)).willReturn(Optional.empty());
+        given(coupleRepository.existsByMember(current)).willReturn(false);
+        given(coupleRepository.existsByMember(opponent)).willReturn(false);
         given(coupleRepository.save(any(Couple.class))).willReturn(couple);
 
         // when
@@ -105,7 +106,7 @@ class CoupleConnectingServiceTest {
         // given
         mockCurrentMember(current);
         given(memberRepository.findByUsername("you")).willReturn(Optional.of(opponent));
-        given(coupleRepository.findBymember1OrMember2(current, opponent)).willReturn(Optional.of(couple));
+        given(coupleRepository.existsByMember(current)).willReturn(true);
 
         // when & then
         assertThatThrownBy(() -> coupleConnectingService.sendRequest("you"))
