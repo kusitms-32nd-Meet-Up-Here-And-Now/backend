@@ -46,6 +46,9 @@ public class Place extends BaseEntity {
     @Column(name = "place_category")
     private String placeCategory;
 
+    @Column(name = "place_url")
+    private String placeUrl;
+
     @Column(name = "place_rating", precision = 3, scale = 1)
     @DecimalMin(value = "0.0")
     @DecimalMax(value = "5.0")
