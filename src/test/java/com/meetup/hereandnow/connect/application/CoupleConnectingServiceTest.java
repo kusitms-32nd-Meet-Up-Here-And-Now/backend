@@ -7,7 +7,7 @@ import com.meetup.hereandnow.connect.dto.response.CoupleConnectingResponseDto;
 import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.member.exception.CoupleErrorCode;
+import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

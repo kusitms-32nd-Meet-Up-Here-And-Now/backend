@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.member.exception;
+package com.meetup.hereandnow.connect.exception;
 
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.exception.error.BaseErrorCode;

@@ -3,7 +3,7 @@ package com.meetup.hereandnow.connect.presentation.swagger;
 import com.meetup.hereandnow.connect.dto.response.CoupleConnectingResponseDto;
 import com.meetup.hereandnow.core.config.swagger.ApiErrorCode;
 import com.meetup.hereandnow.core.presentation.RestResponse;
-import com.meetup.hereandnow.member.exception.CoupleErrorCode;
+import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
