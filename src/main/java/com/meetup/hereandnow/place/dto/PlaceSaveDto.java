@@ -23,6 +23,9 @@ public record PlaceSaveDto(
         String placeGroupCode,
 
         @Schema(description = "장소의 세부 카테고리", example = "여행 > 공원 > 도시근린공원")
-        String placeCategory
+        String placeCategory,
+
+        @Schema(description = "장소 바로가기 URL", example = "http://place.map.kakao.com/16618597")
+        String placeUrl
 ) {
 }

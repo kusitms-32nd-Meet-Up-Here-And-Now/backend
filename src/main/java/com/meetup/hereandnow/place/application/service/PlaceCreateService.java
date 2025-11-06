@@ -33,6 +33,7 @@ public class PlaceCreateService {
                 .location(point)
                 .placeGroup(getPlaceGroupByCode(dto.placeGroupCode()))
                 .placeCategory(parsePlaceCategory(dto.placeCategory()))
+                .placeUrl(dto.placeUrl())
                 .build();
     }
 
