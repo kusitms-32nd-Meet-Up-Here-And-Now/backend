@@ -4,6 +4,7 @@ import com.meetup.hereandnow.connect.application.CoupleConnectingService;
 import com.meetup.hereandnow.connect.dto.response.CoupleConnectingResponseDto;
 import com.meetup.hereandnow.connect.presentation.swagger.CoupleConnectSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +26,14 @@ public class CoupleConnectController implements CoupleConnectSwagger {
     @Override
     @GetMapping("/requests/pending")
     public ResponseEntity<RestResponse<CoupleConnectingResponseDto>> getPendingRequest() {
-        if(coupleConnectingService.getPendingRequest().isPresent()) {
-            return ResponseEntity.ok(
-                    new RestResponse<>(coupleConnectingService.getPendingRequest().get())
-            );
-        }
+        Optional<CoupleConnectingResponseDto> response = coupleConnectingService.getPendingRequest();
 
-        return ResponseEntity.ok(
+        return response.map(coupleConnectingResponseDto -> ResponseEntity.ok(
+                new RestResponse<>(coupleConnectingResponseDto)
+        )).orElseGet(() -> ResponseEntity.ok(
                 new RestResponse<>(null)
-        );
+        ));
+
     }
 
     @Override

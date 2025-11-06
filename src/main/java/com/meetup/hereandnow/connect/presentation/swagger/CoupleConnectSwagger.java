@@ -6,6 +6,7 @@ import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.member.exception.CoupleErrorCode;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,7 @@ public interface CoupleConnectSwagger {
     )
     @ApiErrorCode({MemberErrorCode.class, CoupleErrorCode.class})
     ResponseEntity<RestResponse<CoupleConnectingResponseDto>> sendRequest(
-            @RequestParam(name = "상대방 username") String opponentUsername
+            @RequestParam @Parameter(description = "상대방 username") String opponentUsername
     );
 
     @Operation(
@@ -36,8 +37,9 @@ public interface CoupleConnectSwagger {
             description = "나에게 온 커플 요청을 수락합니다. 전달 받은 커플 식별자를 통해 요청을 수락합니다.",
             operationId = "POST /couple/requests/{coupleId}/approve"
     )
+    @ApiErrorCode(CoupleErrorCode.class)
     ResponseEntity<RestResponse<CoupleConnectingResponseDto>> approveRequest(
-            @PathVariable(name = "커플 식별자") Long coupleId
+            @PathVariable @Parameter(description = "커플 식별자") Long coupleId
     );
 
     @Operation(
@@ -45,7 +47,8 @@ public interface CoupleConnectSwagger {
             description = "나에게 온 커플 요청을 거절합니다. 전달 받은 커플 식별자를 통해 요청을 거절합니다.",
             operationId = "DELETE /couple/requests/{coupleId}/reject"
     )
+    @ApiErrorCode(CoupleErrorCode.class)
     ResponseEntity<Void> rejectRequest(
-            @PathVariable Long coupleId
+            @PathVariable @Parameter(description = "커플 식별자") Long coupleId
     );
 }

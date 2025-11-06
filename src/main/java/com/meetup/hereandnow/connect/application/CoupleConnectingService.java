@@ -23,7 +23,7 @@ public class CoupleConnectingService {
     private final MemberRepository memberRepository;
 
     /**
-     * ① 나에게 온 커플 요청 확인
+     *  나에게 온 커플 요청 확인
      */
     @Transactional
     public Optional<CoupleConnectingResponseDto> getPendingRequest() {
@@ -34,7 +34,7 @@ public class CoupleConnectingService {
     }
 
     /**
-     * ② 커플 요청 보내기
+     *  커플 요청 보내기
      */
     @Transactional
     public CoupleConnectingResponseDto sendRequest(String opponentUsername) {
@@ -60,7 +60,7 @@ public class CoupleConnectingService {
     }
 
     /**
-     * ③ 커플 요청 수락
+     *  커플 요청 수락
      */
     @Transactional
     public CoupleConnectingResponseDto approveRequest(Long coupleId) {
@@ -84,7 +84,7 @@ public class CoupleConnectingService {
     }
 
     /**
-     * ④ 커플 요청 거절
+     *  커플 요청 거절
      */
     @Transactional
     public void rejectRequest(Long coupleId) {
@@ -104,9 +104,8 @@ public class CoupleConnectingService {
         coupleRepository.deleteById(coupleId);
     }
 
-    // ===== Helper Methods =====
     private boolean isExistsCouple(Member member1, Member member2) {
-        return coupleRepository.findBymember1OrMember2(member1, member2).isPresent();
+        return coupleRepository.existsByMember(member1) || coupleRepository.existsByMember(member2);
     }
 
     private Member getCurrentMember() {

@@ -27,8 +27,16 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
     @Query("""
             select c
             from Couple c
-            where c.member1 = :member or c.member2 = :member and c.coupleStatus = :coupleStatus
+            where (c.member1 = :member or c.member2 = :member) and c.coupleStatus = :coupleStatus
             """)
 
     Optional<Couple> findByMemberAndStatus(@Param("member") Member member, @Param("coupleStatus") CoupleStatus coupleStatus);
+
+    @Query("""
+            select case when count(c) > 0 then true else false end
+            from Couple c
+            where c.member1 = :member
+               or c.member2 = :member
+            """)
+    Boolean existsByMember(Member member);
 }
