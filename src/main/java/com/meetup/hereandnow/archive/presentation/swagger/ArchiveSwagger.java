@@ -44,8 +44,11 @@ public interface ArchiveSwagger {
             @Schema(description = "키워드 리스트", example = "선물, 기념일")
             List<String> keyword,
 
-            @Schema(description = "방문 날짜", example = "2025-11-02")
-            LocalDate date,
+            @Schema(description = "검색 시작 날짜", example = "2025-11-01")
+            LocalDate startDate,
+
+            @Schema(description = "검색 끝 날짜", example = "2025-11-30")
+            LocalDate endDate,
 
             @Schema(description = "누구와 함께했는지", example = "연인")
             String with,

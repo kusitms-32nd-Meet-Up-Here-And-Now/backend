@@ -48,9 +48,17 @@ public class CourseSpecifications {
     }
 
     // 날짜
-    public static Specification<Course> hasVisitDate(LocalDate date) {
-        return (root, query, cb) ->
-                cb.equal(root.get("courseVisitDate"), date);
+    public static Specification<Course> isVisitDateBetween(LocalDate startDate, LocalDate endDate) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (startDate != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("courseVisitDate"), startDate));
+            }
+            if (endDate != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("courseVisitDate"), endDate));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     // 누구와 방문
@@ -65,7 +73,8 @@ public class CourseSpecifications {
                 cb.like(root.get("courseRegion"), "%" + region + "%");
     }
 
-    // TODO: 업종 코드 필터링 추가 - placeGroupCode 리팩토링 이후
+    // 업종 코드
+
 
     // 태그
     public static Specification<Course> hasTagIn(List<String> tags) {

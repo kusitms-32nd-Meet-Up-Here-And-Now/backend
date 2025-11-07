@@ -23,7 +23,8 @@ public class CourseSearchService {
             Member member,
             Integer rating,
             List<String> keywords,
-            LocalDate date,
+            LocalDate startDate,
+            LocalDate endDate,
             String with,
             String region,
 //            List<String> placeCodes,
@@ -40,8 +41,8 @@ public class CourseSearchService {
             spec = spec.and(CourseSpecifications.containsKeywords(keywords));
         }
 
-        if (date != null) {
-            spec = spec.and(CourseSpecifications.hasVisitDate(date));
+        if (startDate != null || endDate != null) {
+            spec = spec.and(CourseSpecifications.isVisitDateBetween(startDate, endDate));
         }
 
         if (with != null && !with.isBlank()) {

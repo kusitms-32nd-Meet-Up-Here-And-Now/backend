@@ -60,7 +60,9 @@ public class ArchiveController implements ArchiveSwagger {
             @RequestParam(required = false)
             List<String> keyword,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date,
+            LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate,
             @RequestParam(required = false)
             String with,
             @RequestParam(required = false)
@@ -73,7 +75,8 @@ public class ArchiveController implements ArchiveSwagger {
         return ResponseEntity.ok(
                 new RestResponse<>(
                         archiveFacade.getFilteredArchiveCourses(
-                                page, size, rating, keyword, date, with, region, tag
+                                page, size, rating, keyword,
+                                startDate, endDate, with, region, tag
                         )
                 )
         );

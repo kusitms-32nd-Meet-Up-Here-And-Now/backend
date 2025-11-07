@@ -55,16 +55,17 @@ public class ArchiveFacade {
             int size,
             Integer rating,
             List<String> keyword,
-            LocalDate date,
+            LocalDate startDate,
+            LocalDate endDate,
             String with,
             String region,
-//            List<String> placeCode, // TODO: 업종 코드 추가
+//            List<String> placeCode,
             List<String> tag
     ) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Member member = SecurityUtils.getCurrentMember();
         Page<Course> coursePage = courseSearchService.searchCoursesByMember(
-                member, rating, keyword, date, with, region, tag, pageRequest
+                member, rating, keyword, startDate, endDate, with, region, tag, pageRequest
         );
         if (coursePage.hasContent()) {
             return coursePage.getContent().stream().map(CourseFolderResponseDto::from).toList();
