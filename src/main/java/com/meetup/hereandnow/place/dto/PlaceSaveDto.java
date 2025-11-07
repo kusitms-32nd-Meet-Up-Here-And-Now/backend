@@ -19,13 +19,13 @@ public record PlaceSaveDto(
         @Schema(description = "장소 경도", example = "126.92367663863469")
         double placeLongitude,
 
-        @Schema(description = "장소의 분류 코드", example = "CT1")
+        @Schema(description = "장소의 분류 코드", example = "FD6")
         String placeGroupCode,
 
-        @Schema(description = "장소의 세부 카테고리", example = "여행 > 공원 > 도시근린공원")
+        @Schema(description = "장소의 세부 카테고리", example = "음식점/카페 > 카페")
         String placeCategory,
 
-        @Schema(description = "장소 바로가기 URL", example = "http://place.map.kakao.com/16618597")
+        @Schema(description = "장소 바로가기 URL", example = "https://place.map.kakao.com/22105109")
         String placeUrl
 ) {
 }

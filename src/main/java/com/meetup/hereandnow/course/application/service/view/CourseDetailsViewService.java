@@ -70,12 +70,14 @@ public class CourseDetailsViewService {
 
         return new PlaceDetailsResponseDto(
                 place.getPlaceName(),
+                place.getPlaceCategory(),
                 place.getPlaceStreetNameAddress(),
                 latitude,
                 longitude,
-                scrappedPlaceIds.contains(place.getId()),
                 place.getPlaceRating().doubleValue(),
-                place.getPinCount()
+                place.getPinCount(),
+                place.getPlaceUrl(),
+                scrappedPlaceIds.contains(place.getId())
         );
     }
 }

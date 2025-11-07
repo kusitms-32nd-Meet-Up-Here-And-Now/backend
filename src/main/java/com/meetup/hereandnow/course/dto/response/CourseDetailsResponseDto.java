@@ -30,7 +30,6 @@ public record CourseDetailsResponseDto(
 
         List<PinDetailsResponseDto> pins
 
-        // TODO: 코스 리뷰 (댓글) 추가 또는 댓글 API 분리
 ) {
     public static CourseDetailsResponseDto of(
             Member member,
