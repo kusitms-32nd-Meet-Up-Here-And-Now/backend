@@ -1,12 +1,11 @@
-package com.meetup.hereandnow.course.application.save;
+package com.meetup.hereandnow.course.application.service.save;
 
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.UUIDUtils;
 import com.meetup.hereandnow.course.application.service.save.course.CourseRedisService;
 import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
-import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
@@ -107,7 +106,6 @@ class CourseSaveServiceTest {
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
                 List.of(),
-                null,
                 placeDto
         );
 
@@ -119,7 +117,6 @@ class CourseSaveServiceTest {
                 true,
                 TEST_COURSE_VISIT_DATE,
                 TEST_COURSE_WITH, TEST_COURSE_REGION, 4,
-                null,
                 List.of(pinDto)
         );
 
@@ -159,12 +156,7 @@ class CourseSaveServiceTest {
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
                 List.of(),
-                null,
                 placeDto
-        );
-
-        CoupleCourseRecordSaveRequestDto coupleDto = new CoupleCourseRecordSaveRequestDto(
-                "여자친구 설명", "남자친구 설명"
         );
 
         CourseSaveDto courseSaveDto = new CourseSaveDto(
@@ -175,7 +167,6 @@ class CourseSaveServiceTest {
                 true,
                 TEST_COURSE_VISIT_DATE,
                 TEST_COURSE_WITH, TEST_COURSE_REGION, 4,
-                coupleDto,
                 List.of(pinDto)
         );
 

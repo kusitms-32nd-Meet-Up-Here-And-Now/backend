@@ -1,6 +1,5 @@
-package com.meetup.hereandnow.course.dto;
+package com.meetup.hereandnow.course.dto.request;
 
-import com.meetup.hereandnow.course.dto.request.CoupleCourseRecordSaveRequestDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -35,8 +34,6 @@ public record CourseSaveDto(
 
         @Schema(description = "코스 별점", example = "4")
         Integer courseRating,
-
-        CoupleCourseRecordSaveRequestDto coupleCourseRecordSaveRequestDto,
 
         List<PinSaveDto> pinList
 ) {

@@ -19,8 +19,6 @@ public record PinSaveDto(
         @Schema(description = "태그의 상세 이름 값", example = "[\"야경이 예뻐요\", \"주차하기 편해요\"]")
         List<String> pinTagNames,
 
-        CouplePinSaveRequestDto couplePinSaveRequestDto,
-
         PlaceSaveDto place
 ) {
 }

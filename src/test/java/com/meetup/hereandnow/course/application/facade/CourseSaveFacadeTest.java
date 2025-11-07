@@ -2,7 +2,7 @@ package com.meetup.hereandnow.course.application.facade;
 
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
@@ -36,7 +36,6 @@ class CourseSaveFacadeTest {
     private CourseSaveFacade courseSaveFacade;
 
     private static final String TEST_PIN_IMAGE_OBJECT_KEY = "course/uuid/pins/1/images/1.jpg";
-    private static final String TEST_COUPLE_PIN_IMAGE_KEY = "course/uuid/pins/1/images/couple.jpg";
     private static final String TEST_COUPLE_COURSE_IMAGE_KEY = "course/uuid/couple.jpg";
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
@@ -63,7 +62,6 @@ class CourseSaveFacadeTest {
                 TEST_COURSE_VISIT_DATE,
                 TEST_COURSE_WITH, TEST_COURSE_REGION,
                 TEST_COURSE_RATING,
-                null,
                 List.of()
         );
         CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, List.of());
@@ -82,9 +80,8 @@ class CourseSaveFacadeTest {
     void success_save_course_exists_image() {
 
         // given
-        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
+        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY));
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                null,
                 List.of(pinDto)
         );
 
@@ -103,9 +100,8 @@ class CourseSaveFacadeTest {
     void fail_pin_image_not_found() {
 
         // given
-        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), null);
+        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(0, List.of(TEST_PIN_IMAGE_OBJECT_KEY));
         CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                null,
                 List.of(pinDto)
         );
 
@@ -115,47 +111,6 @@ class CourseSaveFacadeTest {
         assertThatThrownBy(() -> courseSaveFacade.commitSaveCourse(TEST_COURSE_UUID, commitDto))
                 .isInstanceOf(PinErrorCode.NOT_FOUND_PIN_IMAGE.toException().getClass())
                 .hasMessageContaining("핀 이미지를 찾을 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("커플 코스 이미지가 존재하지 않는 경우 오류가 발생한다.")
-    void fail_couple_course_image_not_found() {
-
-        // when
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                List.of(TEST_COUPLE_COURSE_IMAGE_KEY),
-                List.of()
-        );
-
-        given(objectStorageService.exists(TEST_COUPLE_COURSE_IMAGE_KEY)).willReturn(false);
-
-        // when & then
-        assertThatThrownBy(() -> courseSaveFacade.commitSaveCourse(TEST_COURSE_UUID, commitDto))
-                .isInstanceOf(CourseErrorCode.NOT_FOUND_COUPLE_COURSE_IMAGE.toException().getClass())
-                .hasMessageContaining("저장된 커플 기록 코스 이미지를 찾을 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("커플 핀 이미지 기록이 존재하지 않는 경우 오류가 발생한다.")
-    void fail_couple_pin_image_not_found() {
-
-        // when
-        PinImageObjectKeyDto pinDto = new PinImageObjectKeyDto(
-                0, List.of(TEST_PIN_IMAGE_OBJECT_KEY), List.of(TEST_COUPLE_PIN_IMAGE_KEY)
-        );
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(
-                List.of(TEST_COUPLE_COURSE_IMAGE_KEY),
-                List.of(pinDto)
-        );
-
-        given(objectStorageService.exists(TEST_COUPLE_COURSE_IMAGE_KEY)).willReturn(true);
-        given(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).willReturn(true);
-        given(objectStorageService.exists(TEST_COUPLE_PIN_IMAGE_KEY)).willReturn(false);
-
-        // when & then
-        assertThatThrownBy(() -> courseSaveFacade.commitSaveCourse(TEST_COURSE_UUID, commitDto))
-                .isInstanceOf(PinErrorCode.NOT_FOUND_COUPLE_PIN_IMAGE.toException().getClass())
-                .hasMessageContaining("저장 된 커플 기록 핀 이미지를 찾을 수 없습니다.");
     }
 }
 
