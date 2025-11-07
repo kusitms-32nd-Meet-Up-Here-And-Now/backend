@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.course.application.service.save.course;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.infrastructure.mapper.CourseMapper;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;

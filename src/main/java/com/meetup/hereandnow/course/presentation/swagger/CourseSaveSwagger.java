@@ -2,7 +2,7 @@ package com.meetup.hereandnow.course.presentation.swagger;
 
 import com.meetup.hereandnow.core.config.swagger.ApiErrorCode;
 import com.meetup.hereandnow.core.presentation.RestResponse;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.response.CommitSaveCourseResponseDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;

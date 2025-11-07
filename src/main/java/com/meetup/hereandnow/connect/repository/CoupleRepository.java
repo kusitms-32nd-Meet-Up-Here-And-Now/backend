@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.connect.repository;
 
 import com.meetup.hereandnow.connect.domain.Couple;
-import com.meetup.hereandnow.connect.domain.CoupleStatus;
+import com.meetup.hereandnow.connect.domain.value.CoupleStatus;
 import com.meetup.hereandnow.member.domain.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

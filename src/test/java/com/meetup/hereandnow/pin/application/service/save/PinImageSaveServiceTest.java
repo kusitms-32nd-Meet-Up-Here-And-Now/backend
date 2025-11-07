@@ -45,7 +45,7 @@ class PinImageSaveServiceTest {
 
         // given
         List<Pin> pins = List.of(dummyPin);
-        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(), null);
+        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of());
 
         // when
         pinImageSaveService.savePinImages(pins, List.of(dto));
@@ -60,7 +60,7 @@ class PinImageSaveServiceTest {
 
         // given
         List<Pin> pins = List.of(dummyPin);
-        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY, TEST_OBJECT_KEY2), null);
+        PinImageObjectKeyDto dto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY, TEST_OBJECT_KEY2));
 
         when(pinImageRepository.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
 

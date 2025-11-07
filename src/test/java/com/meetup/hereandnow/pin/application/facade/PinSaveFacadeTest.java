@@ -99,7 +99,6 @@ class PinSaveFacadeTest {
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
                 List.of(),
-                null,
                 placeDto
         );
 
@@ -107,8 +106,8 @@ class PinSaveFacadeTest {
         when(pinSaveService.savePins(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace)))
                 .thenReturn(List.of(savedPin));
 
-        PinImageObjectKeyDto imageDto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY), null);
-        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(null, List.of(imageDto));
+        PinImageObjectKeyDto imageDto = new PinImageObjectKeyDto(TEST_PIN_INDEX, List.of(TEST_OBJECT_KEY));
+        CommitSaveCourseRequestDto commitDto = new CommitSaveCourseRequestDto(List.of(imageDto));
 
         // when
         pinSaveFacade.savePinEntityToTable(List.of(pinDto), dummyCourse, Map.of("장소 이름|37.1|127.1", dummyPlace), commitDto);

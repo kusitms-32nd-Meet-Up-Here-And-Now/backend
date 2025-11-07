@@ -1,12 +1,16 @@
 package com.meetup.hereandnow.connect.domain;
 
 import com.meetup.hereandnow.core.infrastructure.entity.BaseEntity;
-import jakarta.persistence.Column;
+import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.member.domain.Member;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,24 +25,20 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "couple_pin_image")
-public class CouplePinImage extends BaseEntity {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "comment_type")
+@Table(name = "couple_course_comment")
+public class CoupleCourseComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "couple_pin_image_url", length = 1024)
-    private String couplePinImageUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "couple_pin_record_id", nullable = false)
-    private CouplePinRecord couplePinRecord;
-
-    public static CouplePinImage of(String objectKey, CouplePinRecord couplePinRecord) {
-        return CouplePinImage.builder()
-                .couplePinImageUrl(objectKey)
-                .couplePinRecord(couplePinRecord)
-                .build();
-    }
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 }

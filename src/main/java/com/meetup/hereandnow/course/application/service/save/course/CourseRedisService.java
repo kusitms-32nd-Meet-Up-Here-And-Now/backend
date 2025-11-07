@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.course.application.service.save.course;
 
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.infrastructure.redis.CourseRedis;
 import com.meetup.hereandnow.member.domain.Member;
 import lombok.RequiredArgsConstructor;

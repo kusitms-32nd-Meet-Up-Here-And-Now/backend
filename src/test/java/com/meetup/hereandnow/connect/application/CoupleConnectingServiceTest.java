@@ -2,12 +2,12 @@ package com.meetup.hereandnow.connect.application;
 
 
 import com.meetup.hereandnow.connect.domain.Couple;
-import com.meetup.hereandnow.connect.domain.CoupleStatus;
+import com.meetup.hereandnow.connect.domain.value.CoupleStatus;
 import com.meetup.hereandnow.connect.dto.response.CoupleConnectingResponseDto;
 import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.member.exception.CoupleErrorCode;
+import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -87,7 +87,8 @@ class CoupleConnectingServiceTest {
         // given
         mockCurrentMember(current);
         given(memberRepository.findByUsername("you")).willReturn(Optional.of(opponent));
-        given(coupleRepository.findBymember1OrMember2(current, opponent)).willReturn(Optional.empty());
+        given(coupleRepository.existsByMember(current)).willReturn(false);
+        given(coupleRepository.existsByMember(opponent)).willReturn(false);
         given(coupleRepository.save(any(Couple.class))).willReturn(couple);
 
         // when
@@ -105,7 +106,7 @@ class CoupleConnectingServiceTest {
         // given
         mockCurrentMember(current);
         given(memberRepository.findByUsername("you")).willReturn(Optional.of(opponent));
-        given(coupleRepository.findBymember1OrMember2(current, opponent)).willReturn(Optional.of(couple));
+        given(coupleRepository.existsByMember(current)).willReturn(true);
 
         // when & then
         assertThatThrownBy(() -> coupleConnectingService.sendRequest("you"))

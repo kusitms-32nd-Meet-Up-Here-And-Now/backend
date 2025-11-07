@@ -39,14 +39,16 @@ class PlaceSaveFacadeTest {
 
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
-    @DisplayName("새로운 장소 목록이 주어지면 장소를 생성하고 반환한다")
     @Test
+    @DisplayName("새로운 장소 목록이 주어지면 장소를 생성하고 반환한다")
     void success_new_place_create_and_return() {
         // given
         PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원", "http://place.map.kakao.com/16618597");
         PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", "number addess 2", 37.456, 127.456, "P03", "여행 > 수목원", "http://place.map.kakao.com/16618597");
-        PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("야경이 예뻐요"), null, placeDto1);
-        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("이색 데이트"), null, placeDto2);
+
+        PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("야경이 예뻐요"), placeDto1);
+        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("이색 데이트"),  placeDto2);
+
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto1, pinSaveDto2);
 
         Point point1 = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
@@ -78,14 +80,15 @@ class PlaceSaveFacadeTest {
     void success_return_existing_place() {
         // given
         PlaceSaveDto placeDto = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원", "http://place.map.kakao.com/16618597");
-        PinSaveDto pinSaveDto = new PinSaveDto(4.5, "핀 좋은 점", "핀 나쁜점", List.of("야경이 예뻐요"), null, placeDto);
+        PinSaveDto pinSaveDto = new PinSaveDto(4.5, "핀 좋은 점", "핀 나쁜점", List.of("야경이 예뻐요"), placeDto);
+
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto);
         Point point = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
         Place existingPlace = Place.builder().placeName("placeName1").placeStreetNameAddress("address").location(point).build();
 
         given(placeKeyFactory.buildKey("placeName1", 37.123, 127.123)).willReturn("key1");
-        given(placeFindService.findByNameAndCoordinates("placeName1", 37.123, 127.123)).willReturn(
-                Optional.of(existingPlace));
+        given(placeFindService.findByNameAndCoordinates("placeName1", 37.123, 127.123))
+                .willReturn(Optional.of(existingPlace));
 
         // when
         Map<String, Place> result = placeSaveFacade.findOrCreatePlaces(pinSaveDtos);
