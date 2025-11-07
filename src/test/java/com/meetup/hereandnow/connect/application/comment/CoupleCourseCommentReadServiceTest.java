@@ -9,6 +9,7 @@ import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +42,7 @@ class CoupleCourseCommentReadServiceTest {
     private Course course;
 
     private MockedStatic<SecurityUtils> mockedSecurity;
+    private MockedStatic<CoupleCourseCommentResponseDto> mockedDto;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +53,9 @@ class CoupleCourseCommentReadServiceTest {
     @AfterEach
     void tearDown() {
         mockedSecurity.close();
+        if(mockedDto != null) {
+            mockedDto.close();
+        }
     }
 
     @Test
@@ -69,7 +74,7 @@ class CoupleCourseCommentReadServiceTest {
         CoupleCourseCommentResponseDto dto2 = new CoupleCourseCommentResponseDto(2L, "image", null,
                 "course/1/couple/comment/abc.png", 2L, "테스트 유저2", LocalDateTime.now());
 
-        when(courseRepository.getReferenceById(courseId)).thenReturn(course);
+        when(courseRepository.findById(courseId)).thenReturn(Optional.of(course));
         when(coupleCourseCommentRepository.findAllByCourseOrderByCreatedAtAsc(course))
                 .thenReturn(List.of(comment1, comment2));
 
@@ -83,7 +88,7 @@ class CoupleCourseCommentReadServiceTest {
         // then
         assertThat(result).hasSize(2);
 
-        verify(courseRepository).getReferenceById(courseId);
+        verify(courseRepository).findById(courseId);
         verify(coupleCourseCommentRepository).findAllByCourseOrderByCreatedAtAsc(course);
     }
 }

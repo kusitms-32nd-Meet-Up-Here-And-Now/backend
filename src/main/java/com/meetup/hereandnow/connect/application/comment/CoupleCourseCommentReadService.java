@@ -4,6 +4,7 @@ import com.meetup.hereandnow.connect.dto.response.CoupleCourseCommentResponseDto
 import com.meetup.hereandnow.connect.repository.CoupleCourseCommentRepository;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -20,7 +21,8 @@ public class CoupleCourseCommentReadService {
     @Transactional
     public List<CoupleCourseCommentResponseDto> getComments(Long courseId) {
         SecurityUtils.getCurrentMember();
-        Course course = courseRepository.getReferenceById(courseId);
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(CourseErrorCode.NOT_FOUND_COURSE::toException);
 
         return coupleCourseCommentRepository.findAllByCourseOrderByCreatedAtAsc(course).stream()
                 .map(CoupleCourseCommentResponseDto::from)

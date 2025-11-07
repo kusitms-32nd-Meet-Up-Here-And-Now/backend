@@ -30,7 +30,7 @@ public class CoupleCourseCommentSaveController implements CoupleCourseCommentSav
     ) {
         coupleCourseCommentSaveService.addTextComment(coupleCourseTextCommentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(null);
+                .build();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CoupleCourseCommentSaveController implements CoupleCourseCommentSav
     ) {
         coupleCourseCommentSaveService.addImageComment(coupleCourseImageCommentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(null);
+                .build();
     }
 
     @Override

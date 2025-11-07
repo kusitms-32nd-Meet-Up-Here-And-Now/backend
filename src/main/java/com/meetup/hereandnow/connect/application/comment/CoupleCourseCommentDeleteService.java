@@ -8,6 +8,7 @@ import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageServ
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
 import jakarta.transaction.Transactional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class CoupleCourseCommentDeleteService {
         CoupleCourseComment comment = coupleCourseCommentRepository.findById(commentId)
                 .orElseThrow(CoupleCourseCommentErrorCode.NOT_FOUND_COMMENT::toException);
 
-        if (!comment.getMember().equals(member)) {
+        if (!Objects.equals(comment.getMember().getId(), member.getId())) {
             throw CoupleCourseCommentErrorCode.FORBIDDEN_COMMENT_DELETE.toException();
         }
 
