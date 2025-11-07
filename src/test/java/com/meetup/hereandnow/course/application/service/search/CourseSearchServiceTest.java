@@ -53,7 +53,8 @@ class CourseSearchServiceTest {
 
         // when
         Page<Course> result = courseSearchService.searchCoursesByMember(
-                testMember, null, null, null, null, null, null, pageable
+                testMember, null, null, null, null,
+                null, null, null, null, pageable
         );
 
         // then
@@ -67,9 +68,11 @@ class CourseSearchServiceTest {
         // given
         Integer rating = 4;
         List<String> keywords = List.of("키워드1", "키워드2");
-        LocalDate date = LocalDate.of(2024, 1, 1);
+        LocalDate startDate = LocalDate.of(2025, 11, 1);
+        LocalDate endDate = LocalDate.of(2025, 11, 30);
         String with = "친구";
         String region = "강남";
+        List<String> placeCodes = List.of("CT1", "FD6");
         List<String> tags = List.of("태그1", "태그2");
 
         Page<Course> expectedPage = new PageImpl<>(Collections.emptyList());
@@ -78,7 +81,7 @@ class CourseSearchServiceTest {
 
         // when
         Page<Course> result = courseSearchService.searchCoursesByMember(
-                testMember, rating, keywords, date, with, region, tags, pageable
+                testMember, rating, keywords, startDate, endDate, with, region, placeCodes, tags, pageable
         );
 
         // then
@@ -102,7 +105,7 @@ class CourseSearchServiceTest {
 
         // when
         Page<Course> result = courseSearchService.searchCoursesByMember(
-                testMember, rating, keywords, null, with, region, tags, pageable
+                testMember, rating, keywords, null, null, with, region, tags, null, pageable
         );
 
         // then

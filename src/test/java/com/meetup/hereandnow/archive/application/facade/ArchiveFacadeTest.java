@@ -174,9 +174,11 @@ class ArchiveFacadeTest {
             int size = 32;
             Integer rating = 4;
             List<String> keywords = List.of("카페");
-            LocalDate date = LocalDate.of(2025, 11, 5);
+            LocalDate startDate = LocalDate.of(2025, 11, 5);
+            LocalDate endDate = LocalDate.of(2025, 11, 30);
             String with = "친구";
             String region = "강남";
+            List<String> placeCodes = List.of("CT1", "FD6");
             List<String> tags = List.of("태그");
 
             PageRequest expectedPageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -196,12 +198,14 @@ class ArchiveFacadeTest {
                 mockedDto.when(() -> CourseFolderResponseDto.from(course2)).thenReturn(dto2);
 
                 given(courseSearchService.searchCoursesByMember(
-                        eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
+                        eq(mockMember), eq(rating), eq(keywords),
+                        eq(startDate), eq(endDate), eq(with), eq(region),
+                        eq(tags), eq(placeCodes), eq(expectedPageRequest)
                 )).willReturn(mockedPage);
 
                 // when
                 List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
-                        page, size, rating, keywords, date, with, region, tags
+                        page, size, rating, keywords, startDate, endDate, with, region, placeCodes, tags
                 );
 
                 // then
@@ -210,7 +214,9 @@ class ArchiveFacadeTest {
                 assertThat(result).containsExactly(dto1, dto2);
 
                 verify(courseSearchService).searchCoursesByMember(
-                        eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
+                        eq(mockMember), eq(rating), eq(keywords),
+                        eq(startDate), eq(endDate), eq(with), eq(region),
+                        eq(tags), eq(placeCodes), eq(expectedPageRequest)
                 );
                 mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
                 mockedDto.verify(() -> CourseFolderResponseDto.from(course1));
@@ -232,12 +238,14 @@ class ArchiveFacadeTest {
             mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
 
             given(courseSearchService.searchCoursesByMember(
-                    eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
+                    eq(mockMember), any(), any(), any(), any(),
+                    any(), any(), any(), any(), eq(expectedPageRequest)
             )).willReturn(emptyPage);
 
             // when
             List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
-                    page, size, null, null, null, null, null, null
+                    page, size, null, null, null, null,
+                    null, null, null, null
             );
 
             // then
@@ -245,7 +253,8 @@ class ArchiveFacadeTest {
             assertThat(result).isEmpty();
 
             verify(courseSearchService).searchCoursesByMember(
-                    eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
+                    eq(mockMember), any(), any(), any(), any(),
+                    any(), any(), any(), any(), eq(expectedPageRequest)
             );
             mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
         }
