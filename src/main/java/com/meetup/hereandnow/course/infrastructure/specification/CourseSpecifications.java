@@ -74,7 +74,16 @@ public class CourseSpecifications {
     }
 
     // 업종 코드
-
+    public static Specification<Course> hasPlaceGroupCodeIn(List<String> placeCode) {
+        return (root, query, cb) -> {
+            query.distinct(true);
+            return root.join("pinList")
+                    .join("place")
+                    .join("placeGroup")
+                    .get("code")
+                    .in(placeCode);
+        };
+    }
 
     // 태그
     public static Specification<Course> hasTagIn(List<String> tags) {

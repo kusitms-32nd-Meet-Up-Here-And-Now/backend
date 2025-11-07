@@ -56,8 +56,8 @@ public interface ArchiveSwagger {
             @Schema(description = "지역", example = "강남")
             String region,
 
-//            @Schema(description = "업종 코드 리스트", example = "AT4, CT1")
-//            List<String> placeCode,
+            @Schema(description = "업종 코드 리스트", example = "AT4, CT1")
+            List<String> placeCode,
 
             @Schema(description = "태그 리스트", example = "사진 찍기 좋아요, 음식이 맛있어요")
             List<String> tag

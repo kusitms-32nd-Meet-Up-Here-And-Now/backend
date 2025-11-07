@@ -67,8 +67,8 @@ public class ArchiveController implements ArchiveSwagger {
             String with,
             @RequestParam(required = false)
             String region,
-//            @RequestParam(required = false)
-//            List<String> placeCode, // TODO: 업종 코드 추가
+            @RequestParam(required = false)
+            List<String> placeCode,
             @RequestParam(required = false)
             List<String> tag
     ) {
@@ -76,7 +76,8 @@ public class ArchiveController implements ArchiveSwagger {
                 new RestResponse<>(
                         archiveFacade.getFilteredArchiveCourses(
                                 page, size, rating, keyword,
-                                startDate, endDate, with, region, tag
+                                startDate, endDate, with,
+                                region, placeCode, tag
                         )
                 )
         );
