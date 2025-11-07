@@ -75,6 +75,7 @@ class CourseViewFacadeTest {
 
         mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
 
+        given(mockCourse.getMember()).willReturn(mockMember);
         given(courseDetailsViewService.getCourseById(courseId)).willReturn(Optional.of(mockCourse));
         given(mockCourse.getPinList()).willReturn(pinList);
         given(courseDetailsViewService.getScrappedPlaceIds(mockMember, mockCourse)).willReturn(scrappedPlaceIds);

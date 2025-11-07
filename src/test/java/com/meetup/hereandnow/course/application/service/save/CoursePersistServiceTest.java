@@ -11,7 +11,6 @@ import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.application.facade.PlaceSaveFacade;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.dto.PlaceSaveDto;
-import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -52,10 +52,12 @@ class CoursePersistServiceTest {
     private static final String TEST_PLACE_NUMBER_ADDRESS = "장소 지번 주소";
     private static final double TEST_LAT = 37.1;
     private static final double TEST_LON = 127.1;
+    private static final String TEST_PLACE_CODE = "CT1";
+    private static final String TEST_PLACE_CATEGORY = "여행 > 공원 > 도시근린공원";
+    private static final String TEST_PLACE_URL = "http://place.map.kakao.com/16618597";
 
     private static final String TEST_PIN_POSITIVE = "핀 좋은 점";
     private static final String TEST_PIN_NEGATIVE = "핀 나쁜 점";
-    private static final String TEST_PLACE_CODE = "CT1";
     private static final double TEST_PIN_RATING = 4.5;
 
     private static final String TEST_COURSE_TITLE = "코스 제목";
@@ -81,14 +83,16 @@ class CoursePersistServiceTest {
                 TEST_PLACE_STREET_ADDRESS,
                 TEST_PLACE_NUMBER_ADDRESS,
                 TEST_LAT,
-                TEST_LON
+                TEST_LON,
+                TEST_PLACE_CODE,
+                TEST_PLACE_CATEGORY,
+                TEST_PLACE_URL
         );
 
         PinSaveDto pinDto = new PinSaveDto(
                 TEST_PIN_RATING,
                 TEST_PIN_POSITIVE,
                 TEST_PIN_NEGATIVE,
-                TEST_PLACE_CODE,
                 List.of(),
                 placeDto
         );
@@ -100,7 +104,7 @@ class CoursePersistServiceTest {
                 TEST_COURSE_NEGATIVE,
                 true,
                 TEST_COURSE_VISIT_DATE,
-                TEST_COURSE_WITH,TEST_COURSE_REGION,
+                TEST_COURSE_WITH, TEST_COURSE_REGION, 4,
                 List.of(pinDto)
         );
 

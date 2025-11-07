@@ -8,7 +8,6 @@ import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.exception.PinErrorCode;
-import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +46,7 @@ class CourseSaveFacadeTest {
     private static final String TEST_COURSE_WITH = "친구";
     private static final String TEST_COURSE_REGION = "마포";
     private static final String TEST_COURSE_UUID = "uuid";
-    private static final String TEST_COURSE_DIRNAME = "/course/uuid/image";
+    private static final Integer TEST_COURSE_RATING = 4;
 
     @Test
     @DisplayName("코스 메타데이터를 레디스에 저장하는 것에 성공한다.")
@@ -61,9 +61,10 @@ class CourseSaveFacadeTest {
                 true,
                 TEST_COURSE_VISIT_DATE,
                 TEST_COURSE_WITH, TEST_COURSE_REGION,
+                TEST_COURSE_RATING,
                 List.of()
         );
-        CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, TEST_COURSE_DIRNAME, List.of());
+        CourseSaveResponseDto responseDto = new CourseSaveResponseDto(TEST_COURSE_UUID, List.of());
         given(courseSaveService.saveCourseToRedis(dto)).willReturn(responseDto);
 
         // when

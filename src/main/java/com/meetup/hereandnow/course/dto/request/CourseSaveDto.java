@@ -1,6 +1,5 @@
 package com.meetup.hereandnow.course.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -24,8 +23,7 @@ public record CourseSaveDto(
         @Schema(description = "코스 공개 여부", example = "true")
         Boolean isPublic,
 
-        @Schema(description = "코스 방문 날짜", example = "2025.11.02")
-        @JsonFormat(pattern = "yyyy.MM.dd")
+        @Schema(description = "코스 방문 날짜", example = "2025-11-02")
         LocalDate courseVisitDate,
 
         @Schema(description = "코스 함께한 사람", example = "연인")
@@ -33,6 +31,9 @@ public record CourseSaveDto(
 
         @Schema(description = "코스 지역", example = "마포")
         String courseRegion,
+
+        @Schema(description = "코스 별점", example = "4")
+        Integer courseRating,
 
         List<PinSaveDto> pinList
 ) {
