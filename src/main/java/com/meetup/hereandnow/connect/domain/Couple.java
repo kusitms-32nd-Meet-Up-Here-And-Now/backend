@@ -63,4 +63,12 @@ public class Couple extends BaseEntity {
     public void accept() {
         this.coupleStatus = CoupleStatus.ACCEPTED;
     }
+
+    public void changeStartDate(LocalDate startDate) {
+        this.coupleStartDate = startDate;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.coupleBannerImageUrl = imageUrl;
+    }
 }
