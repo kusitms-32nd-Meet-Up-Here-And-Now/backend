@@ -38,4 +38,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
             ORDER BY p.id ASC
             """)
     Optional<Course> findCourseDetailsById(@Param("courseId") Long courseId);
+
+    List<Course> findByCourseVisitMemberAndMemberIn(String courseVisitMember, List<Member> members);
 }

@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.connect.application;
+package com.meetup.hereandnow.connect.application.info;
 
 import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.connect.dto.response.CoupleInfoRequestDto;
@@ -8,14 +8,13 @@ import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageServ
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CoupleInfoService {
+public class CoupleInfoSaveService {
 
     private final CoupleRepository coupleRepository;
     private final ObjectStorageService objectStorageService;
@@ -40,4 +39,5 @@ public class CoupleInfoService {
         Optional.ofNullable(coupleInfoRequestDto.imageObjectKey())
                 .ifPresent(couple::updateImageUrl);
     }
+
 }
