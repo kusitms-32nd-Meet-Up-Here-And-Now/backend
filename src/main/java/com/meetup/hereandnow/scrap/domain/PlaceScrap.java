@@ -15,6 +15,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(
         name = "place_scrap",
+        indexes = {
+                @Index(name = "idx_placescrap_member_id", columnList = "member_id"),
+                @Index(name = "idx_placescrap_place_id", columnList = "place_id")
+        },
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "place_scrap_uk",
