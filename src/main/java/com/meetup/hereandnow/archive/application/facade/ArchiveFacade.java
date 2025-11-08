@@ -6,6 +6,8 @@ import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.course.dto.response.CourseSearchResponseDto;
+import com.meetup.hereandnow.course.dto.response.SearchFilterDto;
 import com.meetup.hereandnow.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -50,24 +53,29 @@ public class ArchiveFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<CourseFolderResponseDto> getFilteredArchiveCourses(
-            int page,
-            int size,
-            Integer rating,
-            List<String> keyword,
-            LocalDate date,
-            String with,
-            String region,
-//            List<String> placeCode, // TODO: 업종 코드 추가
-            List<String> tag
+    public CourseSearchResponseDto getFilteredArchiveCourses(
+            int page, int size,
+            Integer rating, List<String> keyword,
+            LocalDate startDate, LocalDate endDate,
+            String with, String region,
+            List<String> placeCode, List<String> tag
     ) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Member member = SecurityUtils.getCurrentMember();
+
         Page<Course> coursePage = courseSearchService.searchCoursesByMember(
-                member, rating, keyword, date, with, region, tag, pageRequest
+                member, rating, keyword, startDate, endDate, with, region, placeCode, tag, pageRequest
         );
+
+        List<CourseFolderResponseDto> filteredCourses = new ArrayList<>();
         if (coursePage.hasContent()) {
-            return coursePage.getContent().stream().map(CourseFolderResponseDto::from).toList();
-        } else return Collections.emptyList();
+            filteredCourses = coursePage.getContent().stream().map(CourseFolderResponseDto::from).toList();
+        }
+
+        SearchFilterDto searchFilterDto = new SearchFilterDto(
+                rating, keyword, startDate, endDate, with, region, placeCode, tag
+        );
+
+        return new CourseSearchResponseDto(searchFilterDto, filteredCourses);
     }
 }

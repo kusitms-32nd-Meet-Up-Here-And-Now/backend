@@ -6,6 +6,7 @@ import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.course.dto.response.CourseSearchResponseDto;
 import com.meetup.hereandnow.member.domain.Member;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -174,9 +175,11 @@ class ArchiveFacadeTest {
             int size = 32;
             Integer rating = 4;
             List<String> keywords = List.of("카페");
-            LocalDate date = LocalDate.of(2025, 11, 5);
+            LocalDate startDate = LocalDate.of(2025, 11, 5);
+            LocalDate endDate = LocalDate.of(2025, 11, 30);
             String with = "친구";
             String region = "강남";
+            List<String> placeCodes = List.of("CT1", "FD6");
             List<String> tags = List.of("태그");
 
             PageRequest expectedPageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -196,21 +199,25 @@ class ArchiveFacadeTest {
                 mockedDto.when(() -> CourseFolderResponseDto.from(course2)).thenReturn(dto2);
 
                 given(courseSearchService.searchCoursesByMember(
-                        eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
+                        eq(mockMember), eq(rating), eq(keywords),
+                        eq(startDate), eq(endDate), eq(with), eq(region),
+                        eq(placeCodes), eq(tags), eq(expectedPageRequest)
                 )).willReturn(mockedPage);
 
                 // when
-                List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
-                        page, size, rating, keywords, date, with, region, tags
+                CourseSearchResponseDto result = archiveFacade.getFilteredArchiveCourses(
+                        page, size, rating, keywords, startDate, endDate, with, region, placeCodes, tags
                 );
 
                 // then
                 assertThat(result).isNotNull();
-                assertThat(result).hasSize(2);
-                assertThat(result).containsExactly(dto1, dto2);
+                assertThat(result.filteredCourses()).hasSize(2);
+                assertThat(result.filteredCourses()).containsExactly(dto1, dto2);
 
                 verify(courseSearchService).searchCoursesByMember(
-                        eq(mockMember), eq(rating), eq(keywords), eq(date), eq(with), eq(region), eq(tags), eq(expectedPageRequest)
+                        eq(mockMember), eq(rating), eq(keywords),
+                        eq(startDate), eq(endDate), eq(with), eq(region),
+                        eq(placeCodes), eq(tags), eq(expectedPageRequest)
                 );
                 mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
                 mockedDto.verify(() -> CourseFolderResponseDto.from(course1));
@@ -232,20 +239,23 @@ class ArchiveFacadeTest {
             mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
 
             given(courseSearchService.searchCoursesByMember(
-                    eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
+                    eq(mockMember), any(), any(), any(), any(),
+                    any(), any(), any(), any(), eq(expectedPageRequest)
             )).willReturn(emptyPage);
 
             // when
-            List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
-                    page, size, null, null, null, null, null, null
+            CourseSearchResponseDto result = archiveFacade.getFilteredArchiveCourses(
+                    page, size, null, null, null, null,
+                    null, null, null, null
             );
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).isEmpty();
+            assertThat(result.filteredCourses()).isEmpty();
 
             verify(courseSearchService).searchCoursesByMember(
-                    eq(mockMember), any(), any(), any(), any(), any(), any(), eq(expectedPageRequest)
+                    eq(mockMember), any(), any(), any(), any(),
+                    any(), any(), any(), any(), eq(expectedPageRequest)
             );
             mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
         }

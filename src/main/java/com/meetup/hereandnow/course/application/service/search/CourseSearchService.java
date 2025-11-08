@@ -23,10 +23,11 @@ public class CourseSearchService {
             Member member,
             Integer rating,
             List<String> keywords,
-            LocalDate date,
+            LocalDate startDate,
+            LocalDate endDate,
             String with,
             String region,
-//            List<String> placeCodes,
+            List<String> placeCode,
             List<String> tags,
             Pageable pageable
     ) {
@@ -40,8 +41,8 @@ public class CourseSearchService {
             spec = spec.and(CourseSpecifications.containsKeywords(keywords));
         }
 
-        if (date != null) {
-            spec = spec.and(CourseSpecifications.hasVisitDate(date));
+        if (startDate != null || endDate != null) {
+            spec = spec.and(CourseSpecifications.isVisitDateBetween(startDate, endDate));
         }
 
         if (with != null && !with.isBlank()) {
@@ -52,7 +53,9 @@ public class CourseSearchService {
             spec = spec.and(CourseSpecifications.inRegion(region));
         }
 
-        // TODO: 업종 코드 추가
+        if (placeCode != null && !placeCode.isEmpty()) {
+            spec = spec.and(CourseSpecifications.hasPlaceGroupCodeIn(placeCode));
+        }
 
         if (tags != null && !tags.isEmpty()) {
             spec = spec.and(CourseSpecifications.hasTagIn(tags));
