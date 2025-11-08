@@ -13,7 +13,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Entity
 @SuperBuilder
-@Table(name = "pin_image")
+@Table(
+        name = "pin_image",
+        indexes = {
+                @Index(name = "idx_pinimage_pin_id", columnList = "pin_id")
+        }
+)
 public class PinImage extends BaseEntity {
 
     @Id
