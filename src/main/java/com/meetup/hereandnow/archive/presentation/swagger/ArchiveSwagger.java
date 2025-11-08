@@ -3,6 +3,7 @@ package com.meetup.hereandnow.archive.presentation.swagger;
 import com.meetup.hereandnow.archive.dto.response.CourseFolderResponseDto;
 import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.core.presentation.RestResponse;
+import com.meetup.hereandnow.course.dto.response.CourseSearchResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,9 +33,12 @@ public interface ArchiveSwagger {
 
     @Operation(
             summary = "아카이빙 폴더 검색(필터링) API",
-            operationId = "/archive/search"
+            operationId = "/archive/search",
+            description = "selectedFilters는 검색 결과를 얻기 위해 어떤 필터가 적용되었는지를 나타냅니다. " +
+                    "적용되지 않은 필터는 null로 나타납니다.<br>" +
+                    "filteredCourses는 검색 결과(아카이브 폴더) 리스트가 리턴됩니다."
     )
-    ResponseEntity<RestResponse<List<CourseFolderResponseDto>>> getFilteredArchiveCourses(
+    ResponseEntity<RestResponse<CourseSearchResponseDto>> getFilteredArchiveCourses(
             @RequestParam int page,
             @RequestParam int size,
 

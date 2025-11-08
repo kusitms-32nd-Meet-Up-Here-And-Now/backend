@@ -5,6 +5,7 @@ import com.meetup.hereandnow.archive.dto.response.CourseFolderResponseDto;
 import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.archive.presentation.swagger.ArchiveSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
+import com.meetup.hereandnow.course.dto.response.CourseSearchResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -50,7 +51,7 @@ public class ArchiveController implements ArchiveSwagger {
 
     @Override
     @GetMapping("/search")
-    public ResponseEntity<RestResponse<List<CourseFolderResponseDto>>> getFilteredArchiveCourses(
+    public ResponseEntity<RestResponse<CourseSearchResponseDto>> getFilteredArchiveCourses(
             @RequestParam(defaultValue = "0")
             int page,
             @RequestParam(defaultValue = "32")
