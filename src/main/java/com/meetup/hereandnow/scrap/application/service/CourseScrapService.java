@@ -19,34 +19,30 @@ public class CourseScrapService {
     private final CourseScrapRepository courseScrapRepository;
     private final CourseRepository courseRepository;
 
-    public Optional<CourseScrap> findOptional(Member member, Long courseId) {
-        return courseScrapRepository.findByMemberIdAndCourseId(member.getId(), courseId);
-    }
+    /**
+     * CourseScrap을 생성 또는 삭제합니다.
+     */
+    public ScrapResponseDto toggleScrapCourse(Member member, Long courseId) {
 
-    public ScrapResponseDto scrap(Member member, Long courseId) {
         Course course = courseRepository.findByIdWithLock(courseId)
-                .orElseThrow(ScrapErrorCode.COURSE_NOT_FOUND::toException);
+                .orElseThrow(ScrapErrorCode.PLACE_NOT_FOUND::toException);
 
-        Optional<CourseScrap> existingScrap =
+        Optional<CourseScrap> optionalScrap =
                 courseScrapRepository.findByMemberIdAndCourseId(member.getId(), courseId);
-        if (existingScrap.isPresent()) {
-            return ScrapResponseDto.from(existingScrap.get());
+
+        if (optionalScrap.isEmpty()) {
+            CourseScrap scrap = CourseScrap.builder()
+                    .member(member)
+                    .course(course)
+                    .build();
+            course.incrementScrapCount();
+            courseScrapRepository.save(scrap);
+            return ScrapResponseDto.from(scrap);
+
+        } else {
+            course.decrementScrapCount();
+            courseScrapRepository.delete(optionalScrap.get());
+            return ScrapResponseDto.from();
         }
-
-        CourseScrap scrap = CourseScrap.builder()
-                .member(member)
-                .course(course)
-                .build();
-        course.incrementScrapCount();
-        courseScrapRepository.save(scrap);
-        return ScrapResponseDto.from(scrap);
-    }
-
-    public ScrapResponseDto deleteScrap(CourseScrap courseScrap) {
-        Course course = courseRepository.findByIdWithLock(courseScrap.getCourse().getId())
-                .orElseThrow(ScrapErrorCode.COURSE_NOT_FOUND::toException);
-        course.decrementScrapCount();
-        courseScrapRepository.delete(courseScrap);
-        return ScrapResponseDto.from();
     }
 }

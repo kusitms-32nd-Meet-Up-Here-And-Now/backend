@@ -7,7 +7,6 @@ import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.application.service.CourseScrapService;
 import com.meetup.hereandnow.scrap.application.service.PlaceScrapService;
-import com.meetup.hereandnow.scrap.domain.CourseScrap;
 import com.meetup.hereandnow.scrap.domain.PlaceScrap;
 import com.meetup.hereandnow.scrap.dto.response.ScrapResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +28,7 @@ public class ScrapFacade {
     @Transactional
     public ScrapResponseDto toggleScrapCourse(Long courseId) {
         Member member = SecurityUtils.getCurrentMember();
-        Optional<CourseScrap> courseScrapOptional = courseScrapService.findOptional(member, courseId);
-        if (courseScrapOptional.isPresent()) {
-            return courseScrapService.deleteScrap(courseScrapOptional.get());
-        } else {
-            return courseScrapService.scrap(member, courseId);
-        }
+        return courseScrapService.toggleScrapCourse(member, courseId);
     }
 
     @Transactional
