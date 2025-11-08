@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.scrap.presentation.controller;
 
 import com.meetup.hereandnow.core.presentation.RestResponse;
+import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.application.facade.ScrapFacade;
 import com.meetup.hereandnow.scrap.dto.response.ScrapResponseDto;
@@ -34,6 +35,20 @@ public class ScrapController implements ScrapSwagger {
         return ResponseEntity.ok(
                 new RestResponse<>(
                         scrapFacade.toggleScrapPlace(placeId)
+                )
+        );
+    }
+
+    @Override
+    @GetMapping("/course")
+    public ResponseEntity<RestResponse<List<CourseCardResponseDto>>> getScrappedCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "recent") String sort
+    ) {
+        return ResponseEntity.ok(
+                new RestResponse<>(
+                        scrapFacade.getScrappedCourses(page, size, sort)
                 )
         );
     }
