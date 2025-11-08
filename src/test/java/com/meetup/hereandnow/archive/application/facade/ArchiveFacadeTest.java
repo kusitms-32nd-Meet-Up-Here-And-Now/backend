@@ -6,6 +6,7 @@ import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.course.dto.response.CourseSearchResponseDto;
 import com.meetup.hereandnow.member.domain.Member;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -200,23 +201,23 @@ class ArchiveFacadeTest {
                 given(courseSearchService.searchCoursesByMember(
                         eq(mockMember), eq(rating), eq(keywords),
                         eq(startDate), eq(endDate), eq(with), eq(region),
-                        eq(tags), eq(placeCodes), eq(expectedPageRequest)
+                        eq(placeCodes), eq(tags), eq(expectedPageRequest)
                 )).willReturn(mockedPage);
 
                 // when
-                List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
+                CourseSearchResponseDto result = archiveFacade.getFilteredArchiveCourses(
                         page, size, rating, keywords, startDate, endDate, with, region, placeCodes, tags
                 );
 
                 // then
                 assertThat(result).isNotNull();
-                assertThat(result).hasSize(2);
-                assertThat(result).containsExactly(dto1, dto2);
+                assertThat(result.filteredCourses()).hasSize(2);
+                assertThat(result.filteredCourses()).containsExactly(dto1, dto2);
 
                 verify(courseSearchService).searchCoursesByMember(
                         eq(mockMember), eq(rating), eq(keywords),
                         eq(startDate), eq(endDate), eq(with), eq(region),
-                        eq(tags), eq(placeCodes), eq(expectedPageRequest)
+                        eq(placeCodes), eq(tags), eq(expectedPageRequest)
                 );
                 mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
                 mockedDto.verify(() -> CourseFolderResponseDto.from(course1));
@@ -243,14 +244,14 @@ class ArchiveFacadeTest {
             )).willReturn(emptyPage);
 
             // when
-            List<CourseFolderResponseDto> result = archiveFacade.getFilteredArchiveCourses(
+            CourseSearchResponseDto result = archiveFacade.getFilteredArchiveCourses(
                     page, size, null, null, null, null,
                     null, null, null, null
             );
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result).isEmpty();
+            assertThat(result.filteredCourses()).isEmpty();
 
             verify(courseSearchService).searchCoursesByMember(
                     eq(mockMember), any(), any(), any(), any(),
