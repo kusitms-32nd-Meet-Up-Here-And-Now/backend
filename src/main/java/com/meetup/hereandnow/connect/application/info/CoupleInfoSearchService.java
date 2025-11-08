@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.connect.application.info;
 
 import com.meetup.hereandnow.connect.domain.Couple;
+import com.meetup.hereandnow.connect.dto.response.CoupleCourseBannerResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleInfoResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.connect.repository.CoupleRepository;
@@ -12,6 +13,10 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,5 +51,27 @@ public class CoupleInfoSearchService {
                 placeWithCount,
                 courseWithCount
         );
+    }
+
+    @Transactional
+    public Slice<CoupleCourseBannerResponseDto> getBannerResponse(
+            int page, int size
+    ) {
+        Member member = SecurityUtils.getCurrentMember();
+
+        Couple couple = coupleRepository.findByMember(member)
+                .orElseThrow(CoupleErrorCode.NOT_FOUND_COUPLE::toException);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Course> courseList = courseRepository.findByCourseVisitMemberAndMemberIn(
+                "연인", List.of(couple.getMember1(), couple.getMember2())
+        );
+
+        List<CoupleCourseBannerResponseDto> bannerList = courseList.stream()
+                .map(CoupleCourseBannerResponseDto::from)
+                .toList();
+
+        return new SliceImpl<>(bannerList, pageable, bannerList.size() >= size);
     }
 }
