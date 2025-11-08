@@ -1,15 +1,15 @@
 package com.meetup.hereandnow.scrap.presentation.controller;
 
 import com.meetup.hereandnow.core.presentation.RestResponse;
+import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.application.facade.ScrapFacade;
 import com.meetup.hereandnow.scrap.dto.response.ScrapResponseDto;
 import com.meetup.hereandnow.scrap.presentation.swagger.ScrapSwagger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +34,20 @@ public class ScrapController implements ScrapSwagger {
         return ResponseEntity.ok(
                 new RestResponse<>(
                         scrapFacade.toggleScrapPlace(placeId)
+                )
+        );
+    }
+
+    @Override
+    @GetMapping("/place")
+    public ResponseEntity<RestResponse<List<PlaceCardResponseDto>>> getScrappedPlaces(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "recent") String sort
+    ) {
+        return ResponseEntity.ok(
+                new RestResponse<>(
+                        scrapFacade.getScrappedPlaces(page, size, sort)
                 )
         );
     }
