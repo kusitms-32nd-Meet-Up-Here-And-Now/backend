@@ -13,7 +13,8 @@ public enum CoupleErrorCode implements BaseErrorCode<DomainException> {
     IS_COUPLE_NOW(HttpStatus.CONFLICT, "이미 커플로 등록되어 있는 멤버입니다."),
     UNAUTHORIZED_REJECTION(HttpStatus.UNAUTHORIZED, "상대방만 거절할 수 있습니다."),
     UNAUTHORIZED_APPROVAL(HttpStatus.UNAUTHORIZED, "상대방만 수락할 수 있습니다."),
-    ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 커플 요청입니다.")
+    ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 커플 요청입니다."),
+    IS_NOT_SAVED_IMAGE(HttpStatus.BAD_REQUEST, "커플 배너 이미지가 아직 업로드 되지 않았습니다.")
     ;
 
     private final HttpStatus httpStatus;
