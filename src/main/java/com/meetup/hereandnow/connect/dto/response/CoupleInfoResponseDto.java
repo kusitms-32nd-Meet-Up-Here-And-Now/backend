@@ -31,8 +31,11 @@ public record CoupleInfoResponseDto(
     public static CoupleInfoResponseDto from(
             LocalDate startDate, Couple couple, int placeWithCount, int courseWithCount
     ) {
+        long datingDate =
+                (couple.getCoupleStartDate() == null) ? 0L : ChronoUnit.DAYS.between(startDate, LocalDate.now());
+
         return new CoupleInfoResponseDto(
-                ChronoUnit.DAYS.between(startDate, LocalDate.now()),
+                datingDate,
                 couple.getMember1().getNickname(),
                 couple.getMember2().getNickname(),
                 couple.getMember1().getProfileImage(),

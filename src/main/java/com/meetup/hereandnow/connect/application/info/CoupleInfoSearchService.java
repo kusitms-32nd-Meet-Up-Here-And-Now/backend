@@ -72,6 +72,11 @@ public class CoupleInfoSearchService {
                 .map(CoupleCourseBannerResponseDto::from)
                 .toList();
 
-        return new SliceImpl<>(bannerList, pageable, bannerList.size() >= size);
+        int fromIndex = Math.min(page * size, bannerList.size());
+        int toIndex = Math.min(fromIndex + size, bannerList.size());
+        List<CoupleCourseBannerResponseDto> content = bannerList.subList(fromIndex, toIndex);
+        boolean hasNext = toIndex < bannerList.size();
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 }

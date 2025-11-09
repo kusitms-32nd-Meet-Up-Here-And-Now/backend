@@ -171,7 +171,7 @@ class CoupleInfoSearchServiceTest {
 
             // then
             assertThat(result).isNotNull();
-            assertThat(result.getContent()).hasSize(3);
+            assertThat(result.getContent()).hasSize(2);
             assertThat(result.getContent().getFirst().courseTitle()).isEqualTo("코스 제목 0");
             assertThat(result.getContent().getFirst().placeCount()).isEqualTo(2);
             assertThat(result.hasNext()).isTrue();
