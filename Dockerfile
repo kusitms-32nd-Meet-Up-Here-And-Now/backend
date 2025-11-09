@@ -1,6 +1,6 @@
 # Dockerfile
 
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21
 
 # 컨테이너의 작업 디렉토리를 /app 으로 설정
 WORKDIR /app

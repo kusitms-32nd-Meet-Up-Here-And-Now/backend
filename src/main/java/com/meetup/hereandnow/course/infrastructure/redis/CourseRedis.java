@@ -2,7 +2,7 @@ package com.meetup.hereandnow.course.infrastructure.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetup.hereandnow.course.domain.value.CourseKeyPrefix;
-import com.meetup.hereandnow.course.dto.CourseSaveDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

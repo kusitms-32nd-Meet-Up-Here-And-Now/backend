@@ -3,6 +3,7 @@ package com.meetup.hereandnow.pin.application.service.save;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
+import com.meetup.hereandnow.pin.exception.PinErrorCode;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import java.util.List;
 import java.util.function.Function;
@@ -18,6 +19,11 @@ public class PinImageSaveService {
     private final PinImageRepository pinImageRepository;
 
     public void savePinImages(List<Pin> pinList, List<PinImageObjectKeyDto> pinImageObjectKeyDtoList) {
+
+        if (pinList.size() != pinImageObjectKeyDtoList.size()) {
+            throw PinErrorCode.NOT_EQUAL_PIN_IMAGE_SIZE.toException();
+        }
+
         List<PinImage> pinImagesToSave = IntStream.range(0, pinList.size())
                 .mapToObj(i -> {
                     Pin savedPin = pinList.get(i);
@@ -28,7 +34,8 @@ public class PinImageSaveService {
                     }
 
                     return objectKeys.stream()
-                            .map(objectKey -> PinImage.of(objectKey, savedPin));
+                            .map(objectKey -> PinImage.of(objectKey, savedPin))
+                            .peek(savedPin::addPinImage);
                 })
                 .flatMap(Function.identity())
                 .toList();
@@ -38,5 +45,6 @@ public class PinImageSaveService {
         }
 
         pinImageRepository.saveAll(pinImagesToSave);
+        pinImageRepository.flush();
     }
 }

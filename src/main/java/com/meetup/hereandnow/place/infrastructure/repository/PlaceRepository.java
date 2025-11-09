@@ -1,13 +1,25 @@
 package com.meetup.hereandnow.place.infrastructure.repository;
 
 import com.meetup.hereandnow.place.domain.Place;
-import java.util.Optional;
+import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface PlaceRepository extends JpaRepository<Place, Long> {
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Place p WHERE p.id = :id")
+    Optional<Place> findByIdWithLock(@Param("id") Long id);
 
     @Query(value = "SELECT * FROM place p WHERE p.place_name = :name AND ST_X(p.location::geometry) = :lon AND ST_Y(p.location::geometry) = :lat", nativeQuery = true)
     Optional<Place> findByNameAndCoordinates(@Param("name") String name, @Param("lat") double lat, @Param("lon") double lon);
+
+    @Query("SELECT p.id FROM Place p")
+    Page<Long> findAllIds(Pageable pageable);
 }

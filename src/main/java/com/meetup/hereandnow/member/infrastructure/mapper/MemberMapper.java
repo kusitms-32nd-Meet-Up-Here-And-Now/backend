@@ -16,6 +16,13 @@ public class MemberMapper {
                 .profileImage(oAuth2UserInfo.getProfileImage())
                 .providerId(oAuth2UserInfo.getProviderId())
                 .provider(oAuth2UserInfo.getProvider())
+                .username(splitUsername(oAuth2UserInfo.getEmail()))
                 .build();
+    }
+
+    private static String splitUsername(String email) {
+        String[] splitByEmail = email.split("@");
+
+        return splitByEmail[0];
     }
 }

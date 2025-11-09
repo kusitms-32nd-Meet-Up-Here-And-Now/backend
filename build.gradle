@@ -33,6 +33,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.15")
 }
 
 tasks.named('test') {

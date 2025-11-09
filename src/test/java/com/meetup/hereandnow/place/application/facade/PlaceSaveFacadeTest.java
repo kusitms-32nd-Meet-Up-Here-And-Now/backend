@@ -1,6 +1,5 @@
 package com.meetup.hereandnow.place.application.facade;
 
-import com.meetup.hereandnow.pin.domain.value.PinTagEnum;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.application.service.PlaceCreateService;
 import com.meetup.hereandnow.place.application.service.PlaceFindService;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
@@ -40,27 +39,30 @@ class PlaceSaveFacadeTest {
 
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
-    @DisplayName("새로운 장소 목록이 주어지면 장소를 생성하고 반환한다")
     @Test
+    @DisplayName("새로운 장소 목록이 주어지면 장소를 생성하고 반환한다")
     void success_new_place_create_and_return() {
         // given
-        PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", 37.123, 127.123);
-        PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", 37.456, 127.456);
-        PinSaveDto pinSaveDto1 = new PinSaveDto("핀 제목 1", 4.5, "핀 설명 1", List.of(PinTagEnum.COZY), placeDto1);
-        PinSaveDto pinSaveDto2 = new PinSaveDto("핀 제목 2", 4.5, "핀 설명 2", List.of(PinTagEnum.EXCITED), placeDto2);
+        PlaceSaveDto placeDto1 = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원", "http://place.map.kakao.com/16618597");
+        PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", "number addess 2", 37.456, 127.456, "P03", "여행 > 수목원", "http://place.map.kakao.com/16618597");
+
+        PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("야경이 예뻐요"), placeDto1);
+        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("이색 데이트"),  placeDto2);
+
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto1, pinSaveDto2);
 
         Point point1 = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
-        Place newPlace1 = Place.builder().placeName("placeName1").placeAddress("address1").location(point1).build();
+        Place newPlace1 = Place.builder().placeName("placeName1").placeStreetNameAddress("address1").location(point1).build();
         Point point2 = geometryFactory.createPoint(new Coordinate(127.456, 37.456));
-        Place newPlace2 = Place.builder().placeName("placeName2").placeAddress("address2").location(point2).build();
+        Place newPlace2 = Place.builder().placeName("placeName2").placeStreetNameAddress("address2").location(point2).build();
         List<Place> placesToSave = List.of(newPlace1, newPlace2);
 
         given(placeKeyFactory.buildKey("placeName1", 37.123, 127.123)).willReturn("key1");
         given(placeKeyFactory.buildKey("placeName2", 37.456, 127.456)).willReturn("key2");
-        given(placeFindService.findByNameAndCoordinates(anyString(), anyDouble(), anyDouble())).willReturn(Optional.empty());
-        given(placeCreateService.createEntity("placeName1", "address1", 37.123, 127.123)).willReturn(newPlace1);
-        given(placeCreateService.createEntity("placeName2", "address2", 37.456, 127.456)).willReturn(newPlace2);
+        given(placeFindService.findByNameAndCoordinates(anyString(), anyDouble(), anyDouble())).willReturn(
+                Optional.empty());
+        given(placeCreateService.createEntity(placeDto1)).willReturn(newPlace1);
+        given(placeCreateService.createEntity(placeDto2)).willReturn(newPlace2);
         given(placeCreateService.saveAll(placesToSave)).willReturn(placesToSave);
 
         // when
@@ -77,14 +79,16 @@ class PlaceSaveFacadeTest {
     @Test
     void success_return_existing_place() {
         // given
-        PlaceSaveDto placeDto = new PlaceSaveDto("placeName", "address", 37.123, 127.123);
-        PinSaveDto pinSaveDto = new PinSaveDto("핀 제목 1", 4.5, "핀 설명 1", List.of(PinTagEnum.COZY), placeDto);
+        PlaceSaveDto placeDto = new PlaceSaveDto("placeName1", "address1", "number addess 1", 37.123, 127.123, "CT1", "여행 > 공원 > 도시근린공원", "http://place.map.kakao.com/16618597");
+        PinSaveDto pinSaveDto = new PinSaveDto(4.5, "핀 좋은 점", "핀 나쁜점", List.of("야경이 예뻐요"), placeDto);
+
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto);
         Point point = geometryFactory.createPoint(new Coordinate(127.123, 37.123));
-        Place existingPlace = Place.builder().placeName("placeName").placeAddress("address").location(point).build();
+        Place existingPlace = Place.builder().placeName("placeName1").placeStreetNameAddress("address").location(point).build();
 
-        given(placeKeyFactory.buildKey("placeName", 37.123, 127.123)).willReturn("key1");
-        given(placeFindService.findByNameAndCoordinates("placeName", 37.123, 127.123)).willReturn(Optional.of(existingPlace));
+        given(placeKeyFactory.buildKey("placeName1", 37.123, 127.123)).willReturn("key1");
+        given(placeFindService.findByNameAndCoordinates("placeName1", 37.123, 127.123))
+                .willReturn(Optional.of(existingPlace));
 
         // when
         Map<String, Place> result = placeSaveFacade.findOrCreatePlaces(pinSaveDtos);

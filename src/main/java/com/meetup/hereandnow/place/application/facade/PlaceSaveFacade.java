@@ -6,14 +6,10 @@ import com.meetup.hereandnow.place.application.service.PlaceFindService;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.infrastructure.factory.PlaceKeyFactory;
 import jakarta.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,12 +38,7 @@ public class PlaceSaveFacade {
             ).ifPresentOrElse(
                     existing -> placeMap.put(key, existing),
                     () -> {
-                        Place newPlace = placeCreateService.createEntity(
-                                placeDto.placeName(),
-                                placeDto.placeAddress(),
-                                placeDto.placeLatitude(),
-                                placeDto.placeLongitude()
-                        );
+                        Place newPlace = placeCreateService.createEntity(placeDto);
                         placesToSave.add(newPlace);
                         placeMap.put(key, newPlace);
                     }

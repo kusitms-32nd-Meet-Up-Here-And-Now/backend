@@ -7,31 +7,30 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
-import java.math.BigDecimal;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.BatchSize;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-@Table(name = "pin")
+@Table(
+        name = "pin",
+        indexes = {
+                @Index(name = "idx_pin_place_id", columnList = "place_id")
+        }
+)
 public class Pin extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "pin_title", length = 128)
-    private String pinTitle;
-
-    @Column(name = "pin_thumbnail_image", length = 1024)
-    private String pinThumbnailImage;
 
     @Column(name = "pin_rating", precision = 3, scale = 1)
     @DecimalMin(value = "1.0")
@@ -40,8 +39,11 @@ public class Pin extends BaseEntity {
     @Builder.Default
     private BigDecimal pinRating = BigDecimal.valueOf(2.5);
 
-    @Column(name = "pin_description", length = 1024)
-    private String pinDescription;
+    @Column(name = "pin_positive", nullable = false)
+    private String pinPositive;
+
+    @Column(name = "pin_negative", nullable = false)
+    private String pinNegative;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
@@ -50,4 +52,16 @@ public class Pin extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
+
+    @OneToMany(
+            mappedBy = "pin", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true
+    )
+    @BatchSize(size = 100)
+    @Builder.Default
+    private List<PinImage> pinImages = new ArrayList<>();
+
+    public void addPinImage(PinImage pinImage) {
+        this.pinImages.add(pinImage);
+    }
 }
