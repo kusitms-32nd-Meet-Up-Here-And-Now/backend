@@ -28,7 +28,7 @@ public class ArchiveController implements ArchiveSwagger {
 
     @Override
     @GetMapping("/recent")
-    public ResponseEntity<RestResponse<RecentArchiveResponseDto>> getCreatedCourse() {
+    public ResponseEntity<RestResponse<RecentArchiveResponseDto>> getRecentArchive() {
         return ResponseEntity.ok(
                 new RestResponse<>(
                         archiveFacade.getRecentArchive()

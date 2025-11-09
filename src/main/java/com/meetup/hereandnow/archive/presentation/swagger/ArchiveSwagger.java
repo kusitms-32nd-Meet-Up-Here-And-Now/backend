@@ -20,7 +20,7 @@ public interface ArchiveSwagger {
             summary = "가장 최신 아카이빙 폴더 API",
             operationId = "/archive/recent"
     )
-    ResponseEntity<RestResponse<RecentArchiveResponseDto>> getCreatedCourse();
+    ResponseEntity<RestResponse<RecentArchiveResponseDto>> getRecentArchive();
 
     @Operation(
             summary = "내가 생성한 코스 폴더 리스트 API",

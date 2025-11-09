@@ -20,7 +20,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
-@Table(name = "pin")
+@Table(
+        name = "pin",
+        indexes = {
+                @Index(name = "idx_pin_place_id", columnList = "place_id")
+        }
+)
 public class Pin extends BaseEntity {
 
     @Id

@@ -65,6 +65,10 @@ public class Place extends BaseEntity {
     @Builder.Default
     private Long pinCount = 0L;
 
+    @Column(name = "scrap_count", nullable = false)
+    @Builder.Default
+    private Long scrapCount = 0L;
+
     public void updateRating(BigDecimal placeRating, Long pinCount) {
         this.placeRating = placeRating;
         this.pinCount = pinCount;
@@ -72,5 +76,13 @@ public class Place extends BaseEntity {
 
     public void updateTags(List<String> topTags) {
         this.placeTags = topTags;
+    }
+
+    public void incrementScrapCount() {
+        this.scrapCount++;
+    }
+
+    public void decrementScrapCount() {
+        if (this.scrapCount > 0) this.scrapCount--;
     }
 }
