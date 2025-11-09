@@ -29,7 +29,7 @@ public class CourseScrapService {
     public ScrapResponseDto toggleScrapCourse(Member member, Long courseId) {
 
         Course course = courseRepository.findByIdWithLock(courseId)
-                .orElseThrow(ScrapErrorCode.PLACE_NOT_FOUND::toException);
+                .orElseThrow(ScrapErrorCode.COURSE_NOT_FOUND::toException);
 
         Optional<CourseScrap> optionalScrap =
                 courseScrapRepository.findByMemberIdAndCourseId(member.getId(), courseId);
@@ -61,8 +61,9 @@ public class CourseScrapService {
      * 전달된 정렬 값을 pageable로 알맞게 처리합니다. 기본값은 최신순입니다.
      */
     public Pageable resolveSort(int page, int size, String sort) {
+        String sortBy = Optional.ofNullable(sort).orElse("");
         String resolvedSortBy;
-        if (sort.equalsIgnoreCase("scraps")) {
+        if (sortBy.equalsIgnoreCase("scraps")) {
             resolvedSortBy = "course.scrapCount";
         } else {
             resolvedSortBy = "createdAt";

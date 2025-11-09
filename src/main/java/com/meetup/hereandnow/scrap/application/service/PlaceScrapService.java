@@ -61,7 +61,8 @@ public class PlaceScrapService {
      * 전달된 정렬 값을 pageable로 알맞게 처리합니다. 기본값은 최신순입니다.
      */
     public Pageable resolveSort(int page, int size, String sort) {
-        String resolvedSortBy = switch (sort.toLowerCase()) {
+        String sortBy = Optional.ofNullable(sort).orElse("");
+        String resolvedSortBy = switch (sortBy.toLowerCase()) {
             case "scraps" -> "place.scrapCount";
             case "reviews" -> "place.pinCount";
             default -> "createdAt";

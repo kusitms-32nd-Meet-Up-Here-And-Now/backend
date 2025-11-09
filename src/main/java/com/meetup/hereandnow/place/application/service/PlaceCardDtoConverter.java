@@ -39,7 +39,8 @@ public class PlaceCardDtoConverter {
         List<PinImage> placeImages = pinImageRepository.findRecentImagesByPlaceIds(placeIds);
         return placeImages.stream().collect(Collectors.toMap(
                 img -> img.getPin().getPlace().getId(),
-                img -> objectStorageService.buildImageUrl(img.getImageUrl())
+                img -> objectStorageService.buildImageUrl(img.getImageUrl()),
+                (existing, ignored) -> existing
         ));
     }
 }
