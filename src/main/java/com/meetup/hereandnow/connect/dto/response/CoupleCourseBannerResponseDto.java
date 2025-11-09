@@ -7,6 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 
 public record CoupleCourseBannerResponseDto(
+
+        @Schema(description = "코스 식별자", example = "1")
+        Long courseId,
+
         @Schema(description = "코스 방문 날짜", example = "2025-11-02")
         @JsonFormat(shape = Shape.STRING, pattern = "yyyy.MM.dd")
         LocalDate startDate,
@@ -26,6 +30,7 @@ public record CoupleCourseBannerResponseDto(
         public static CoupleCourseBannerResponseDto from(Course course) {
 
                 return new CoupleCourseBannerResponseDto(
+                        course.getId(),
                         course.getCourseVisitDate(),
                         course.getCourseTitle(),
                         course.getCourseDescription(),

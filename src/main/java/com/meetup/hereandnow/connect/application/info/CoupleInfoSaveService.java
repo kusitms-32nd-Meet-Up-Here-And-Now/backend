@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.connect.application.info;
 
 import com.meetup.hereandnow.connect.domain.Couple;
-import com.meetup.hereandnow.connect.dto.response.CoupleInfoRequestDto;
+import com.meetup.hereandnow.connect.dto.request.CoupleInfoRequestDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;

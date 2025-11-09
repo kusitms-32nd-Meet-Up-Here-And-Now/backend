@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.connect.presentation.swagger.info;
 
-import com.meetup.hereandnow.connect.dto.response.CoupleInfoRequestDto;
+import com.meetup.hereandnow.connect.dto.request.CoupleInfoRequestDto;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

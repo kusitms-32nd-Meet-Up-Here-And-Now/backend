@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.connect.presentation.controller.info;
 
 import com.meetup.hereandnow.connect.application.info.CoupleInfoSaveService;
-import com.meetup.hereandnow.connect.dto.response.CoupleInfoRequestDto;
+import com.meetup.hereandnow.connect.dto.request.CoupleInfoRequestDto;
 import com.meetup.hereandnow.connect.presentation.swagger.info.CoupleInfoSaveSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
