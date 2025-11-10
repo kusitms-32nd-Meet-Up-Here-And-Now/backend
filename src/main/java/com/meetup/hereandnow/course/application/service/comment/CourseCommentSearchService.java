@@ -7,10 +7,10 @@ import com.meetup.hereandnow.course.dto.response.CourseCommentResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseCommentRepository;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

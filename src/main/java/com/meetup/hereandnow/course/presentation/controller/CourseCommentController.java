@@ -32,7 +32,7 @@ public class CourseCommentController implements CourseCommentSwagger {
         courseCommentSaveService.saveCourseComment(courseCommentSaveRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
+                .body(new RestResponse<>(null));
     }
 
     @Override
