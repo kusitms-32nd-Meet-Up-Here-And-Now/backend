@@ -9,9 +9,7 @@ import com.meetup.hereandnow.scrap.exception.ScrapErrorCode;
 import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,21 +55,5 @@ public class PlaceScrapService {
      */
     public Page<PlaceScrap> getScrapsByMember(Member member, Pageable pageable) {
         return placeScrapRepository.findScrapsByMemberWithSort(member, pageable);
-    }
-
-    /**
-     * 전달된 정렬 값을 pageable로 알맞게 처리합니다. 기본값은 최신순입니다.
-     */
-    public Pageable resolveSort(int page, int size, String sort) {
-        String sortBy = Optional.ofNullable(sort).orElse("");
-        String resolvedSortBy = switch (sortBy.toLowerCase()) {
-            case "scraps" -> "place.scrapCount";
-            case "reviews" -> "place.pinCount";
-            default -> "createdAt";
-        };
-        return PageRequest.of(
-                page, size,
-                Sort.by(Sort.Direction.DESC, resolvedSortBy)
-        );
     }
 }

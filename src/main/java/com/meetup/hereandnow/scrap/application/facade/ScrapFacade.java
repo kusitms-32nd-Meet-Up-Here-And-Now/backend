@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.scrap.application.facade;
 
 import com.meetup.hereandnow.core.util.SecurityUtils;
+import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
@@ -45,7 +46,7 @@ public class ScrapFacade {
     @Transactional(readOnly = true)
     public List<CourseCardResponseDto> getScrappedCourses(int page, int size, String sort) {
         Member member = SecurityUtils.getCurrentMember();
-        Pageable resolvedPageable = courseScrapService.resolveSort(page, size, sort);
+        Pageable resolvedPageable = SortUtils.resolveCourseSort(page, size, sort);
         Page<CourseScrap> scrapPage = courseScrapService.getScrapsByMember(member, resolvedPageable);
         List<Course> courses = scrapPage.getContent().stream().map(CourseScrap::getCourse).toList();
         return courseCardDtoConverter.convert(courses);
@@ -54,7 +55,7 @@ public class ScrapFacade {
     @Transactional(readOnly = true)
     public List<PlaceCardResponseDto> getScrappedPlaces(int page, int size, String sort) {
         Member member = SecurityUtils.getCurrentMember();
-        Pageable resolvedPageable = placeScrapService.resolveSort(page, size, sort);
+        Pageable resolvedPageable = SortUtils.resolvePlaceSort(page, size, sort);
         Page<PlaceScrap> scrapPage = placeScrapService.getScrapsByMember(member, resolvedPageable);
         List<Place> places = scrapPage.getContent().stream().map(PlaceScrap::getPlace).toList();
         return placeCardDtoConverter.convert(places);
