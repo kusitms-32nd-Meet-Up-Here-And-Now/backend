@@ -1,6 +1,7 @@
 package com.meetup.hereandnow.pin.infrastructure.repository;
 
 import com.meetup.hereandnow.pin.domain.entity.Pin;
+import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.dto.PlaceRatingDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,7 @@ public interface PinRepository extends JpaRepository<Pin, Long> {
                 GROUP BY p.place.id
             """)
     List<PlaceRatingDto> getPlaceRatingsByIds(@Param("placeIds") List<Long> placeIds);
+
+    List<Pin> findAllByPlace(Place place);
 }
 
