@@ -2,7 +2,7 @@ package com.meetup.hereandnow.pin.infrastructure.repository;
 
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceRatingDto;
+import com.meetup.hereandnow.place.dto.request.PlaceRatingDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface PinRepository extends JpaRepository<Pin, Long> {
 
     @Query("""
-                SELECT new com.meetup.hereandnow.place.dto.PlaceRatingDto(p.place.id, AVG(p.pinRating), COUNT(p))
+                SELECT new com.meetup.hereandnow.place.dto.request.PlaceRatingDto(p.place.id, AVG(p.pinRating), COUNT(p))
                 FROM Pin p
                 WHERE p.place.id IN :placeIds
                 GROUP BY p.place.id
@@ -20,5 +20,12 @@ public interface PinRepository extends JpaRepository<Pin, Long> {
     List<PlaceRatingDto> getPlaceRatingsByIds(@Param("placeIds") List<Long> placeIds);
 
     List<Pin> findAllByPlace(Place place);
+
+    @Query("""
+            SELECT p FROM Pin p
+            WHERE p.place.id IN :placeIds
+            ORDER BY p.place.id ASC, p.id DESC
+            """)
+    List<Pin> findAllPinsByPlaceIdsSorted(@Param("placeIds") List<Long> placeIds);
 }
 

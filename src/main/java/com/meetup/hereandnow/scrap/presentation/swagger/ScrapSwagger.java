@@ -3,7 +3,7 @@ package com.meetup.hereandnow.scrap.presentation.swagger;
 import com.meetup.hereandnow.core.config.swagger.ApiErrorCode;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.dto.response.ScrapResponseDto;
 import com.meetup.hereandnow.scrap.exception.ScrapErrorCode;
 import io.swagger.v3.oas.annotations.Operation;

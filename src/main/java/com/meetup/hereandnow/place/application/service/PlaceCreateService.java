@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.place.application.service;
 
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import com.meetup.hereandnow.place.dto.request.PlaceSaveDto;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
 import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
 import com.meetup.hereandnow.tag.exception.TagErrorCode;

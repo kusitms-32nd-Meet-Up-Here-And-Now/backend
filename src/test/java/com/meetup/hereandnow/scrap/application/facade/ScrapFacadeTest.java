@@ -6,9 +6,9 @@ import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConver
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.place.application.service.PlaceCardDtoConverter;
+import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.application.service.CourseScrapService;
 import com.meetup.hereandnow.scrap.application.service.PlaceScrapService;
 import com.meetup.hereandnow.scrap.domain.CourseScrap;
@@ -47,7 +47,7 @@ class ScrapFacadeTest {
     private CourseCardDtoConverter courseCardDtoConverter;
 
     @Mock
-    private PlaceCardDtoConverter placeCardDtoConverter;
+    private PlaceDtoConverter placeDtoConverter;
 
     @InjectMocks
     private ScrapFacade scrapFacade;
@@ -162,7 +162,7 @@ class ScrapFacadeTest {
         mockSortUtils.when(() -> SortUtils.resolvePlaceSort(page, size, sort)).thenReturn(mockPageable);
         given(placeScrapService.getScrapsByMember(mockMember, mockPageable)).willReturn(scrapPage);
         given(scrap1.getPlace()).willReturn(place1);
-        given(placeCardDtoConverter.convert(places)).willReturn(expectedDtos);
+        given(placeDtoConverter.convert(places)).willReturn(expectedDtos);
 
         // when
         List<PlaceCardResponseDto> result = scrapFacade.getScrappedPlaces(page, size, sort);
@@ -172,6 +172,6 @@ class ScrapFacadeTest {
         mockSortUtils.verify(() -> SortUtils.resolvePlaceSort(page, size, sort));
         verify(placeScrapService).getScrapsByMember(mockMember, mockPageable);
         verify(scrap1).getPlace();
-        verify(placeCardDtoConverter).convert(places);
+        verify(placeDtoConverter).convert(places);
     }
 }

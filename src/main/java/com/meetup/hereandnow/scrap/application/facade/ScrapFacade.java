@@ -6,9 +6,9 @@ import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConver
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.place.application.service.PlaceCardDtoConverter;
+import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.application.service.CourseScrapService;
 import com.meetup.hereandnow.scrap.application.service.PlaceScrapService;
 import com.meetup.hereandnow.scrap.domain.CourseScrap;
@@ -28,7 +28,7 @@ public class ScrapFacade {
 
     private final PlaceScrapService placeScrapService;
     private final CourseScrapService courseScrapService;
-    private final PlaceCardDtoConverter placeCardDtoConverter;
+    private final PlaceDtoConverter placeDtoConverter;
     private final CourseCardDtoConverter courseCardDtoConverter;
 
     @Transactional
@@ -58,6 +58,6 @@ public class ScrapFacade {
         Pageable resolvedPageable = SortUtils.resolvePlaceSort(page, size, sort);
         Page<PlaceScrap> scrapPage = placeScrapService.getScrapsByMember(member, resolvedPageable);
         List<Place> places = scrapPage.getContent().stream().map(PlaceScrap::getPlace).toList();
-        return placeCardDtoConverter.convert(places);
+        return placeDtoConverter.convert(places);
     }
 }

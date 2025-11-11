@@ -1,8 +1,5 @@
 package com.meetup.hereandnow.place.application.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
@@ -11,15 +8,10 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceInfoResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceInfoResponseDto;
 import com.meetup.hereandnow.place.exception.PlaceErrorCode;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
 import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,6 +22,16 @@ import org.locationtech.jts.geom.Point;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("PlaceDetailService 테스트")

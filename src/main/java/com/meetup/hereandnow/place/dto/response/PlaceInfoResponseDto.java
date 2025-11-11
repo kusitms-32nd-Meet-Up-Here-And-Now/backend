@@ -1,11 +1,12 @@
-package com.meetup.hereandnow.place.dto;
+package com.meetup.hereandnow.place.dto.response;
 
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.List;
 
 public record PlaceInfoResponseDto(
-        
+
         @Schema(description = "장소 상세")
         PlaceCardResponseDto placeCardResponseDto,
 
