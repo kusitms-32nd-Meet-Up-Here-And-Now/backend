@@ -7,7 +7,7 @@ import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.dto.PinDetailsResponseDto;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceDetailsResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceDetailsResponseDto;
 import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -69,6 +69,7 @@ public class CourseDetailsViewService {
         Double longitude = (location != null) ? location.getX() : null;
 
         return new PlaceDetailsResponseDto(
+                place.getId(),
                 place.getPlaceName(),
                 place.getPlaceCategory(),
                 place.getPlaceStreetNameAddress(),
