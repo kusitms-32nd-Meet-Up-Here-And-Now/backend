@@ -87,10 +87,10 @@ class CourseCommentSearchServiceTest {
             // then
             assertThat(result.count()).isEqualTo(2);
             assertThat(result.comments()).hasSize(2);
-            assertThat(result.comments().getFirst().id()).isEqualTo(1L);
+            assertThat(result.comments().getFirst().commentId()).isEqualTo(1L);
             assertThat(result.comments().getFirst().nickName()).isEqualTo("김히어");
             assertThat(result.comments().getFirst().content()).isEqualTo("여기 장소 좋아요.");
-            assertThat(result.comments().get(1).id()).isEqualTo(2L);
+            assertThat(result.comments().get(1).commentId()).isEqualTo(2L);
             assertThat(result.comments().get(1).nickName()).isEqualTo("박데어");
             assertThat(result.comments().get(1).content()).isEqualTo("다음에 또 가고싶어요!");
 
@@ -185,7 +185,7 @@ class CourseCommentSearchServiceTest {
             assertThat(result.count()).isEqualTo(3);
             assertThat(result.comments()).hasSize(3);
             assertThat(result.comments())
-                    .extracting(CourseCommentDto::id)
+                    .extracting(CourseCommentDto::commentId)
                     .containsExactly(1L, 2L, 3L);
             assertThat(result.comments())
                     .extracting(CourseCommentDto::content)
