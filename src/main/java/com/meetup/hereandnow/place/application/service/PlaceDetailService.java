@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.place.application.service;
 
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
@@ -21,6 +22,7 @@ public class PlaceDetailService {
 
     private final PlaceRepository placeRepository;
     private final PinRepository pinRepository;
+    private final ObjectStorageService objectStorageService;
 
     @Transactional(readOnly = true)
     public PlaceInfoResponseDto getPlaceDetail(Long placeId) {
@@ -55,7 +57,7 @@ public class PlaceDetailService {
     private List<String> extractBannerImages(List<Pin> pinList) {
         return pinList.stream()
                 .flatMap(pin -> pin.getPinImages().stream())
-                .map(PinImage::getImageUrl)
+                .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
                 .limit(5)
                 .toList();
     }
@@ -66,7 +68,7 @@ public class PlaceDetailService {
     private List<String> extractPlaceInfoImages(List<Pin> pinList) {
         return pinList.stream()
                 .flatMap(pin -> pin.getPinImages().stream())
-                .map(PinImage::getImageUrl)
+                .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
                 .limit(10)
                 .toList();
     }
@@ -107,7 +109,7 @@ public class PlaceDetailService {
                 .map(course -> {
                     List<String> courseImages = course.getPinList().stream()
                             .flatMap(pin -> pin.getPinImages().stream())
-                            .map(PinImage::getImageUrl)
+                            .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
                             .limit(3)
                             .toList();
                     return CourseCardResponseDto.from(course, courseImages);
