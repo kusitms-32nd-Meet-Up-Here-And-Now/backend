@@ -1,21 +1,21 @@
 package com.meetup.hereandnow.place.application.service;
 
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
+import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PlaceCardDtoConverter {
+public class PlaceDtoConverter {
 
     private final PinImageRepository pinImageRepository;
     private final ObjectStorageService objectStorageService;
@@ -42,5 +42,18 @@ public class PlaceCardDtoConverter {
                 img -> objectStorageService.buildImageUrl(img.getImageUrl()),
                 (existing, ignored) -> existing
         ));
+    }
+
+    /**
+     * Place와 이 장소를 참조하는 pinList로 사진을 가져오고
+     * PlacePointResponseDto로 변환해 리턴합니다.
+     */
+    public PlacePointResponseDto convert(Place place, List<Pin> pinList) {
+        List<String> imageUrls = pinList.stream().limit(3)
+                .map(pin -> pin.getPinImages().stream().min(Comparator.comparing(PinImage::getId)))
+                .flatMap(Optional::stream)
+                .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
+                .toList();
+        return PlacePointResponseDto.from(place, imageUrls);
     }
 }
