@@ -29,7 +29,7 @@ public class PlaceViewFacade {
     @Transactional(readOnly = true)
     public List<PlacePointResponseDto> getAdPlaces(double lat, double lon) {
         List<Place> places = placeFindService.find2RandomNearbyPlaceIds(lat, lon);
-        List<Pin> pinList = pinRepository.findAllPinsByPlaceIdsSorted(places.stream().map(Place::getId).toList());
+        List<Pin> pinList = pinRepository.find3PinsByPlaceIdsSorted(places.stream().map(Place::getId).toList());
 
         Map<Long, List<Pin>> pinsByPlaceId = pinList.stream()
                 .collect(Collectors.groupingBy(pin -> pin.getPlace().getId()));

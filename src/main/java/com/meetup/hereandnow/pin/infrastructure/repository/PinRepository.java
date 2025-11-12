@@ -21,11 +21,12 @@ public interface PinRepository extends JpaRepository<Pin, Long> {
 
     List<Pin> findAllByPlace(Place place);
 
-    @Query("""
-            SELECT p FROM Pin p
-            WHERE p.place.id IN :placeIds
-            ORDER BY p.place.id ASC, p.id DESC
-            """)
-    List<Pin> findAllPinsByPlaceIdsSorted(@Param("placeIds") List<Long> placeIds);
+    @Query(value = """
+            SELECT p.* FROM (
+                SELECT *, ROW_NUMBER() OVER (PARTITION BY place_id ORDER BY created_at DESC) as rn
+                FROM pin WHERE place_id IN :placeIds
+            ) p WHERE p.rn <= 3
+            """, nativeQuery = true)
+    List<Pin> find3PinsByPlaceIdsSorted(@Param("placeIds") List<Long> placeIds);
 }
 
