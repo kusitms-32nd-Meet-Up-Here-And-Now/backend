@@ -20,6 +20,11 @@ spring:
         format_sql: true
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
         default_batch_fetch_size: 100
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
   
   data:
     redis:
