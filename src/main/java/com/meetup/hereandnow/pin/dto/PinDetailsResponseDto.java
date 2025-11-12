@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.pin.dto;
 
-import com.meetup.hereandnow.place.dto.PlaceDetailsResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceDetailsResponseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;

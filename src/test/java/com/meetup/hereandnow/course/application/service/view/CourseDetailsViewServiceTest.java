@@ -8,7 +8,7 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.dto.PinDetailsResponseDto;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceDetailsResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceDetailsResponseDto;
 import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
@@ -22,4 +23,19 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     @Query("SELECT p.id FROM Place p")
     Page<Long> findAllIds(Pageable pageable);
+
+    // 주어진 lat, lon를 중심으로 반경 1.5km 내의 장소 목록을 조회
+    @Query(
+            value = "SELECT * FROM place p WHERE ST_DWithin(p.location, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, 1500)",
+            countQuery = "SELECT count(*) FROM place p WHERE ST_DWithin(p.location, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, 1500)",
+            nativeQuery = true
+    )
+    Page<Place> findPlacesByLocation(@Param("lat") double lat, @Param("lon") double lon, Pageable pageable);
+
+    // 1.5km 내의 장소 id 목록 조회
+    @Query(
+            value = "SELECT p.id FROM place p WHERE ST_DWithin(p.location, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, 1500)",
+            nativeQuery = true
+    )
+    List<Long> findNearbyPlaceIds(@Param("lat") double lat, @Param("lon") double lon);
 }

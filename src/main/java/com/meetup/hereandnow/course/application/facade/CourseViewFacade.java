@@ -22,14 +22,17 @@ public class CourseViewFacade {
 
     private final CourseDetailsViewService courseDetailsViewService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public CourseDetailsResponseDto getCourseDetails(Long courseId) {
         Member member = SecurityUtils.getCurrentMember();
         Course course = courseDetailsViewService.getCourseById(courseId)
                 .orElseThrow(CourseErrorCode.NOT_FOUND_COURSE::toException);
+
         if (course.getIsPublic() == false && !course.getMember().getId().equals(member.getId())) {
             throw CourseErrorCode.COURSE_NOT_PUBLIC.toException();
         }
+
+        courseDetailsViewService.increaseViewCount(courseId);
         return CourseDetailsResponseDto.of(member, course, getPinDtoList(member, course));
     }
 

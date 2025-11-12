@@ -9,7 +9,7 @@ import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
-import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import com.meetup.hereandnow.place.dto.request.PlaceSaveDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

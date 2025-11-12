@@ -4,17 +4,17 @@ import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageServ
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
-import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
-import com.meetup.hereandnow.place.dto.PlaceInfoResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceInfoResponseDto;
 import com.meetup.hereandnow.place.exception.PlaceErrorCode;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

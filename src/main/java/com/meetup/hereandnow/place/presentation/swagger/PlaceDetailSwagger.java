@@ -1,8 +1,8 @@
-package com.meetup.hereandnow.place.presentation;
+package com.meetup.hereandnow.place.presentation.swagger;
 
 import com.meetup.hereandnow.core.config.swagger.ApiErrorCode;
 import com.meetup.hereandnow.core.presentation.RestResponse;
-import com.meetup.hereandnow.place.dto.PlaceInfoResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceInfoResponseDto;
 import com.meetup.hereandnow.place.exception.PlaceErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -103,4 +103,8 @@ public class Course extends BaseEntity {
             this.scrapCount--;
         }
     }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
 }

@@ -2,15 +2,15 @@ package com.meetup.hereandnow.course.application.service.save;
 
 import com.meetup.hereandnow.course.application.service.save.course.CoursePersistService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
+import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.application.facade.PinSaveFacade;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.application.facade.PlaceSaveFacade;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import com.meetup.hereandnow.place.dto.request.PlaceSaveDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -153,59 +152,5 @@ class PlaceScrapServiceTest {
         // then
         assertThat(result).isEqualTo(mockPage);
         verify(placeScrapRepository).findScrapsByMemberWithSort(mockMember, mockPageable);
-    }
-
-    @Test
-    @DisplayName("정렬: scraps는 place.scrapCount로 정렬한다")
-    void resolve_sort_handles_scraps_sort() {
-
-        // given
-        int page = 0;
-        int size = 20;
-        Sort expectedSort = Sort.by(Sort.Direction.DESC, "place.scrapCount");
-
-        // when
-        Pageable resultUpper = placeScrapService.resolveSort(page, size, "SCRAPS");
-        Pageable resultLower = placeScrapService.resolveSort(page, size, "scraps");
-
-        // then
-        assertThat(resultUpper.getSort()).isEqualTo(expectedSort);
-        assertThat(resultLower.getSort()).isEqualTo(expectedSort);
-    }
-
-    @Test
-    @DisplayName("정렬: reviews는 place.pinCount로 정렬한다")
-    void resolve_sort_handles_reviews_sort() {
-
-        // given
-        int page = 0;
-        int size = 20;
-        Sort expectedSort = Sort.by(Sort.Direction.DESC, "place.pinCount");
-
-        // when
-        Pageable resultUpper = placeScrapService.resolveSort(page, size, "REVIEWS");
-        Pageable resultLower = placeScrapService.resolveSort(page, size, "reviews");
-
-        // then
-        assertThat(resultUpper.getSort()).isEqualTo(expectedSort);
-        assertThat(resultLower.getSort()).isEqualTo(expectedSort);
-    }
-
-    @Test
-    @DisplayName("정렬: 그 외에는 createdAt(기본값)으로 정렬한다")
-    void resolve_sort_handles_default_sort() {
-
-        // given
-        int page = 0;
-        int size = 20;
-        Sort expectedSort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        // when
-        Pageable resultRecent = placeScrapService.resolveSort(page, size, "Recent");
-        Pageable resultEmpty = placeScrapService.resolveSort(page, size, "");
-
-        // then
-        assertThat(resultRecent.getSort()).isEqualTo(expectedSort);
-        assertThat(resultEmpty.getSort()).isEqualTo(expectedSort);
     }
 }

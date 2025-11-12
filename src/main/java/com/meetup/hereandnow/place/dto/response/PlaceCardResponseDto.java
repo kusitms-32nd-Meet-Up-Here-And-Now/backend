@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.place.dto;
+package com.meetup.hereandnow.place.dto.response;
 
 import com.meetup.hereandnow.place.domain.Place;
 import io.swagger.v3.oas.annotations.media.Schema;
