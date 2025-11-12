@@ -32,7 +32,7 @@ public class CourseViewFacade {
             throw CourseErrorCode.COURSE_NOT_PUBLIC.toException();
         }
 
-        course.incrementViewCount();
+        courseDetailsViewService.increaseViewCount(courseId);
         return CourseDetailsResponseDto.of(member, course, getPinDtoList(member, course));
     }
 

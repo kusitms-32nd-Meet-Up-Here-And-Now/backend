@@ -81,4 +81,8 @@ public class CourseDetailsViewService {
                 scrappedPlaceIds.contains(place.getId())
         );
     }
+
+    public void increaseViewCount(Long courseId) {
+        courseRepository.increaseViewCount(courseId);
+    }
 }
