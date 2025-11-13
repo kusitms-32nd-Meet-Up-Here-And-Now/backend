@@ -1,8 +1,11 @@
 package com.meetup.hereandnow.course.application.facade;
 
 import com.meetup.hereandnow.core.util.SecurityUtils;
+import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.application.service.view.CourseDetailsViewService;
+import com.meetup.hereandnow.course.application.service.view.CourseFindService;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.course.dto.response.CourseDetailsResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.member.domain.Member;
@@ -21,6 +24,8 @@ import java.util.Set;
 public class CourseViewFacade {
 
     private final CourseDetailsViewService courseDetailsViewService;
+    private final CourseFindService courseFindService;
+    private final CourseCardDtoConverter courseCardDtoConverter;
 
     @Transactional
     public CourseDetailsResponseDto getCourseDetails(Long courseId) {
@@ -45,5 +50,13 @@ public class CourseViewFacade {
             pinIndex++;
         }
         return pinDtoList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CourseCardResponseDto> getRecommendedCourses(
+            int page, int size, String sort, double lat, double lon
+    ) {
+        List<Course> nearbyCourses = courseFindService.getNearbyCourses(page, size, sort, lat, lon);
+        return courseCardDtoConverter.convert(nearbyCourses);
     }
 }
