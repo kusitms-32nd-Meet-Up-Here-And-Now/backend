@@ -4,6 +4,7 @@ import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +33,9 @@ public interface PlaceHomeSwagger {
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam String sort,
+            @Schema(description = "현재 위도", example = "37.5709578373114")
             @RequestParam double lat,
+            @Schema(description = "현재 경도", example = "126.977928770123")
             @RequestParam double lon
     );
 }
