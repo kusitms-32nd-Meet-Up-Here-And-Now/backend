@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.connect.application.comment;
 
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseCommentResponseDto;
-import com.meetup.hereandnow.connect.repository.CoupleCourseCommentRepository;
+import com.meetup.hereandnow.connect.infrastructure.repository.CoupleCourseCommentRepository;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;

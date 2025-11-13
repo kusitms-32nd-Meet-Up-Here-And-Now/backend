@@ -3,6 +3,7 @@ package com.meetup.hereandnow.archive.application.facade;
 import com.meetup.hereandnow.archive.application.service.ArchiveCourseService;
 import com.meetup.hereandnow.archive.dto.response.CourseFolderResponseDto;
 import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
+import com.meetup.hereandnow.archive.infrastructure.aggregator.CommentCountAggregator;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.domain.entity.Course;
@@ -41,6 +42,9 @@ class ArchiveFacadeTest {
     @Mock
     private CourseSearchService courseSearchService;
 
+    @Mock
+    private CommentCountAggregator commentCountAggregator;
+
     @InjectMocks
     private ArchiveFacade archiveFacade;
 
@@ -74,6 +78,7 @@ class ArchiveFacadeTest {
             mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
 
             given(archiveCourseService.getRecentCourseByMember(mockMember)).willReturn(Optional.of(mockCourse));
+            given(commentCountAggregator.aggregate(mockCourse)).willReturn(10);
             given(archiveCourseService.getCourseImages(mockCourse.getId())).willReturn(mockImages);
 
             // when
@@ -130,6 +135,9 @@ class ArchiveFacadeTest {
             Course course2 = Course.builder().id(101L).build();
             List<Course> mockCourses = List.of(course1, course2);
             given(archiveCourseService.getCoursesWithPins(mockIds)).willReturn(mockCourses);
+
+            given(commentCountAggregator.aggregate(course1)).willReturn(10);
+            given(commentCountAggregator.aggregate(course2)).willReturn(10);
 
             // when
             List<CourseFolderResponseDto> response = archiveFacade.getMyCreatedCourses(0, 10);
@@ -195,8 +203,13 @@ class ArchiveFacadeTest {
             try (MockedStatic<CourseFolderResponseDto> mockedDto = mockStatic(CourseFolderResponseDto.class)) {
 
                 mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
-                mockedDto.when(() -> CourseFolderResponseDto.from(course1)).thenReturn(dto1);
-                mockedDto.when(() -> CourseFolderResponseDto.from(course2)).thenReturn(dto2);
+
+                // 추가: commentCountAggregator 모킹
+                given(commentCountAggregator.aggregate(course1)).willReturn(10);
+                given(commentCountAggregator.aggregate(course2)).willReturn(10);
+
+                mockedDto.when(() -> CourseFolderResponseDto.from(course1, 10)).thenReturn(dto1);
+                mockedDto.when(() -> CourseFolderResponseDto.from(course2, 10)).thenReturn(dto2);
 
                 given(courseSearchService.searchCoursesByMember(
                         eq(mockMember), eq(rating), eq(keywords),
@@ -220,8 +233,8 @@ class ArchiveFacadeTest {
                         eq(placeCodes), eq(tags), eq(expectedPageRequest)
                 );
                 mockSecurityUtils.verify(SecurityUtils::getCurrentMember);
-                mockedDto.verify(() -> CourseFolderResponseDto.from(course1));
-                mockedDto.verify(() -> CourseFolderResponseDto.from(course2));
+                mockedDto.verify(() -> CourseFolderResponseDto.from(course1, 10));
+                mockedDto.verify(() -> CourseFolderResponseDto.from(course2, 10));
             }
         }
 

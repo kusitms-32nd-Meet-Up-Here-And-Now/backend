@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CourseCommentRepository extends JpaRepository<CourseComment, Long> {
 
     List<CourseComment> findByCourse(Course course);
+
+    int countByCourse(Course course);
 }

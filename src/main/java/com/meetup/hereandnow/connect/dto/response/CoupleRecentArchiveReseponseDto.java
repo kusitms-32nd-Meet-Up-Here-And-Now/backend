@@ -1,12 +1,11 @@
-package com.meetup.hereandnow.archive.dto.response;
+package com.meetup.hereandnow.connect.dto.response;
 
 import com.meetup.hereandnow.course.domain.entity.Course;
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.LocalDate;
 import java.util.List;
 
-public record RecentArchiveResponseDto(
+public record CoupleRecentArchiveReseponseDto(
 
         @Schema(description = "코스 ID", example = "1")
         Long courseId,
@@ -31,8 +30,8 @@ public record RecentArchiveResponseDto(
         @Schema(description = "코스 댓글 수", example = "4")
         Integer commentCount
 ) {
-    public static RecentArchiveResponseDto from(Course course, List<String> courseImages, int commentCount) {
-        return new RecentArchiveResponseDto(
+    public static CoupleRecentArchiveReseponseDto from(Course course, List<String> courseImages, Integer commentCount) {
+        return new CoupleRecentArchiveReseponseDto(
                 course.getId(),
                 course.getCourseVisitDate(),
                 course.getCourseTitle(),

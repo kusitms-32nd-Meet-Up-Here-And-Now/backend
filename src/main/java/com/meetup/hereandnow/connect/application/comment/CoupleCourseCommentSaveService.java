@@ -6,7 +6,7 @@ import com.meetup.hereandnow.connect.dto.request.CoupleCourseImageCommentRequest
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseTextCommentRequestDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseCommentPresignedUrlResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleCourseCommentErrorCode;
-import com.meetup.hereandnow.connect.repository.CoupleCourseCommentRepository;
+import com.meetup.hereandnow.connect.infrastructure.repository.CoupleCourseCommentRepository;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
