@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@Tag(name = "Place", description = "장소 관련 API")
+@Tag(name = "Home", description = "홈 화면 관련 API")
 public interface PlaceHomeSwagger {
 
     @Operation(
@@ -20,7 +20,9 @@ public interface PlaceHomeSwagger {
             operationId = "GET /place/home/ads"
     )
     ResponseEntity<RestResponse<List<PlacePointResponseDto>>> getAdPlaces(
+            @Schema(description = "현재 위도", example = "37.5709578373114")
             @RequestParam double lat,
+            @Schema(description = "현재 경도", example = "126.977928770123")
             @RequestParam double lon
     );
 
