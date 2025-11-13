@@ -3,7 +3,7 @@ package com.meetup.hereandnow.connect.application;
 import com.meetup.hereandnow.connect.domain.vo.CourseSearchCriteria;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseSearchResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleRecentArchiveReseponseDto;
-import com.meetup.hereandnow.connect.infrastructure.aggregator.CommentCountAggregator;
+import com.meetup.hereandnow.connect.infrastructure.aggregator.CoupleCommentCountAggregator;
 import com.meetup.hereandnow.connect.infrastructure.builder.CoupleSpecificationBuilder;
 import com.meetup.hereandnow.connect.infrastructure.strategy.CourseImageSelector;
 import com.meetup.hereandnow.connect.infrastructure.validator.CoupleValidator;
@@ -49,7 +49,7 @@ class CoupleConnectingSearchServiceTest {
     private CourseImageSelector imageSelector;
 
     @Mock
-    private CommentCountAggregator commentCountAggregator;
+    private CoupleCommentCountAggregator coupleCommentCountAggregator;
 
     @Mock
     private CoupleSpecificationBuilder specificationBuilder;
@@ -86,7 +86,7 @@ class CoupleConnectingSearchServiceTest {
             when(courseRepository.findLatestCourse(any(Member.class), anyString()))
                     .thenReturn(Optional.of(course));
             when(imageSelector.selectRandomImages(course)).thenReturn(images);
-            when(commentCountAggregator.aggregate(course)).thenReturn(10);
+            when(coupleCommentCountAggregator.aggregate(course)).thenReturn(10);
 
             // when
             CoupleRecentArchiveReseponseDto result = service.getRecentArchive();
@@ -96,7 +96,7 @@ class CoupleConnectingSearchServiceTest {
             verify(coupleValidator).validate(mockedMember);
             verify(courseRepository).findLatestCourse(any(Member.class), anyString());
             verify(imageSelector).selectRandomImages(course);
-            verify(commentCountAggregator).aggregate(course);
+            verify(coupleCommentCountAggregator).aggregate(course);
         }
 
         @Test
@@ -113,7 +113,7 @@ class CoupleConnectingSearchServiceTest {
             assertThat(result).isNull();
             verify(coupleValidator).validate(mockedMember);
             verify(courseRepository).findLatestCourse(any(Member.class), anyString());
-            verifyNoInteractions(imageSelector, commentCountAggregator);
+            verifyNoInteractions(imageSelector, coupleCommentCountAggregator);
         }
     }
 
@@ -134,7 +134,7 @@ class CoupleConnectingSearchServiceTest {
                     .thenReturn(mock(Specification.class));
             when(courseRepository.findAll(any(Specification.class), any(PageRequest.class)))
                     .thenReturn(coursePage);
-            when(commentCountAggregator.aggregate(any(Course.class))).thenReturn(5);
+            when(coupleCommentCountAggregator.aggregate(any(Course.class))).thenReturn(5);
 
             // when
             CoupleCourseSearchResponseDto result = service.getCourseFolder(
@@ -148,7 +148,7 @@ class CoupleConnectingSearchServiceTest {
             assertThat(result.filteredCourses()).hasSize(2);
             verify(specificationBuilder).build(any(Member.class), any(CourseSearchCriteria.class));
             verify(courseRepository).findAll(any(Specification.class), any(PageRequest.class));
-            verify(commentCountAggregator, times(2)).aggregate(any(Course.class));
+            verify(coupleCommentCountAggregator, times(2)).aggregate(any(Course.class));
         }
 
         @Test
@@ -172,7 +172,7 @@ class CoupleConnectingSearchServiceTest {
             assertThat(result.filteredCourses()).isEmpty();
             verify(specificationBuilder).build(any(Member.class), any(CourseSearchCriteria.class));
             verify(courseRepository).findAll(any(Specification.class), any(PageRequest.class));
-            verifyNoInteractions(commentCountAggregator);
+            verifyNoInteractions(coupleCommentCountAggregator);
         }
 
         @Test
@@ -185,7 +185,7 @@ class CoupleConnectingSearchServiceTest {
                     .thenReturn(mock(Specification.class));
             when(courseRepository.findAll(any(Specification.class), any(PageRequest.class)))
                     .thenReturn(coursePage);
-            when(commentCountAggregator.aggregate(any(Course.class))).thenReturn(3);
+            when(coupleCommentCountAggregator.aggregate(any(Course.class))).thenReturn(3);
 
             // when
             CoupleCourseSearchResponseDto result = service.getCourseFolder(

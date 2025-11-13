@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CommentCountAggregator {
+public class CoupleCommentCountAggregator {
 
     private final CourseCommentRepository courseCommentRepository;
     private final CoupleCourseCommentRepository coupleCourseCommentRepository;

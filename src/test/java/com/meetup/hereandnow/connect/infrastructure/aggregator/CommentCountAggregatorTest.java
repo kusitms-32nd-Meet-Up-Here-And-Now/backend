@@ -23,7 +23,7 @@ class CommentCountAggregatorTest {
     private CoupleCourseCommentRepository coupleCourseCommentRepository;
 
     @InjectMocks
-    private CommentCountAggregator commentCountAggregator;
+    private CoupleCommentCountAggregator coupleCommentCountAggregator;
 
     @Test
     @DisplayName("두 레포지토리의 댓글 합산에 성공한다")
@@ -34,7 +34,7 @@ class CommentCountAggregatorTest {
         when(coupleCourseCommentRepository.countByCourse(course)).thenReturn(3);
 
         // when
-        int result = commentCountAggregator.aggregate(course);
+        int result = coupleCommentCountAggregator.aggregate(course);
 
         // then
         assertThat(result).isEqualTo(8);
@@ -51,7 +51,7 @@ class CommentCountAggregatorTest {
         when(coupleCourseCommentRepository.countByCourse(course)).thenReturn(0);
 
         // when
-        int result = commentCountAggregator.aggregate(course);
+        int result = coupleCommentCountAggregator.aggregate(course);
 
         // then
         assertThat(result).isEqualTo(10);
@@ -66,7 +66,7 @@ class CommentCountAggregatorTest {
         when(coupleCourseCommentRepository.countByCourse(course)).thenReturn(0);
 
         // when
-        int result = commentCountAggregator.aggregate(course);
+        int result = coupleCommentCountAggregator.aggregate(course);
 
         // then
         assertThat(result).isEqualTo(0);

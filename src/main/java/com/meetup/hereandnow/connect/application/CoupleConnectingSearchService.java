@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.connect.application;
 
-import com.meetup.hereandnow.connect.infrastructure.aggregator.CommentCountAggregator;
+import com.meetup.hereandnow.connect.infrastructure.aggregator.CoupleCommentCountAggregator;
 import com.meetup.hereandnow.connect.infrastructure.builder.CoupleSpecificationBuilder;
 import com.meetup.hereandnow.connect.infrastructure.strategy.CourseImageSelector;
 import com.meetup.hereandnow.connect.infrastructure.validator.CoupleValidator;
@@ -30,7 +30,7 @@ public class CoupleConnectingSearchService {
     private final CourseRepository courseRepository;
     private final CoupleValidator coupleValidator;
     private final CourseImageSelector imageSelector;
-    private final CommentCountAggregator commentCountAggregator;
+    private final CoupleCommentCountAggregator coupleCommentCountAggregator;
     private final CoupleSpecificationBuilder specificationBuilder;
 
     @Transactional
@@ -41,7 +41,7 @@ public class CoupleConnectingSearchService {
         return courseRepository.findLatestCourse(member, CourseVisitType.COUPLE.getValue())
                 .map(course -> {
                     List<String> courseImages = imageSelector.selectRandomImages(course);
-                    int commentCount = commentCountAggregator.aggregate(course);
+                    int commentCount = coupleCommentCountAggregator.aggregate(course);
                     return CoupleRecentArchiveReseponseDto.from(course, courseImages, commentCount);
                 })
                 .orElse(null);
@@ -70,7 +70,7 @@ public class CoupleConnectingSearchService {
 
         List<CoupleCourseFolderResponseDto> courses = coursePage.getContent()
                 .stream()
-                .map(course -> CoupleCourseFolderResponseDto.from(course, commentCountAggregator.aggregate(course)))
+                .map(course -> CoupleCourseFolderResponseDto.from(course, coupleCommentCountAggregator.aggregate(course)))
                 .toList();
 
         CoupleCourseSearchFilterDto filterDto = new CoupleCourseSearchFilterDto(
