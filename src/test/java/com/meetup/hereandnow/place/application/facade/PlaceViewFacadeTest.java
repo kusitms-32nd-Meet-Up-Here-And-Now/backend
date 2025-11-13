@@ -157,7 +157,6 @@ class PlaceViewFacadeTest {
 
         // given
         given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
-        given(pinRepository.find3PinsByPlaceIdsSorted(Collections.emptyList())).willReturn(Collections.emptyList());
 
         // when
         List<PlacePointResponseDto> result = placeViewFacade.getAdPlaces(TEST_LAT, TEST_LON);
@@ -166,7 +165,7 @@ class PlaceViewFacadeTest {
         assertThat(result).isEmpty();
 
         verify(placeFindService).find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
-        verify(pinRepository).find3PinsByPlaceIdsSorted(Collections.emptyList());
+        verify(pinRepository, never()).find3PinsByPlaceIdsSorted(Collections.emptyList());
         verify(placeDtoConverter, never()).convert(any(Place.class), anyList());
     }
 

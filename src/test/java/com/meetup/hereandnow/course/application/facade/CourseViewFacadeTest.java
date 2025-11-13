@@ -1,8 +1,11 @@
 package com.meetup.hereandnow.course.application.facade;
 
 import com.meetup.hereandnow.core.util.SecurityUtils;
+import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.application.service.view.CourseDetailsViewService;
+import com.meetup.hereandnow.course.application.service.view.CourseFindService;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.course.dto.response.CourseDetailsResponseDto;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.member.domain.Member;
@@ -19,6 +22,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +38,12 @@ class CourseViewFacadeTest {
 
     @Mock
     private CourseDetailsViewService courseDetailsViewService;
+
+    @Mock
+    private CourseFindService courseFindService;
+
+    @Mock
+    private CourseCardDtoConverter courseCardDtoConverter;
 
     @InjectMocks
     private CourseViewFacade courseViewFacade;
@@ -152,5 +162,67 @@ class CourseViewFacadeTest {
         verify(courseDetailsViewService).getScrappedPlaceIds(mockMember, mockCourse);
         verify(courseDetailsViewService).toPinDetailsDto(pin1, 1, scrappedPlaceIds);
         verify(courseDetailsViewService).toPinDetailsDto(pin2, 2, scrappedPlaceIds);
+    }
+
+    @Test
+    @DisplayName("getRecommendedCourses: 주변 코스를 조회하여 DTO 리스트로 변환한다")
+    void get_recommended_courses() {
+
+        // given
+        int page = 0;
+        int size = 10;
+        String sort = "scraps";
+        double lat = 37.5;
+        double lon = 127.0;
+
+        Course mockCourse1 = mock(Course.class);
+        Course mockCourse2 = mock(Course.class);
+        List<Course> mockCourses = List.of(mockCourse1, mockCourse2);
+
+        CourseCardResponseDto mockDto1 = mock(CourseCardResponseDto.class);
+        CourseCardResponseDto mockDto2 = mock(CourseCardResponseDto.class);
+        List<CourseCardResponseDto> expectedDtos = List.of(mockDto1, mockDto2);
+
+        given(courseFindService.getNearbyCourses(page, size, sort, lat, lon)).willReturn(mockCourses);
+        given(courseCardDtoConverter.convert(mockCourses)).willReturn(expectedDtos);
+
+        // when
+        List<CourseCardResponseDto> result = courseViewFacade.getRecommendedCourses(page, size, sort, lat, lon);
+
+        // then
+        assertThat(result).isEqualTo(expectedDtos);
+        assertThat(result).hasSize(2);
+
+        // verify
+        verify(courseFindService).getNearbyCourses(page, size, sort, lat, lon);
+        verify(courseCardDtoConverter).convert(mockCourses);
+    }
+
+    @Test
+    @DisplayName("getRecommendedCourses: 주변 코스가 없으면 빈 리스트를 반환한다")
+    void get_recommended_courses_when_no_courses_found() {
+
+        // given
+        int page = 0;
+        int size = 10;
+        String sort = "scraps";
+        double lat = 37.5;
+        double lon = 127.0;
+
+        List<Course> emptyCourses = Collections.emptyList();
+        List<CourseCardResponseDto> emptyDtos = Collections.emptyList();
+
+        given(courseFindService.getNearbyCourses(page, size, sort, lat, lon)).willReturn(emptyCourses);
+        given(courseCardDtoConverter.convert(emptyCourses)).willReturn(emptyDtos);
+
+        // when
+        List<CourseCardResponseDto> result = courseViewFacade.getRecommendedCourses(page, size, sort, lat, lon);
+
+        // then
+        assertThat(result).isEmpty();
+
+        // verify
+        verify(courseFindService).getNearbyCourses(page, size, sort, lat, lon);
+        verify(courseCardDtoConverter).convert(emptyCourses);
     }
 }
