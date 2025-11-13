@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.place.presentation.controller;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.place.application.facade.PlaceViewFacade;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
@@ -24,8 +25,8 @@ public class PlaceHomeController implements PlaceHomeSwagger {
     @Override
     @GetMapping("/ads")
     public ResponseEntity<RestResponse<List<PlacePointResponseDto>>> getAdPlaces(
-            @RequestParam double lat,
-            @RequestParam double lon
+            @RequestParam(defaultValue = "37.566585446882") double lat,
+            @RequestParam(defaultValue = "126.978203640984") double lon
     ) {
         return ResponseEntity.ok(
                 new RestResponse<>(
@@ -39,9 +40,9 @@ public class PlaceHomeController implements PlaceHomeSwagger {
     public ResponseEntity<RestResponse<List<PlaceCardResponseDto>>> getRecommendedPlaces(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "scraps") String sort,
-            @RequestParam double lat,
-            @RequestParam double lon
+            @RequestParam(defaultValue = "SCRAPS") SortType sort,
+            @RequestParam(defaultValue = "37.566585446882") double lat,
+            @RequestParam(defaultValue = "126.978203640984") double lon
     ) {
         return ResponseEntity.ok(
                 new RestResponse<>(

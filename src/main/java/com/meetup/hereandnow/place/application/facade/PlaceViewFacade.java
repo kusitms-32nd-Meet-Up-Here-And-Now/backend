@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.place.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
@@ -47,7 +48,7 @@ public class PlaceViewFacade {
 
     @Transactional(readOnly = true)
     public List<PlaceCardResponseDto> getRecommendedPlaces(
-            int page, int size, String sort, double lat, double lon
+            int page, int size, SortType sort, double lat, double lon
     ) {
         Pageable pageable = SortUtils.resolvePlaceSortNQ(page, size, sort);
         List<Place> places = placeFindService.findNearbyPlaces(lat, lon, pageable);

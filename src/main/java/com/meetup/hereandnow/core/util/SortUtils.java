@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.core.util;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -8,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * 전달된 정렬 값을 pageable로 알맞게 처리합니다. 기본값은 최신순입니다.
+ * 전달된 정렬 값을 pageable로 알맞게 처리합니다.
  */
 public class SortUtils {
 
@@ -17,20 +18,25 @@ public class SortUtils {
     }
 
     private static final String COURSE_DEFAULT_SORT = "createdAt";
-    private static final Map<String, String> COURSE_SORT_MAP = Map.of(
-            "scraps", "course.scrapCount"
+    private static final Map<SortType, String> COURSE_SORT_MAP = Map.of(
+            SortType.SCRAPS, "course.scrapCount"
+    );
+
+    private static final String COURSE_NATIVE_DEFAULT_SORT = "created_at";
+    private static final Map<SortType, String> COURSE_NATIVE_SORT_MAP = Map.of(
+            SortType.SCRAPS, "scrap_count"
     );
 
     private static final String PLACE_DEFAULT_SORT = "createdAt";
-    private static final Map<String, String> PLACE_SORT_MAP = Map.of(
-            "scraps", "place.scrapCount",
-            "reviews", "place.pinCount"
+    private static final Map<SortType, String> PLACE_SORT_MAP = Map.of(
+            SortType.SCRAPS, "place.scrapCount",
+            SortType.REVIEWS, "place.pinCount"
     );
 
     private static final String PLACE_NATIVE_DEFAULT_SORT = "created_at";
-    private static final Map<String, String> PLACE_NATIVE_SORT_MAP = Map.of(
-            "scraps", "scrap_count",
-            "reviews", "pin_count"
+    private static final Map<SortType, String> PLACE_NATIVE_SORT_MAP = Map.of(
+            SortType.SCRAPS, "scrap_count",
+            SortType.REVIEWS, "pin_count"
     );
 
     /**
@@ -44,30 +50,30 @@ public class SortUtils {
      * sort 문자열을 실제 DB 필드명으로 변환하는 로직
      */
     private static String resolveSortProperty(
-            String sort,
-            Map<String, String> strategyMap,
+            SortType sort,
+            Map<SortType, String> strategyMap,
             String defaultProperty
     ) {
-        String sortBy = Optional.ofNullable(sort).orElse("").toLowerCase();
+        SortType sortBy = Optional.ofNullable(sort).orElse(SortType.SCRAPS);
         return strategyMap.getOrDefault(sortBy, defaultProperty);
     }
-    
 
-    public static Pageable resolveCourseSort(int page, int size) {
-        return PageRequest.of(page, size);
-    }
-
-    public static Pageable resolveCourseSort(int page, int size, String sort) {
+    public static Pageable resolveCourseSort(int page, int size, SortType sort) {
         String resolvedSortBy = resolveSortProperty(sort, COURSE_SORT_MAP, COURSE_DEFAULT_SORT);
         return createPageable(page, size, resolvedSortBy);
     }
 
-    public static Pageable resolvePlaceSort(int page, int size, String sort) {
+    public static Pageable resolveCourseSortNQ(int page, int size, SortType sort) {
+        String resolvedSortBy = resolveSortProperty(sort, COURSE_NATIVE_SORT_MAP, COURSE_NATIVE_DEFAULT_SORT);
+        return createPageable(page, size, resolvedSortBy);
+    }
+
+    public static Pageable resolvePlaceSort(int page, int size, SortType sort) {
         String resolvedSortBy = resolveSortProperty(sort, PLACE_SORT_MAP, PLACE_DEFAULT_SORT);
         return createPageable(page, size, resolvedSortBy);
     }
 
-    public static Pageable resolvePlaceSortNQ(int page, int size, String sort) {
+    public static Pageable resolvePlaceSortNQ(int page, int size, SortType sort) {
         String resolvedSortBy = resolveSortProperty(sort, PLACE_NATIVE_SORT_MAP, PLACE_NATIVE_DEFAULT_SORT);
         return createPageable(page, size, resolvedSortBy);
     }

@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.place.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
@@ -157,7 +158,6 @@ class PlaceViewFacadeTest {
 
         // given
         given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
-        given(pinRepository.find3PinsByPlaceIdsSorted(Collections.emptyList())).willReturn(Collections.emptyList());
 
         // when
         List<PlacePointResponseDto> result = placeViewFacade.getAdPlaces(TEST_LAT, TEST_LON);
@@ -166,7 +166,7 @@ class PlaceViewFacadeTest {
         assertThat(result).isEmpty();
 
         verify(placeFindService).find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
-        verify(pinRepository).find3PinsByPlaceIdsSorted(Collections.emptyList());
+        verify(pinRepository, never()).find3PinsByPlaceIdsSorted(Collections.emptyList());
         verify(placeDtoConverter, never()).convert(any(Place.class), anyList());
     }
 
@@ -177,7 +177,7 @@ class PlaceViewFacadeTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "newest";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
         List<Place> places = List.of(mock(Place.class), mock(Place.class));
@@ -204,7 +204,7 @@ class PlaceViewFacadeTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "newest";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
         List<Place> emptyPlaces = Collections.emptyList();

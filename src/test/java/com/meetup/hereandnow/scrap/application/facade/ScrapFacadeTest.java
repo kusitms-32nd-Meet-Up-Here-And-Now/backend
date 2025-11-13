@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.scrap.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
@@ -114,7 +115,7 @@ class ScrapFacadeTest {
         // given
         int page = 0;
         int size = 20;
-        String sort = "recent";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
 
@@ -148,7 +149,7 @@ class ScrapFacadeTest {
         // given
         int page = 0;
         int size = 20;
-        String sort = "recent";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
 
