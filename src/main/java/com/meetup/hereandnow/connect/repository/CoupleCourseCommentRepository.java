@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CoupleCourseCommentRepository extends JpaRepository<CoupleCourseComment, Long> {
 
     List<CoupleCourseComment> findAllByCourseOrderByCreatedAtAsc(Course course);
+
+    int countByCourse(Course course);
 }
