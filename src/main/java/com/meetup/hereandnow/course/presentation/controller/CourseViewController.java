@@ -34,8 +34,8 @@ public class CourseViewController implements CourseViewSwagger {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "scraps") String sort,
-            @RequestParam double lat,
-            @RequestParam double lon
+            @RequestParam(defaultValue = "37.566585446882") double lat,
+            @RequestParam(defaultValue = "126.978203640984") double lon
     ) {
         return ResponseEntity.ok(
                 new RestResponse<>(
