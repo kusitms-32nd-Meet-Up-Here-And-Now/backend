@@ -53,6 +53,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
     )
     Optional<Course> findLatestCourse(
             @Param("member") Member member,
-            @Param("courseVisitMember")String courseVisitMember
+            @Param("visitMember")String visitMember
     );
 }
