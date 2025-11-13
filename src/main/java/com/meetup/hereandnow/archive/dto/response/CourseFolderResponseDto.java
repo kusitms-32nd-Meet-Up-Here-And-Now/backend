@@ -19,11 +19,11 @@ public record CourseFolderResponseDto(
         @Schema(description = "코스 방문 날짜", example = "2025-11-05")
         LocalDate courseVisitDate
 ) {
-    public static CourseFolderResponseDto from(Course course) {
+    public static CourseFolderResponseDto from(Course course, int commentCount) {
         return new CourseFolderResponseDto(
                 course.getId(),
                 course.getCourseTitle(),
-                0, //TODO: 코스 댓글(리뷰) 구현 시 수정
+                commentCount,
                 course.getCourseVisitDate()
         );
     }

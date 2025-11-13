@@ -31,7 +31,7 @@ public record RecentArchiveResponseDto(
         @Schema(description = "코스 댓글 수", example = "4")
         Integer commentCount
 ) {
-    public static RecentArchiveResponseDto from(Course course, List<String> courseImages) {
+    public static RecentArchiveResponseDto from(Course course, List<String> courseImages, int commentCount) {
         return new RecentArchiveResponseDto(
                 course.getId(),
                 course.getCourseVisitDate(),
@@ -39,7 +39,7 @@ public record RecentArchiveResponseDto(
                 courseImages,
                 course.getCourseDescription(),
                 course.getCourseTags(),
-                0 //TODO: 코스 댓글(리뷰) 구현 시 수정
+                commentCount
         );
     }
 }
