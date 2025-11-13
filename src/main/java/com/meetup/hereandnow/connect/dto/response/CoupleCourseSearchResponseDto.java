@@ -5,6 +5,6 @@ import java.util.List;
 public record CoupleCourseSearchResponseDto(
         CoupleCourseSearchFilterDto selectedFilters,
 
-        List<CoupleCourseFolderReponseDto> filteredCourses
+        List<CoupleCourseFolderResponseDto> filteredCourses
 ) {
 }

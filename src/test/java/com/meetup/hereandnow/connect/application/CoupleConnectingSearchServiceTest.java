@@ -64,7 +64,7 @@ class CoupleConnectingSearchServiceTest {
     void setUp() {
         mockedSecurity = Mockito.mockStatic(SecurityUtils.class);
         mockedMember = Member.builder().id(1L).build();
-        when(SecurityUtils.getCurrentMember()).thenReturn(mockedMember);
+        mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(mockedMember);
     }
 
     @AfterEach

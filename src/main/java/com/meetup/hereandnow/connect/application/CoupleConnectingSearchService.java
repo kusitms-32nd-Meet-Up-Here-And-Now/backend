@@ -6,7 +6,7 @@ import com.meetup.hereandnow.connect.infrastructure.strategy.CourseImageSelector
 import com.meetup.hereandnow.connect.infrastructure.validator.CoupleValidator;
 import com.meetup.hereandnow.connect.domain.vo.CourseSearchCriteria;
 import com.meetup.hereandnow.connect.domain.vo.CourseVisitType;
-import com.meetup.hereandnow.connect.dto.response.CoupleCourseFolderReponseDto;
+import com.meetup.hereandnow.connect.dto.response.CoupleCourseFolderResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseSearchFilterDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseSearchResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleRecentArchiveReseponseDto;
@@ -68,9 +68,9 @@ public class CoupleConnectingSearchService {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Course> coursePage = searchCourses(member, criteria, pageRequest);
 
-        List<CoupleCourseFolderReponseDto> courses = coursePage.getContent()
+        List<CoupleCourseFolderResponseDto> courses = coursePage.getContent()
                 .stream()
-                .map(course -> CoupleCourseFolderReponseDto.from(course, commentCountAggregator.aggregate(course)))
+                .map(course -> CoupleCourseFolderResponseDto.from(course, commentCountAggregator.aggregate(course)))
                 .toList();
 
         CoupleCourseSearchFilterDto filterDto = new CoupleCourseSearchFilterDto(
