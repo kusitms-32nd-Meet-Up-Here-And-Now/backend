@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.place.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
@@ -176,7 +177,7 @@ class PlaceViewFacadeTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "newest";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
         List<Place> places = List.of(mock(Place.class), mock(Place.class));
@@ -203,7 +204,7 @@ class PlaceViewFacadeTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "newest";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
         List<Place> emptyPlaces = Collections.emptyList();

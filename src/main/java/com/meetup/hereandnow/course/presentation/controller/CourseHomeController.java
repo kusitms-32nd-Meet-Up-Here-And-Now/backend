@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.presentation.controller;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.course.application.facade.CourseViewFacade;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
@@ -25,7 +26,7 @@ public class CourseHomeController implements CourseHomeSwagger {
     public ResponseEntity<RestResponse<List<CourseCardResponseDto>>> getRecommendedCourses(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "scraps") String sort,
+            @RequestParam(defaultValue = "SCRAPS") SortType sort,
             @RequestParam(defaultValue = "37.566585446882") double lat,
             @RequestParam(defaultValue = "126.978203640984") double lon
     ) {

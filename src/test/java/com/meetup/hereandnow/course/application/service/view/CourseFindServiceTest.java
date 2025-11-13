@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.application.service.view;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
@@ -56,7 +57,7 @@ class CourseFindServiceTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "reviews";
+        SortType sort = SortType.REVIEWS;
         double lat = 37.5;
         double lon = 127.0;
 
@@ -100,7 +101,7 @@ class CourseFindServiceTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "recent";
+        SortType sort = SortType.RECENT;
         double lat = 37.5;
         double lon = 127.0;
 
@@ -145,7 +146,7 @@ class CourseFindServiceTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "recent";
+        SortType sort = SortType.RECENT;
         double lat = 37.5;
         double lon = 127.0;
 

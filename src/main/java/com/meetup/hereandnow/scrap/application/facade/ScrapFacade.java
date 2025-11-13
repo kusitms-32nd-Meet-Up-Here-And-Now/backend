@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.scrap.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
@@ -44,7 +45,7 @@ public class ScrapFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<CourseCardResponseDto> getScrappedCourses(int page, int size, String sort) {
+    public List<CourseCardResponseDto> getScrappedCourses(int page, int size, SortType sort) {
         Member member = SecurityUtils.getCurrentMember();
         Pageable resolvedPageable = SortUtils.resolveCourseSort(page, size, sort);
         Page<CourseScrap> scrapPage = courseScrapService.getScrapsByMember(member, resolvedPageable);
@@ -53,7 +54,7 @@ public class ScrapFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<PlaceCardResponseDto> getScrappedPlaces(int page, int size, String sort) {
+    public List<PlaceCardResponseDto> getScrappedPlaces(int page, int size, SortType sort) {
         Member member = SecurityUtils.getCurrentMember();
         Pageable resolvedPageable = SortUtils.resolvePlaceSort(page, size, sort);
         Page<PlaceScrap> scrapPage = placeScrapService.getScrapsByMember(member, resolvedPageable);

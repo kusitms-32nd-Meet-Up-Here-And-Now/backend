@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.application.service.view.CourseDetailsViewService;
@@ -171,7 +172,7 @@ class CourseViewFacadeTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "scraps";
+        SortType sort = SortType.SCRAPS;
         double lat = 37.5;
         double lon = 127.0;
 
@@ -205,7 +206,7 @@ class CourseViewFacadeTest {
         // given
         int page = 0;
         int size = 10;
-        String sort = "scraps";
+        SortType sort = SortType.SCRAPS;
         double lat = 37.5;
         double lon = 127.0;
 

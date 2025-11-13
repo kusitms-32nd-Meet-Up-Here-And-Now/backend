@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.application.service.view;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
@@ -25,13 +26,13 @@ public class CourseFindService {
     private final CourseRepository courseRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
-    public List<Course> getNearbyCourses(int page, int size, String sort, double lat, double lon) {
+    public List<Course> getNearbyCourses(int page, int size, SortType sort, double lat, double lon) {
 
         List<Long> courseIds;
         Point point = geometryFactory.createPoint(new Coordinate(lon, lat));
 
         // 리뷰 순 (코스 댓글 순) 경우만 course_comment 조인한 쿼리 사용
-        if (sort.equalsIgnoreCase("reviews")) {
+        if (sort.equals(SortType.REVIEWS)) {
             Pageable pageable = PageRequest.of(page, size);
             courseIds = courseRepository.findNearbyCourseIdsSortedByCommentCount(point, pageable).getContent();
         } else {

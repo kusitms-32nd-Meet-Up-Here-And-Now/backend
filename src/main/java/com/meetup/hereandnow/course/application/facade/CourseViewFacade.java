@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.course.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.application.service.view.CourseDetailsViewService;
@@ -54,7 +55,7 @@ public class CourseViewFacade {
 
     @Transactional(readOnly = true)
     public List<CourseCardResponseDto> getRecommendedCourses(
-            int page, int size, String sort, double lat, double lon
+            int page, int size, SortType sort, double lat, double lon
     ) {
         List<Course> nearbyCourses = courseFindService.getNearbyCourses(page, size, sort, lat, lon);
         return courseCardDtoConverter.convert(nearbyCourses);
