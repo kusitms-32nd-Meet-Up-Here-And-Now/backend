@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.connect.repository;
+package com.meetup.hereandnow.connect.infrastructure.repository;
 
 import com.meetup.hereandnow.connect.domain.CoupleCourseComment;
 import com.meetup.hereandnow.course.domain.entity.Course;

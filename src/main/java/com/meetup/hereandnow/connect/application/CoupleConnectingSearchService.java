@@ -1,20 +1,26 @@
 package com.meetup.hereandnow.connect.application;
 
+import com.meetup.hereandnow.connect.infrastructure.aggregator.CommentCountAggregator;
+import com.meetup.hereandnow.connect.infrastructure.builder.CoupleSpecificationBuilder;
+import com.meetup.hereandnow.connect.infrastructure.strategy.CourseImageSelector;
+import com.meetup.hereandnow.connect.infrastructure.validator.CoupleValidator;
+import com.meetup.hereandnow.connect.domain.vo.CourseSearchCriteria;
+import com.meetup.hereandnow.connect.domain.vo.CourseVisitType;
+import com.meetup.hereandnow.connect.dto.response.CoupleCourseFolderReponseDto;
+import com.meetup.hereandnow.connect.dto.response.CoupleCourseSearchFilterDto;
+import com.meetup.hereandnow.connect.dto.response.CoupleCourseSearchResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleRecentArchiveReseponseDto;
-import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
-import com.meetup.hereandnow.connect.repository.CoupleCourseCommentRepository;
-import com.meetup.hereandnow.connect.repository.CoupleRepository;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.infrastructure.repository.CourseCommentRepository;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.pin.domain.entity.Pin;
-import com.meetup.hereandnow.pin.domain.entity.PinImage;
-import java.util.Collections;
+import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,48 +28,60 @@ import org.springframework.stereotype.Service;
 public class CoupleConnectingSearchService {
 
     private final CourseRepository courseRepository;
-    private final CoupleRepository coupleRepository;
-    private final CourseCommentRepository courseCommentRepository;
-    private final CoupleCourseCommentRepository coupleCourseCommentRepository;
+    private final CoupleValidator coupleValidator;
+    private final CourseImageSelector imageSelector;
+    private final CommentCountAggregator commentCountAggregator;
+    private final CoupleSpecificationBuilder specificationBuilder;
 
+    @Transactional
     public CoupleRecentArchiveReseponseDto getRecentArchive() {
         Member member = SecurityUtils.getCurrentMember();
-        validateCouple(member);
+        coupleValidator.validate(member);
 
-        return courseRepository.findLatestCourse(member, "연인")
+        return courseRepository.findLatestCourse(member, CourseVisitType.COUPLE.getValue())
                 .map(course -> {
-                    List<Pin> savedPinList = course.getPinList();
-
-                    List<PinImage> pinImagesInCourse = savedPinList.stream()
-                            .flatMap(pin -> pin.getPinImages().stream())
-                            .collect(Collectors.toList());
-
-                    Collections.shuffle(pinImagesInCourse);
-
-                    List<String> courseImages = pinImagesInCourse.stream()
-                            .map(PinImage::getImageUrl)
-                            .limit(3)
-                            .toList();
-
-                    int commentCount = getCommentCount(course);
-
+                    List<String> courseImages = imageSelector.selectRandomImages(course);
+                    int commentCount = commentCountAggregator.aggregate(course);
                     return CoupleRecentArchiveReseponseDto.from(course, courseImages, commentCount);
                 })
                 .orElse(null);
     }
 
+    public CoupleCourseSearchResponseDto getCourseFolder(
+            int page, int size,
+            Integer rating, List<String> keywords,
+            LocalDate startDate, LocalDate endDate, String region,
+            List<String> placeCode, List<String> tags
+    ) {
+        Member member = SecurityUtils.getCurrentMember();
 
-    private void validateCouple(Member member) {
-        if(!coupleRepository.existsByMember(member)) {
-            throw CoupleErrorCode.NOT_FOUND_COUPLE.toException();
-        }
+        CourseSearchCriteria criteria = CourseSearchCriteria.builder()
+                .rating(rating)
+                .keywords(keywords)
+                .startDate(startDate)
+                .endDate(endDate)
+                .region(region)
+                .placeCode(placeCode)
+                .tags(tags)
+                .build();
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Course> coursePage = searchCourses(member, criteria, pageRequest);
+
+        List<CoupleCourseFolderReponseDto> courses = coursePage.getContent()
+                .stream()
+                .map(course -> CoupleCourseFolderReponseDto.from(course, commentCountAggregator.aggregate(course)))
+                .toList();
+
+        CoupleCourseSearchFilterDto filterDto = new CoupleCourseSearchFilterDto(
+                rating, keywords, startDate, endDate, region, placeCode, tags
+        );
+
+        return new CoupleCourseSearchResponseDto(filterDto, courses);
     }
 
-
-    private int getCommentCount(Course course) {
-        int courseCommentCount = courseCommentRepository.countByCourse(course);
-        int coupleCourseCommentCount = coupleCourseCommentRepository.countByCourse(course);
-
-        return courseCommentCount + coupleCourseCommentCount;
+    private Page<Course> searchCourses(Member member, CourseSearchCriteria criteria, PageRequest pageRequest) {
+        return courseRepository.findAll(specificationBuilder.build(member, criteria), pageRequest);
     }
 }
+
