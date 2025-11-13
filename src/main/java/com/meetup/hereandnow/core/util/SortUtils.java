@@ -21,6 +21,11 @@ public class SortUtils {
             "scraps", "course.scrapCount"
     );
 
+    private static final String COURSE_NATIVE_DEFAULT_SORT = "created_at";
+    private static final Map<String, String> COURSE_NATIVE_SORT_MAP = Map.of(
+            "scraps", "scrap_count"
+    );
+
     private static final String PLACE_DEFAULT_SORT = "createdAt";
     private static final Map<String, String> PLACE_SORT_MAP = Map.of(
             "scraps", "place.scrapCount",
@@ -51,14 +56,14 @@ public class SortUtils {
         String sortBy = Optional.ofNullable(sort).orElse("").toLowerCase();
         return strategyMap.getOrDefault(sortBy, defaultProperty);
     }
-    
-
-    public static Pageable resolveCourseSort(int page, int size) {
-        return PageRequest.of(page, size);
-    }
 
     public static Pageable resolveCourseSort(int page, int size, String sort) {
         String resolvedSortBy = resolveSortProperty(sort, COURSE_SORT_MAP, COURSE_DEFAULT_SORT);
+        return createPageable(page, size, resolvedSortBy);
+    }
+
+    public static Pageable resolveCourseSortNQ(int page, int size, String sort) {
+        String resolvedSortBy = resolveSortProperty(sort, COURSE_NATIVE_SORT_MAP, COURSE_NATIVE_DEFAULT_SORT);
         return createPageable(page, size, resolvedSortBy);
     }
 
