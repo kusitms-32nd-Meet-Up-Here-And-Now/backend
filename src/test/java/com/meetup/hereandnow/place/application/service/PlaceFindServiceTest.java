@@ -122,7 +122,7 @@ class PlaceFindServiceTest {
         given(placeRepository.findNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
 
         // when
-        List<Place> result = placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        List<Place> result = placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
 
         // then
         assertThat(result).isEmpty();
@@ -144,7 +144,7 @@ class PlaceFindServiceTest {
         given(placeRepository.findAllById(idListCaptor.capture())).willReturn(expectedPlaces);
 
         // when
-        List<Place> result = placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        List<Place> result = placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
 
         // then
         assertThat(result).isEqualTo(expectedPlaces);
@@ -170,7 +170,7 @@ class PlaceFindServiceTest {
         given(placeRepository.findAllById(eq(expectedFinalIds))).willReturn(expectedPlaces);
 
         // when
-        List<Place> result = placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        List<Place> result = placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
 
         // then
         assertThat(result).isEqualTo(expectedPlaces);

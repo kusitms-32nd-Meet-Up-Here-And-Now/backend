@@ -72,7 +72,7 @@ class PlaceViewFacadeTest {
         PlacePointResponseDto mockDto1 = mock(PlacePointResponseDto.class);
         PlacePointResponseDto mockDto2 = mock(PlacePointResponseDto.class);
 
-        given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(places);
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(places);
 
         given(mockPlace1.getId()).willReturn(1L);
         given(mockPlace2.getId()).willReturn(2L);
@@ -102,7 +102,7 @@ class PlaceViewFacadeTest {
         assertThat(result).hasSize(2);
         assertThat(result).containsExactly(mockDto1, mockDto2);
 
-        verify(placeFindService).find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
         verify(pinRepository).find3PinsByPlaceIdsSorted(placeIds);
         verify(placeDtoConverter).convert(mockPlace1, pinsForPlace1);
         verify(placeDtoConverter).convert(mockPlace2, pinsForPlace2);
@@ -128,7 +128,7 @@ class PlaceViewFacadeTest {
         PlacePointResponseDto mockDto1 = mock(PlacePointResponseDto.class);
         PlacePointResponseDto mockDto2 = mock(PlacePointResponseDto.class);
 
-        given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(places);
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(places);
         given(pinRepository.find3PinsByPlaceIdsSorted(placeIds)).willReturn(pinList);
 
         Place placeFromPin1 = mock(Place.class);
@@ -157,7 +157,7 @@ class PlaceViewFacadeTest {
     void get_ad_places_returns_when_no_places_found() {
 
         // given
-        given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
 
         // when
         List<PlacePointResponseDto> result = placeViewFacade.getAdPlaces(TEST_LAT, TEST_LON);
@@ -165,7 +165,7 @@ class PlaceViewFacadeTest {
         // then
         assertThat(result).isEmpty();
 
-        verify(placeFindService).find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
         verify(pinRepository, never()).find3PinsByPlaceIdsSorted(Collections.emptyList());
         verify(placeDtoConverter, never()).convert(any(Place.class), anyList());
     }
