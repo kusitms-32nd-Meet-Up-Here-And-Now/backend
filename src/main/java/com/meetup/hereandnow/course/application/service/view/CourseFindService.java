@@ -9,6 +9,7 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,14 @@ public class CourseFindService {
         return sortedIds.stream()
                 .map(courseMap::get)
                 .toList();
+    }
+
+    public List<Course> getCourses(Pageable pageable) {
+        Page<Course> coursePage = courseRepository.findCoursesWithMember(pageable);
+        if (coursePage.hasContent()) {
+            return coursePage.getContent();
+        } else {
+            return Collections.emptyList();
+        }
     }
 }

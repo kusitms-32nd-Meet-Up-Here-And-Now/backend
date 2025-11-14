@@ -21,10 +21,15 @@ public record CourseCommentDto(
     public static CourseCommentDto from(CourseComment comment) {
         return new CourseCommentDto(
                 comment.getId(),
-                comment.getMember().getNickname(),
+                maskNickname(comment.getMember().getNickname()),
                 comment.getMember().getProfileImage(),
                 comment.getContent()
         );
+    }
+
+    private static String maskNickname(String nickname) {
+        return nickname.charAt(0) +
+                "*".repeat(nickname.length() - 1);
     }
 }
 

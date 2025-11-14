@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface CourseScrapRepository extends JpaRepository<CourseScrap, Long> {
 
@@ -22,4 +24,7 @@ public interface CourseScrapRepository extends JpaRepository<CourseScrap, Long> 
             """,
             countQuery = "SELECT COUNT(cs) FROM CourseScrap cs WHERE cs.member = :member")
     Page<CourseScrap> findScrapsByMemberWithSort(@Param("member") Member member, Pageable pageable);
+
+    @Query("SELECT cs.course.id FROM CourseScrap cs WHERE cs.member = :member AND cs.course.id IN :courseIds")
+    Set<Long> findScrappedCourseIdsByMemberAndCourseIds(@Param("member") Member member, @Param("courseIds") List<Long> courseIds);
 }

@@ -28,7 +28,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
             nativeQuery = true)
     Optional<Course> findByMemberOrderByCreatedAtDesc(@Param("memberId") Long memberId);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             SELECT DISTINCT c FROM Course c
             LEFT JOIN FETCH c.pinList p
@@ -92,7 +91,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
             nativeQuery = true
     )
     Page<Long> findNearbyCourseIdsSortedByCommentCount(@Param("point") Point point, Pageable pageable);
-    
+
     @Query("SELECT c FROM Course c JOIN FETCH c.member m WHERE c.id IN :courseIds")
     List<Course> findCoursesWithDetailsByIds(@Param("courseIds") List<Long> courseIds);
 
@@ -102,14 +101,18 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
 
     @Query(
             """
-                SELECT c FROM Course c
-                WHERE c.member = :member AND c.courseVisitMember = :visitMember
-                ORDER BY c.createdAt DESC
-                LIMIT 1
-           """
+                         SELECT c FROM Course c
+                         WHERE c.member = :member AND c.courseVisitMember = :visitMember
+                         ORDER BY c.createdAt DESC
+                         LIMIT 1
+                    """
     )
     Optional<Course> findLatestCourse(
             @Param("member") Member member,
-            @Param("visitMember")String visitMember
+            @Param("visitMember") String visitMember
     );
+
+    @Query(value = "SELECT c FROM Course c JOIN FETCH c.member m WHERE c.isPublic = true",
+            countQuery = "SELECT COUNT(c) FROM Course c")
+    Page<Course> findCoursesWithMember(Pageable pageable);
 }
