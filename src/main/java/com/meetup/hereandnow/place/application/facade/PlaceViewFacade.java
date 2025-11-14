@@ -7,6 +7,7 @@ import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
 import com.meetup.hereandnow.place.application.service.PlaceFindService;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class PlaceViewFacade {
 
     @Transactional(readOnly = true)
     public List<PlacePointResponseDto> getAdPlaces(double lat, double lon) {
-        List<Place> places = placeFindService.find2RandomNearbyPlaceIds(lat, lon);
+        List<Place> places = placeFindService.find2RandomNearbyPlaces(lat, lon);
 
         if (places.isEmpty()) {
             return Collections.emptyList();
@@ -44,6 +45,15 @@ public class PlaceViewFacade {
             List<Pin> pins = pinsByPlaceId.getOrDefault(place.getId(), Collections.emptyList());
             return placeDtoConverter.convert(place, pins);
         }).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceCardMarkerResponseDto> getAdPlacesWithMarker(double lat, double lon) {
+        List<Place> places = placeFindService.find2RandomNearbyPlaces(lat, lon);
+        if (places.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return placeDtoConverter.convertWithMarker(places);
     }
 
     @Transactional(readOnly = true)
