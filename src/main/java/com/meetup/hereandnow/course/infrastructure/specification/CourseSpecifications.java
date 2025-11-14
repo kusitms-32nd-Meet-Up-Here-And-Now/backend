@@ -95,4 +95,10 @@ public class CourseSpecifications {
             return cb.or(predicates.toArray(new Predicate[0]));
         };
     }
+
+    // 공개 코스인 것만
+    public static Specification<Course> isPublic() {
+        return (root, query, cb) ->
+                cb.isTrue(root.get("isPublic"));
+    }
 }
