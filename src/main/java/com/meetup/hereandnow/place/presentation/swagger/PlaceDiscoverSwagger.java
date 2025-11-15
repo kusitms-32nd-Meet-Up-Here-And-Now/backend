@@ -29,7 +29,7 @@ public interface PlaceDiscoverSwagger {
     );
 
     @Operation(
-            summary = "지도 - 장소 검색 API",
+            summary = "지도 - 장소 검색 API (구현 예정)", //TODO: 구현 예정
             operationId = "GET /discover/place/search",
             description = "selectedFilters는 검색 결과를 얻기 위해 어떤 필터가 적용되었는지를 나타냅니다. " +
                     "적용되지 않은 필터는 null로 나타납니다.<br>" +

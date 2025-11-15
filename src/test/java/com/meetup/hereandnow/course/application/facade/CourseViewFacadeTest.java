@@ -290,7 +290,7 @@ class CourseViewFacadeTest {
 
         mockedSortUtils.when(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT)).thenReturn(mockPageable);
         given(courseFindService.getCourses(mockPageable)).willReturn(emptyCourses);
-        mockedSortUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+        mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
         given(courseCardDtoConverter.convertWithComment(mockMember, emptyCourses)).willReturn(emptyDtos);
 
         // when

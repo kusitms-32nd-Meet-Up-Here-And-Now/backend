@@ -113,6 +113,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
     );
 
     @Query(value = "SELECT c FROM Course c JOIN FETCH c.member m WHERE c.isPublic = true",
-            countQuery = "SELECT COUNT(c) FROM Course c")
+            countQuery = "SELECT COUNT(c) FROM Course c WHERE c.isPublic = true")
     Page<Course> findCoursesWithMember(Pageable pageable);
 }
