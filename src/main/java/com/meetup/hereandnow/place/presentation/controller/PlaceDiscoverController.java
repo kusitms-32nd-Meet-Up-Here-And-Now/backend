@@ -60,6 +60,11 @@ public class PlaceDiscoverController implements PlaceDiscoverSwagger {
             @RequestParam(required = false)
             List<String> tag
     ) {
-        return null;
+        return ResponseEntity.ok(
+                new RestResponse<>(
+                        placeViewFacade.getFilteredPlaces(
+                                page, size, rating, keyword, startDate, endDate, with, region, placeCode, tag)
+                )
+        );
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,7 @@ public class CourseSearchService {
 
     private final CourseRepository courseRepository;
 
+    @Transactional(readOnly = true)
     public Page<Course> searchCoursesByMember(
             Member member, Integer rating, List<String> keywords, LocalDate startDate, LocalDate endDate,
             String with, String region, List<String> placeCode, List<String> tags, Pageable pageable
@@ -27,6 +29,7 @@ public class CourseSearchService {
         return searchCourses(rating, keywords, startDate, endDate, with, region, placeCode, tags, pageable, spec);
     }
 
+    @Transactional(readOnly = true)
     public Page<Course> searchPublicCourses(
             Integer rating, List<String> keywords, LocalDate startDate, LocalDate endDate,
             String with, String region, List<String> placeCode, List<String> tags, Pageable pageable
