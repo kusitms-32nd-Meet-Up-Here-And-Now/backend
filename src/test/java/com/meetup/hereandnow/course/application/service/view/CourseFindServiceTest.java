@@ -163,4 +163,49 @@ class CourseFindServiceTest {
         assertThat(result).isEmpty();
         verify(courseRepository, never()).findCoursesWithDetailsByIds(anyList());
     }
+
+    @Test
+    @DisplayName("getCourses: 코스 페이지에 내용이 있으면 리스트를 반환한다")
+    void get_courses() {
+
+        // given
+        Course mockCourse1 = mock(Course.class);
+        Course mockCourse2 = mock(Course.class);
+        List<Course> courseList = List.of(mockCourse1, mockCourse2);
+
+        int page = 0;
+        int size = 10;
+        Pageable mockPageable = PageRequest.of(page, size);
+        Page<Course> mockPage = new PageImpl<>(courseList, mockPageable, courseList.size());
+
+        given(courseRepository.findCoursesWithMember(mockPageable)).willReturn(mockPage);
+
+        // when
+        List<Course> result = courseFindService.getCourses(mockPageable);
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result).containsExactly(mockCourse1, mockCourse2);
+        verify(courseRepository).findCoursesWithMember(mockPageable);
+    }
+
+    @Test
+    @DisplayName("getCourses: 코스 페이지에 내용이 없으면 빈 리스트를 반환한다")
+    void get_courses_when_no_content_exists() {
+
+        // given
+        int page = 0;
+        int size = 10;
+        Pageable mockPageable = PageRequest.of(page, size);
+        Page<Course> emptyPage = new PageImpl<>(Collections.emptyList(), mockPageable, 0);
+
+        given(courseRepository.findCoursesWithMember(mockPageable)).willReturn(emptyPage);
+
+        // when
+        List<Course> result = courseFindService.getCourses(mockPageable);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(courseRepository).findCoursesWithMember(mockPageable);
+    }
 }

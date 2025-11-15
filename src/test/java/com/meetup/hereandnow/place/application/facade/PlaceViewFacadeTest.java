@@ -7,6 +7,7 @@ import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
 import com.meetup.hereandnow.place.application.service.PlaceFindService;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import org.junit.jupiter.api.AfterEach;
@@ -223,5 +224,49 @@ class PlaceViewFacadeTest {
 
         verify(placeFindService).findNearbyPlaces(TEST_LAT, TEST_LON, mockPageable);
         verify(placeDtoConverter).convert(emptyPlaces);
+    }
+
+    @Test
+    @DisplayName("getAdPlacesWithMarker: 장소가 존재하면 DTO 컨버터를 호출하여 반환한다")
+    void get_ad_places_with_marker() {
+
+        // given
+        Place mockPlace1 = mock(Place.class);
+        Place mockPlace2 = mock(Place.class);
+        List<Place> places = List.of(mockPlace1, mockPlace2);
+
+        PlaceCardMarkerResponseDto mockDto1 = mock(PlaceCardMarkerResponseDto.class);
+        PlaceCardMarkerResponseDto mockDto2 = mock(PlaceCardMarkerResponseDto.class);
+        List<PlaceCardMarkerResponseDto> expectedDtos = List.of(mockDto1, mockDto2);
+
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(places);
+        given(placeDtoConverter.convertWithMarker(places)).willReturn(expectedDtos);
+
+        // when
+        List<PlaceCardMarkerResponseDto> result = placeViewFacade.getAdPlacesWithMarker(TEST_LAT, TEST_LON);
+
+        // then
+        assertThat(result).isEqualTo(expectedDtos);
+        assertThat(result).hasSize(2);
+
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
+        verify(placeDtoConverter).convertWithMarker(places);
+    }
+
+    @Test
+    @DisplayName("getAdPlacesWithMarker: 장소가 없으면 빈 리스트를 반환한다")
+    void get_ad_places_with_marker_when_no_places_found() {
+
+        // given
+        List<Place> emptyPlaces = Collections.emptyList();
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(emptyPlaces);
+
+        // when
+        List<PlaceCardMarkerResponseDto> result = placeViewFacade.getAdPlacesWithMarker(TEST_LAT, TEST_LON);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
+        verify(placeDtoConverter, never()).convertWithMarker(anyList());
     }
 }
