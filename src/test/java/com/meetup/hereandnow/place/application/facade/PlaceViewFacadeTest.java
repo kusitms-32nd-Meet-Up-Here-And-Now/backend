@@ -2,13 +2,17 @@ package com.meetup.hereandnow.place.application.facade;
 
 import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SortUtils;
+import com.meetup.hereandnow.course.dto.response.SearchFilterDto;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
 import com.meetup.hereandnow.place.application.service.PlaceFindService;
+import com.meetup.hereandnow.place.application.service.PlaceSearchService;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceSearchResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +22,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,6 +42,8 @@ class PlaceViewFacadeTest {
     private PlaceDtoConverter placeDtoConverter;
     @Mock
     private PinRepository pinRepository;
+    @Mock
+    private PlaceSearchService placeSearchService;
 
     @InjectMocks
     private PlaceViewFacade placeViewFacade;
@@ -72,7 +79,7 @@ class PlaceViewFacadeTest {
         PlacePointResponseDto mockDto1 = mock(PlacePointResponseDto.class);
         PlacePointResponseDto mockDto2 = mock(PlacePointResponseDto.class);
 
-        given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(places);
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(places);
 
         given(mockPlace1.getId()).willReturn(1L);
         given(mockPlace2.getId()).willReturn(2L);
@@ -102,7 +109,7 @@ class PlaceViewFacadeTest {
         assertThat(result).hasSize(2);
         assertThat(result).containsExactly(mockDto1, mockDto2);
 
-        verify(placeFindService).find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
         verify(pinRepository).find3PinsByPlaceIdsSorted(placeIds);
         verify(placeDtoConverter).convert(mockPlace1, pinsForPlace1);
         verify(placeDtoConverter).convert(mockPlace2, pinsForPlace2);
@@ -128,7 +135,7 @@ class PlaceViewFacadeTest {
         PlacePointResponseDto mockDto1 = mock(PlacePointResponseDto.class);
         PlacePointResponseDto mockDto2 = mock(PlacePointResponseDto.class);
 
-        given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(places);
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(places);
         given(pinRepository.find3PinsByPlaceIdsSorted(placeIds)).willReturn(pinList);
 
         Place placeFromPin1 = mock(Place.class);
@@ -157,7 +164,7 @@ class PlaceViewFacadeTest {
     void get_ad_places_returns_when_no_places_found() {
 
         // given
-        given(placeFindService.find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(Collections.emptyList());
 
         // when
         List<PlacePointResponseDto> result = placeViewFacade.getAdPlaces(TEST_LAT, TEST_LON);
@@ -165,7 +172,7 @@ class PlaceViewFacadeTest {
         // then
         assertThat(result).isEmpty();
 
-        verify(placeFindService).find2RandomNearbyPlaceIds(TEST_LAT, TEST_LON);
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
         verify(pinRepository, never()).find3PinsByPlaceIdsSorted(Collections.emptyList());
         verify(placeDtoConverter, never()).convert(any(Place.class), anyList());
     }
@@ -223,5 +230,130 @@ class PlaceViewFacadeTest {
 
         verify(placeFindService).findNearbyPlaces(TEST_LAT, TEST_LON, mockPageable);
         verify(placeDtoConverter).convert(emptyPlaces);
+    }
+
+    @Test
+    @DisplayName("getAdPlacesWithMarker: 장소가 존재하면 DTO 컨버터를 호출하여 반환한다")
+    void get_ad_places_with_marker() {
+
+        // given
+        Place mockPlace1 = mock(Place.class);
+        Place mockPlace2 = mock(Place.class);
+        List<Place> places = List.of(mockPlace1, mockPlace2);
+
+        PlaceCardMarkerResponseDto mockDto1 = mock(PlaceCardMarkerResponseDto.class);
+        PlaceCardMarkerResponseDto mockDto2 = mock(PlaceCardMarkerResponseDto.class);
+        List<PlaceCardMarkerResponseDto> expectedDtos = List.of(mockDto1, mockDto2);
+
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(places);
+        given(placeDtoConverter.convertWithMarker(places)).willReturn(expectedDtos);
+
+        // when
+        List<PlaceCardMarkerResponseDto> result = placeViewFacade.getAdPlacesWithMarker(TEST_LAT, TEST_LON);
+
+        // then
+        assertThat(result).isEqualTo(expectedDtos);
+        assertThat(result).hasSize(2);
+
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
+        verify(placeDtoConverter).convertWithMarker(places);
+    }
+
+    @Test
+    @DisplayName("getAdPlacesWithMarker: 장소가 없으면 빈 리스트를 반환한다")
+    void get_ad_places_with_marker_when_no_places_found() {
+
+        // given
+        List<Place> emptyPlaces = Collections.emptyList();
+        given(placeFindService.find2RandomNearbyPlaces(TEST_LAT, TEST_LON)).willReturn(emptyPlaces);
+
+        // when
+        List<PlaceCardMarkerResponseDto> result = placeViewFacade.getAdPlacesWithMarker(TEST_LAT, TEST_LON);
+
+        // then
+        assertThat(result).isEmpty();
+        verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
+        verify(placeDtoConverter, never()).convertWithMarker(anyList());
+    }
+
+    @Test
+    @DisplayName("getFilteredPlaces: 검색 결과가 있을 때 필터와 DTO 리스트를 반환한다")
+    void get_filtered_places() {
+
+        // given
+        int page = 0;
+        int size = 10;
+        Integer rating = 4;
+        List<String> keyword = List.of("카페");
+        LocalDate startDate = LocalDate.of(2025, 11, 1);
+        LocalDate endDate = LocalDate.of(2025, 11, 30);
+        String with = "연인";
+        String region = "서울";
+        List<String> placeCode = List.of("CT1");
+        List<String> tag = List.of("산책하기 좋아요");
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "pinCount"));
+
+        Place mockPlace1 = mock(Place.class);
+        List<Place> placeList = List.of(mockPlace1);
+        Page<Place> placePage = new PageImpl<>(placeList, pageable, 1);
+
+        PlaceCardMarkerResponseDto mockDto = mock(PlaceCardMarkerResponseDto.class);
+        List<PlaceCardMarkerResponseDto> expectedDtos = List.of(mockDto);
+
+        given(placeSearchService.searchPlaces(
+                rating, keyword, startDate, endDate, with, region, placeCode, tag, pageable
+        )).willReturn(placePage);
+        given(placeDtoConverter.convertWithMarker(placeList)).willReturn(expectedDtos);
+
+        // when
+        PlaceSearchResponseDto result = placeViewFacade.getFilteredPlaces(
+                page, size, rating, keyword, startDate, endDate, with, region, placeCode, tag
+        );
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.filteredPlaces()).isSameAs(expectedDtos);
+
+        SearchFilterDto filterDto = result.selectedFilters();
+        assertThat(filterDto).isNotNull();
+        assertThat(filterDto.keyword()).isEqualTo(keyword);
+        assertThat(filterDto.region()).isEqualTo(region);
+
+        verify(placeSearchService).searchPlaces(
+                rating, keyword, startDate, endDate, with, region, placeCode, tag, pageable
+        );
+        verify(placeDtoConverter).convertWithMarker(placeList);
+    }
+
+    @Test
+    @DisplayName("getFilteredPlaces: 검색 결과가 없으면 필터와 빈 DTO 리스트를 반환한다")
+    void get_filtered_places_when_no_content() {
+
+        // given
+        int page = 0;
+        int size = 10;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "pinCount"));
+        Page<Place> emptyPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+
+        given(placeSearchService.searchPlaces(
+                null, null, null, null, null, null, null, null, pageable
+        )).willReturn(emptyPage);
+
+        // when
+        PlaceSearchResponseDto result = placeViewFacade.getFilteredPlaces(
+                page, size, null, null, null, null, null, null, null, null
+        );
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.filteredPlaces()).isEmpty();
+        assertThat(result.selectedFilters()).isNotNull();
+
+        verify(placeSearchService).searchPlaces(
+                null, null, null, null, null, null, null, null, pageable
+        );
+        verify(placeDtoConverter, never()).convertWithMarker(anyList());
     }
 }

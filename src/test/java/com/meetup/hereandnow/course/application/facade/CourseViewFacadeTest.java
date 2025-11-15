@@ -2,12 +2,13 @@ package com.meetup.hereandnow.course.application.facade;
 
 import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SecurityUtils;
+import com.meetup.hereandnow.core.util.SortUtils;
+import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.application.service.view.CourseDetailsViewService;
 import com.meetup.hereandnow.course.application.service.view.CourseFindService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
-import com.meetup.hereandnow.course.dto.response.CourseDetailsResponseDto;
+import com.meetup.hereandnow.course.dto.response.*;
 import com.meetup.hereandnow.course.exception.CourseErrorCode;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
@@ -22,7 +23,11 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,23 +51,28 @@ class CourseViewFacadeTest {
     @Mock
     private CourseCardDtoConverter courseCardDtoConverter;
 
+    @Mock
+    private CourseSearchService courseSearchService;
+
     @InjectMocks
     private CourseViewFacade courseViewFacade;
 
     private MockedStatic<SecurityUtils> mockedSecurity;
-
     private MockedStatic<CourseDetailsResponseDto> mockedDto;
+    private MockedStatic<SortUtils> mockedSortUtils;
 
     @BeforeEach
     void setUp() {
         mockedSecurity = Mockito.mockStatic(SecurityUtils.class);
         mockedDto = Mockito.mockStatic(CourseDetailsResponseDto.class);
+        mockedSortUtils = Mockito.mockStatic(SortUtils.class);
     }
 
     @AfterEach
     void tearDown() {
         mockedSecurity.close();
         mockedDto.close();
+        mockedSortUtils.close();
     }
 
     @Test
@@ -225,5 +235,170 @@ class CourseViewFacadeTest {
         // verify
         verify(courseFindService).getNearbyCourses(page, size, sort, lat, lon);
         verify(courseCardDtoConverter).convert(emptyCourses);
+    }
+
+    @Test
+    @DisplayName("getRecentCourses: 최근 코스를 조회하여 DTO 리스트로 변환한다")
+    void get_recent_courses() {
+
+        // given
+        int page = 0;
+        int size = 10;
+
+        Pageable mockPageable = mock(Pageable.class);
+        Member mockMember = mock(Member.class);
+
+        Course mockCourse1 = mock(Course.class);
+        Course mockCourse2 = mock(Course.class);
+        List<Course> mockCourses = List.of(mockCourse1, mockCourse2);
+
+        CourseCardWithCommentDto mockDto1 = mock(CourseCardWithCommentDto.class);
+        CourseCardWithCommentDto mockDto2 = mock(CourseCardWithCommentDto.class);
+        List<CourseCardWithCommentDto> expectedDtos = List.of(mockDto1, mockDto2);
+
+        mockedSortUtils.when(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT)).thenReturn(mockPageable);
+        given(courseFindService.getCourses(mockPageable)).willReturn(mockCourses);
+        mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+        given(courseCardDtoConverter.convertWithComment(mockMember, mockCourses)).willReturn(expectedDtos);
+
+        // when
+        List<CourseCardWithCommentDto> result = courseViewFacade.getRecentCourses(page, size);
+
+        // then
+        mockedSortUtils.verify(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT));
+        verify(courseFindService).getCourses(mockPageable);
+        mockedSecurity.verify(SecurityUtils::getCurrentMember);
+        verify(courseCardDtoConverter).convertWithComment(mockMember, mockCourses);
+
+        assertThat(result).isSameAs(expectedDtos);
+        assertThat(result).hasSize(2);
+        assertThat(result).isEqualTo(expectedDtos);
+    }
+
+    @Test
+    @DisplayName("getRecentCourses: 최근 코스가 없으면 빈 리스트를 반환한다")
+    void get_recent_courses_when_no_courses_found() {
+
+        // given
+        int page = 0;
+        int size = 10;
+
+        Pageable mockPageable = mock(Pageable.class);
+        Member mockMember = mock(Member.class);
+        List<Course> emptyCourses = Collections.emptyList();
+        List<CourseCardWithCommentDto> emptyDtos = Collections.emptyList();
+
+        mockedSortUtils.when(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT)).thenReturn(mockPageable);
+        given(courseFindService.getCourses(mockPageable)).willReturn(emptyCourses);
+        mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+        given(courseCardDtoConverter.convertWithComment(mockMember, emptyCourses)).willReturn(emptyDtos);
+
+        // when
+        List<CourseCardWithCommentDto> result = courseViewFacade.getRecentCourses(page, size);
+
+        // then
+        assertThat(result).isEmpty();
+
+        mockedSortUtils.verify(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT));
+        verify(courseFindService).getCourses(mockPageable);
+        mockedSecurity.verify(SecurityUtils::getCurrentMember);
+        verify(courseCardDtoConverter).convertWithComment(mockMember, emptyCourses);
+    }
+
+    @Test
+    @DisplayName("getFilteredCourses: 검색 결과가 있을 때 필터와 DTO 리스트를 반환한다")
+    void get_filtered_courses() {
+
+        // given
+        int page = 0;
+        int size = 10;
+        Integer rating = 4;
+        List<String> keyword = List.of("카페");
+        LocalDate startDate = LocalDate.of(2025, 11, 1);
+        LocalDate endDate = LocalDate.of(2025, 11, 30);
+        String with = "친구";
+        String region = "서울";
+        List<String> placeCode = List.of("FD6");
+        List<String> tag = List.of("감성");
+
+        Pageable mockPageable = mock(Pageable.class);
+        Member mockMember = mock(Member.class);
+
+        Course mockCourse1 = mock(Course.class);
+        List<Course> courseList = List.of(mockCourse1);
+        Page<Course> coursePage = new PageImpl<>(courseList, mockPageable, 1);
+
+        CourseCardWithCommentDto mockDto = mock(CourseCardWithCommentDto.class);
+        List<CourseCardWithCommentDto> expectedDtos = List.of(mockDto);
+
+        mockedSortUtils.when(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT)).thenReturn(mockPageable);
+        given(courseSearchService.searchPublicCourses(
+                rating, keyword, startDate, endDate, with, region, placeCode, tag, mockPageable
+        )).willReturn(coursePage);
+
+
+        mockedSecurity.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+        given(courseCardDtoConverter.convertWithComment(mockMember, courseList)).willReturn(expectedDtos);
+
+        // when
+        CourseSearchWithCommentDto result = courseViewFacade.getFilteredCourses(
+                page, size, rating, keyword, startDate, endDate, with, region, placeCode, tag
+        );
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.filteredCourses()).isSameAs(expectedDtos);
+
+        SearchFilterDto filterDto = result.selectedFilters();
+        assertThat(filterDto).isNotNull();
+        assertThat(filterDto.keyword()).isEqualTo(keyword);
+        assertThat(filterDto.rating()).isEqualTo(rating);
+        assertThat(filterDto.region()).isEqualTo(region);
+
+        mockedSortUtils.verify(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT));
+        verify(courseSearchService).searchPublicCourses(
+                rating, keyword, startDate, endDate, with, region, placeCode, tag, mockPageable
+        );
+        mockedSecurity.verify(SecurityUtils::getCurrentMember);
+        verify(courseCardDtoConverter).convertWithComment(mockMember, courseList);
+    }
+
+    @Test
+    @DisplayName("getFilteredCourses: 검색 결과가 없으면 필터와 빈 DTO 리스트를 반환한다")
+    void get_filtered_courses_when_no_content() {
+
+        // given
+        int page = 0;
+        int size = 10;
+
+        Pageable mockPageable = mock(Pageable.class);
+        Page<Course> emptyPage = new PageImpl<>(Collections.emptyList(), mockPageable, 0);
+
+        mockedSortUtils.when(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT)).thenReturn(mockPageable);
+        given(courseSearchService.searchPublicCourses(
+                null, null, null, null, null, null, null, null, mockPageable
+        )).willReturn(emptyPage);
+
+        // when
+        CourseSearchWithCommentDto result = courseViewFacade.getFilteredCourses(
+                page, size, null, null, null, null, null, null, null, null
+        );
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.filteredCourses()).isEmpty();
+
+        SearchFilterDto filterDto = result.selectedFilters();
+        assertThat(filterDto).isNotNull();
+        assertThat(filterDto.keyword()).isNull();
+        assertThat(filterDto.rating()).isNull();
+
+        mockedSortUtils.verify(() -> SortUtils.resolveCourseSort(page, size, SortType.RECENT));
+        verify(courseSearchService).searchPublicCourses(
+                null, null, null, null, null, null, null, null, mockPageable
+        );
+
+        mockedSecurity.verifyNoInteractions();
+        verify(courseCardDtoConverter, never()).convertWithComment(any(), anyList());
     }
 }

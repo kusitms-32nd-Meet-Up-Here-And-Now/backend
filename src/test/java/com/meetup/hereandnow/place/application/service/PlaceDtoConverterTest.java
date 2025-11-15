@@ -5,7 +5,9 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,17 +42,23 @@ class PlaceDtoConverterTest {
 
     private MockedStatic<PlaceCardResponseDto> placeCardDto;
     private MockedStatic<PlacePointResponseDto> placePointDto;
+    private MockedStatic<PlaceMarkerResponseDto> placeMarkerDto;
+    private MockedStatic<PlaceCardMarkerResponseDto> placeCardMarkerDto;
 
     @BeforeEach
     void setUp() {
         placeCardDto = mockStatic(PlaceCardResponseDto.class);
         placePointDto = mockStatic(PlacePointResponseDto.class);
+        placeMarkerDto = mockStatic(PlaceMarkerResponseDto.class);
+        placeCardMarkerDto = mockStatic(PlaceCardMarkerResponseDto.class);
     }
 
     @AfterEach
     void tearDown() {
         placeCardDto.close();
         placePointDto.close();
+        placeMarkerDto.close();
+        placeCardMarkerDto.close();
     }
 
     @Test
@@ -237,5 +245,83 @@ class PlaceDtoConverterTest {
         verify(pin2).getPinImages();
         verify(objectStorageService, times(1)).buildImageUrl("img1a.jpg");
         placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls));
+    }
+
+    @Test
+    @DisplayName("convertWithMarker: 빈 리스트가 주어지면 빈 리스트를 반환한다")
+    void convert_with_marker_returns_empty_list() {
+
+        // given
+        List<Place> emptyPlaces = Collections.emptyList();
+
+        // when
+        List<PlaceCardMarkerResponseDto> result = placeDtoConverter.convertWithMarker(emptyPlaces);
+
+        // then
+        assertThat(result).isEmpty();
+
+        verify(pinImageRepository, never()).findRecentImagesByPlaceIds(any());
+        verify(objectStorageService, never()).buildImageUrl(anyString());
+
+        placeCardDto.verify(() -> PlaceCardResponseDto.from(any(), anyString()), never());
+        placeMarkerDto.verify(() -> PlaceMarkerResponseDto.from(any()), never());
+        placeCardMarkerDto.verify(() -> PlaceCardMarkerResponseDto.of(any(), any()), never());
+    }
+
+    @Test
+    @DisplayName("convertWithMarker: 장소 리스트를 카드/마커 DTO로 변환한다")
+    void convert_with_marker() {
+
+        // given
+        Place mockPlace1 = mock(Place.class);
+        Place mockPlace2 = mock(Place.class);
+        given(mockPlace1.getId()).willReturn(1L);
+        given(mockPlace2.getId()).willReturn(2L);
+        List<Place> places = List.of(mockPlace1, mockPlace2);
+        List<Long> placeIds = List.of(1L, 2L);
+
+        PinImage img1 = mock(PinImage.class);
+        Pin pin1 = mock(Pin.class);
+        Place placeFromPin1 = mock(Place.class);
+        given(img1.getPin()).willReturn(pin1);
+        given(pin1.getPlace()).willReturn(placeFromPin1);
+        given(placeFromPin1.getId()).willReturn(1L);
+        given(img1.getImageUrl()).willReturn("img1.jpg");
+
+        given(pinImageRepository.findRecentImagesByPlaceIds(placeIds)).willReturn(List.of(img1));
+        given(objectStorageService.buildImageUrl("img1.jpg")).willReturn("http://img1.jpg");
+
+        PlaceCardResponseDto mockCard1 = mock(PlaceCardResponseDto.class);
+        PlaceCardResponseDto mockCard2 = mock(PlaceCardResponseDto.class);
+        PlaceMarkerResponseDto mockMarker1 = mock(PlaceMarkerResponseDto.class);
+        PlaceMarkerResponseDto mockMarker2 = mock(PlaceMarkerResponseDto.class);
+        PlaceCardMarkerResponseDto mockFinalDto1 = mock(PlaceCardMarkerResponseDto.class);
+        PlaceCardMarkerResponseDto mockFinalDto2 = mock(PlaceCardMarkerResponseDto.class);
+
+        placeCardDto.when(() -> PlaceCardResponseDto.from(mockPlace1, "http://img1.jpg")).thenReturn(mockCard1);
+        placeMarkerDto.when(() -> PlaceMarkerResponseDto.from(mockPlace1)).thenReturn(mockMarker1);
+        placeCardMarkerDto.when(() -> PlaceCardMarkerResponseDto.of(mockCard1, mockMarker1)).thenReturn(mockFinalDto1);
+
+        placeCardDto.when(() -> PlaceCardResponseDto.from(mockPlace2, null)).thenReturn(mockCard2);
+        placeMarkerDto.when(() -> PlaceMarkerResponseDto.from(mockPlace2)).thenReturn(mockMarker2);
+        placeCardMarkerDto.when(() -> PlaceCardMarkerResponseDto.of(mockCard2, mockMarker2)).thenReturn(mockFinalDto2);
+
+        // when
+        List<PlaceCardMarkerResponseDto> result = placeDtoConverter.convertWithMarker(places);
+
+        // then
+        assertThat(result).hasSize(2);
+        assertThat(result).containsExactly(mockFinalDto1, mockFinalDto2);
+
+        verify(pinImageRepository).findRecentImagesByPlaceIds(placeIds);
+        verify(objectStorageService).buildImageUrl("img1.jpg");
+
+        placeCardDto.verify(() -> PlaceCardResponseDto.from(mockPlace1, "http://img1.jpg"));
+        placeMarkerDto.verify(() -> PlaceMarkerResponseDto.from(mockPlace1));
+        placeCardMarkerDto.verify(() -> PlaceCardMarkerResponseDto.of(mockCard1, mockMarker1));
+
+        placeCardDto.verify(() -> PlaceCardResponseDto.from(mockPlace2, null));
+        placeMarkerDto.verify(() -> PlaceMarkerResponseDto.from(mockPlace2));
+        placeCardMarkerDto.verify(() -> PlaceCardMarkerResponseDto.of(mockCard2, mockMarker2));
     }
 }

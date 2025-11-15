@@ -12,6 +12,17 @@ import java.util.List;
 
 public class CourseSpecifications {
 
+    private static final char ESCAPE_CHAR = '\\';
+
+    private static String escapeLike(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.replace(String.valueOf(ESCAPE_CHAR), ESCAPE_CHAR + String.valueOf(ESCAPE_CHAR))
+                .replace("%", ESCAPE_CHAR + "%")
+                .replace("_", ESCAPE_CHAR + "_");
+    }
+
     // 코스 작성자
     public static Specification<Course> hasMember(Member member) {
         return (root, query, cb) ->
@@ -38,9 +49,9 @@ public class CourseSpecifications {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             for (String keyword : keywords) {
-                // 제목, 설명 비교
-                Predicate titleLike = cb.like(root.get("courseTitle"), "%" + keyword + "%");
-                Predicate descriptionLike = cb.like(root.get("courseDescription"), "%" + keyword + "%");
+                String escapedKeyword = escapeLike(keyword);
+                Predicate titleLike = cb.like(root.get("courseTitle"), "%" + escapedKeyword + "%", ESCAPE_CHAR);
+                Predicate descriptionLike = cb.like(root.get("courseDescription"), "%" + escapedKeyword + "%", ESCAPE_CHAR);
                 predicates.add(cb.or(titleLike, descriptionLike));
             }
             return cb.or(predicates.toArray(new Predicate[0]));
@@ -94,5 +105,11 @@ public class CourseSpecifications {
             }
             return cb.or(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    // 공개 코스인 것만
+    public static Specification<Course> isPublic() {
+        return (root, query, cb) ->
+                cb.isTrue(root.get("isPublic"));
     }
 }

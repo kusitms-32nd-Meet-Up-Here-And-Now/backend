@@ -24,7 +24,7 @@ public class PlaceFindService {
         return placeRepository.findPlacesByLocation(lat, lon, pageable).stream().toList();
     }
 
-    public List<Place> find2RandomNearbyPlaceIds(double lat, double lon) {
+    public List<Place> find2RandomNearbyPlaces(double lat, double lon) {
         List<Long> nearbyIds = placeRepository.findNearbyPlaceIds(lat, lon);
         if (nearbyIds.isEmpty()) {
             return Collections.emptyList();

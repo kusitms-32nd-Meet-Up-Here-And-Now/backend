@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,48 +20,50 @@ public class CourseSearchService {
 
     private final CourseRepository courseRepository;
 
+    @Transactional(readOnly = true)
     public Page<Course> searchCoursesByMember(
-            Member member,
-            Integer rating,
-            List<String> keywords,
-            LocalDate startDate,
-            LocalDate endDate,
-            String with,
-            String region,
-            List<String> placeCode,
-            List<String> tags,
-            Pageable pageable
+            Member member, Integer rating, List<String> keywords, LocalDate startDate, LocalDate endDate,
+            String with, String region, List<String> placeCode, List<String> tags, Pageable pageable
     ) {
         Specification<Course> spec = Specification.where(CourseSpecifications.hasMember(member));
+        return searchCourses(rating, keywords, startDate, endDate, with, region, placeCode, tags, pageable, spec);
+    }
 
+    @Transactional(readOnly = true)
+    public Page<Course> searchPublicCourses(
+            Integer rating, List<String> keywords, LocalDate startDate, LocalDate endDate,
+            String with, String region, List<String> placeCode, List<String> tags, Pageable pageable
+    ) {
+        Specification<Course> spec = Specification.where(CourseSpecifications.isPublic());
+        return searchCourses(rating, keywords, startDate, endDate, with, region, placeCode, tags, pageable, spec);
+    }
+
+    private Page<Course> searchCourses(
+            Integer rating, List<String> keywords, LocalDate startDate, LocalDate endDate,
+            String with, String region, List<String> placeCode, List<String> tags,
+            Pageable pageable, Specification<Course> spec
+    ) {
         if (rating != null && rating > 0) {
             spec = spec.and(CourseSpecifications.isRatingInRange(rating));
         }
-
         if (keywords != null && !keywords.isEmpty()) {
             spec = spec.and(CourseSpecifications.containsKeywords(keywords));
         }
-
         if (startDate != null || endDate != null) {
             spec = spec.and(CourseSpecifications.isVisitDateBetween(startDate, endDate));
         }
-
         if (with != null && !with.isBlank()) {
             spec = spec.and(CourseSpecifications.visitedWith(with));
         }
-
         if (region != null && !region.isBlank()) {
             spec = spec.and(CourseSpecifications.inRegion(region));
         }
-
         if (placeCode != null && !placeCode.isEmpty()) {
             spec = spec.and(CourseSpecifications.hasPlaceGroupCodeIn(placeCode));
         }
-
         if (tags != null && !tags.isEmpty()) {
             spec = spec.and(CourseSpecifications.hasTagIn(tags));
         }
-
         return courseRepository.findAll(spec, pageable);
     }
 }

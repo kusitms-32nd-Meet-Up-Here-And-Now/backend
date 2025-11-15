@@ -5,7 +5,9 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinImageRepository;
 import com.meetup.hereandnow.place.domain.Place;
+import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,5 +57,20 @@ public class PlaceDtoConverter {
                 .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
                 .toList();
         return PlacePointResponseDto.from(place, imageUrls);
+    }
+
+    /*
+    장소 리스트를 카드 형태와 마커 형태를 동시에 갖는 응답 형태로 반환합니다.
+     */
+    public List<PlaceCardMarkerResponseDto> convertWithMarker(List<Place> places) {
+        if (places.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Map<Long, String> imageUrlMap = getImageUrlsByPlaceIdsMap(places);
+        return places.stream().map(place -> {
+            PlaceCardResponseDto placeCard = PlaceCardResponseDto.from(place, imageUrlMap.get(place.getId()));
+            PlaceMarkerResponseDto placeMarker = PlaceMarkerResponseDto.from(place);
+            return PlaceCardMarkerResponseDto.of(placeCard, placeMarker);
+        }).toList();
     }
 }
