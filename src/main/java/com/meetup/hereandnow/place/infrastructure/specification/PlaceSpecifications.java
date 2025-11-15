@@ -16,6 +16,17 @@ import java.util.List;
 
 public class PlaceSpecifications {
 
+    private static final char ESCAPE_CHAR = '\\';
+
+    private static String escapeLike(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.replace(String.valueOf(ESCAPE_CHAR), ESCAPE_CHAR + String.valueOf(ESCAPE_CHAR))
+                .replace("%", ESCAPE_CHAR + "%")
+                .replace("_", ESCAPE_CHAR + "_");
+    }
+
     // 평점
     public static Specification<Place> isRatingInRange(Integer rating) {
         return (root, query, cb) -> {
@@ -32,9 +43,10 @@ public class PlaceSpecifications {
         return (root, query, cb) -> {
             List<Predicate> keywordOrPredicates = new ArrayList<>();
             for (String keyword : keywords) {
+                String escapedKeyword = escapeLike(keyword);
                 // 장소명, 카테고리 검색
-                Predicate p1 = cb.like(root.get("placeName"), "%" + keyword + "%");
-                Predicate p2 = cb.like(root.get("placeCategory"), "%" + keyword + "%");
+                Predicate p1 = cb.like(root.get("placeName"), "%" + escapedKeyword + "%", ESCAPE_CHAR);
+                Predicate p2 = cb.like(root.get("placeCategory"), "%" + escapedKeyword + "%", ESCAPE_CHAR);
                 keywordOrPredicates.add(cb.or(p1, p2));
             }
             return cb.or(keywordOrPredicates.toArray(new Predicate[0]));
