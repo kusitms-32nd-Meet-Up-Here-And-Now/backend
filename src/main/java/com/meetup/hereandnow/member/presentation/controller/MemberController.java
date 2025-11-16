@@ -5,6 +5,7 @@ import com.meetup.hereandnow.member.application.MemberService;
 import com.meetup.hereandnow.member.dto.MemberInfoResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +16,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @GetMapping
     public ResponseEntity<RestResponse<MemberInfoResponseDto>> getInfo() {
         return ResponseEntity.ok(
                 new RestResponse<>(
