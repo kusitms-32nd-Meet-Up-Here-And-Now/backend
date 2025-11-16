@@ -21,6 +21,9 @@ public record CoupleInfoResponseDto(
         @Schema(description = "멤버 2 프로필 이미지(imageUrl, 왼쪽)", example = "http://~~~")
         String member2ImageUrl,
 
+        @Schema(description = "커플 배너 이미지 없으면 null", example = "http://~~~")
+        String coupleBannerImageUrl,
+
         @Schema(description = "우리가 함께한 장소 개수", example = "12")
         int placeWithCount,
 
@@ -29,7 +32,7 @@ public record CoupleInfoResponseDto(
 ) {
 
     public static CoupleInfoResponseDto from(
-            LocalDate startDate, Couple couple, int placeWithCount, int courseWithCount
+            LocalDate startDate, Couple couple, int placeWithCount, int courseWithCount, String coupleBannerImageUrl
     ) {
         long datingDate =
                 (couple.getCoupleStartDate() == null) ? 0L : ChronoUnit.DAYS.between(startDate, LocalDate.now());
@@ -40,6 +43,7 @@ public record CoupleInfoResponseDto(
                 couple.getMember2().getNickname(),
                 couple.getMember1().getProfileImage(),
                 couple.getMember2().getProfileImage(),
+                coupleBannerImageUrl,
                 placeWithCount,
                 courseWithCount
         );
