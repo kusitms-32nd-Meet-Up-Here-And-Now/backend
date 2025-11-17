@@ -1,7 +1,7 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.1'
-	id 'io.spring.dependency-management' version '1.1.5'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'com.meetup'
@@ -9,35 +9,34 @@ version = '0.0.1-SNAPSHOT'
 description = 'Kusitms 32nd Meet Up Project Backend'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
-apply from:"gradle/spring.gradle"
-apply from:"gradle/swagger.gradle"
-apply from:"gradle/db.gradle"
+apply from: "gradle/spring.gradle"
+apply from: "gradle/swagger.gradle"
+apply from: "gradle/db.gradle"
 apply from: "gradle/jwt.gradle"
+apply from: "gradle/test.gradle"
 
 dependencies {
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
-
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.15")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.15")
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
