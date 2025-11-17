@@ -1,10 +1,11 @@
-package com.meetup.hereandnow.auth.presentation;
+package com.meetup.hereandnow.auth.presentation.controller;
 
 import com.meetup.hereandnow.auth.application.AuthService;
 import com.meetup.hereandnow.auth.dto.request.ReIssueTokenRequest;
 import com.meetup.hereandnow.auth.dto.request.TokenIssueRequest;
 import com.meetup.hereandnow.auth.dto.response.LogoutResponse;
 import com.meetup.hereandnow.auth.dto.response.TokenResponse;
+import com.meetup.hereandnow.auth.presentation.AuthSwagger;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

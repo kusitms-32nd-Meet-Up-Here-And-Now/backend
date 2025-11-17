@@ -35,7 +35,8 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/docs/ncp-api.json",
             "/test/**",
-            "/auth/token"
+            "/auth/token",
+            "/token/**"
     };
 
     @Bean
