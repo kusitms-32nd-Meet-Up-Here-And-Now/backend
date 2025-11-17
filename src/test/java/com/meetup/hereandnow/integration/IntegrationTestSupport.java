@@ -1,6 +1,5 @@
 package com.meetup.hereandnow.integration;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
@@ -28,16 +27,6 @@ public abstract class IntegrationTestSupport {
                     .withDatabaseName("testdb")
                     .withUsername("sa")
                     .withPassword("sa");
-
-    @BeforeAll
-    public static void startContainers() {
-        if (!postgreSQLContainer.isRunning()) {
-            postgreSQLContainer.start();
-        }
-        if (!redisContainer.isRunning()) {
-            redisContainer.start();
-        }
-    }
 
     /*
     yml 시크릿 값 덮어쓰기 위한 메서드 (전부 임의 값 설정) 
