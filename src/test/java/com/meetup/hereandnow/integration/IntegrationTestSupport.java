@@ -1,13 +1,17 @@
 package com.meetup.hereandnow.integration;
 
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 @SuppressWarnings("resource")
+@Testcontainers
+@SpringBootTest
 public abstract class IntegrationTestSupport {
 
     private static final String POSTGIS_IMAGE = "postgis/postgis:16-3.4";
@@ -43,7 +47,7 @@ public abstract class IntegrationTestSupport {
         registry.add("REDIS_HOST", redisContainer::getHost);
         registry.add("REDIS_PORT", () -> redisContainer.getMappedPort(6379).toString());
         registry.add("REDIS_USERNAME", () -> "default");
-        registry.add("REDIS_PASSWORD", () -> "test");
+        registry.add("REDIS_PASSWORD", () -> "");
         registry.add("REDIS_DB_NO", () -> "0");
 
         registry.add("GOOGLE_CLIENT_ID", () -> "test-google-client-id");
