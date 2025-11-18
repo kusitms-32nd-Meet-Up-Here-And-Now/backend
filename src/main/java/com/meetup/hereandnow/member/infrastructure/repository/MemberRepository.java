@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.member.repository;
+package com.meetup.hereandnow.member.infrastructure.repository;
 
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-
-    Optional<Member> findByEmail(String email);
 
     Optional<Member> findByEmailAndProvider(String email, Provider provider);
 

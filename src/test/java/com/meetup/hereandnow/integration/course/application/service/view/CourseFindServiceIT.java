@@ -9,7 +9,7 @@ import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.integration.IntegrationTestSupport;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
-import com.meetup.hereandnow.member.repository.MemberRepository;
+import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.domain.Place;

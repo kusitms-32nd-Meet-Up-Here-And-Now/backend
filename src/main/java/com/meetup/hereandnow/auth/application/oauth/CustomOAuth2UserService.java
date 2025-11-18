@@ -6,7 +6,7 @@ import com.meetup.hereandnow.auth.infrastructure.oauth.KakaoUserInfo;
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.infrastructure.mapper.MemberMapper;
-import com.meetup.hereandnow.member.repository.MemberRepository;
+import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

@@ -2,7 +2,7 @@ package com.meetup.hereandnow.core.infrastructure.security;
 
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
-import com.meetup.hereandnow.member.repository.MemberRepository;
+import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
