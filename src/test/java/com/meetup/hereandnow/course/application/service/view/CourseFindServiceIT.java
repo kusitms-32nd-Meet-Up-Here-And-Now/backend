@@ -1,15 +1,14 @@
-package com.meetup.hereandnow.integration.course.application.service.view;
+package com.meetup.hereandnow.course.application.service.view;
 
 import com.meetup.hereandnow.core.infrastructure.value.SortType;
-import com.meetup.hereandnow.course.application.service.view.CourseFindService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.domain.entity.CourseComment;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseCommentRepository;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
-import com.meetup.hereandnow.integration.IntegrationTestSupport;
+import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
-import com.meetup.hereandnow.member.repository.MemberRepository;
+import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.domain.Place;

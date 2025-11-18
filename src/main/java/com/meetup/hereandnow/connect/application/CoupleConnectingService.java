@@ -8,7 +8,7 @@ import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.member.exception.MemberErrorCode;
-import com.meetup.hereandnow.member.repository.MemberRepository;
+import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

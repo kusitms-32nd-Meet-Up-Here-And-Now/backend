@@ -3,7 +3,7 @@ package com.meetup.hereandnow.auth.application.oauth;
 import com.meetup.hereandnow.core.infrastructure.security.CustomUserDetails;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
-import com.meetup.hereandnow.member.repository.MemberRepository;
+import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
