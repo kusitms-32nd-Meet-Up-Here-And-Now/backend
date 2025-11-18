@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.integration.auth;
+package com.meetup.hereandnow.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetup.hereandnow.auth.application.AuthService;
@@ -8,8 +8,8 @@ import com.meetup.hereandnow.auth.dto.request.ReIssueTokenRequest;
 import com.meetup.hereandnow.auth.dto.request.TokenIssueRequest;
 import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
 import com.meetup.hereandnow.core.util.SecurityUtils;
-import com.meetup.hereandnow.integration.IntegrationTestSupport;
-import com.meetup.hereandnow.integration.core.config.TestSecurityConfiguration;
+import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
+import com.meetup.hereandnow.core.config.TestSecurityConfiguration;
 import com.meetup.hereandnow.member.domain.Member;
 import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;

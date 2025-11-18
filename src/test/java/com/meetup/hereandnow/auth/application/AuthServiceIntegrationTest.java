@@ -1,6 +1,5 @@
-package com.meetup.hereandnow.integration.auth.application;
+package com.meetup.hereandnow.auth.application;
 
-import com.meetup.hereandnow.auth.application.AuthService;
 import com.meetup.hereandnow.auth.application.jwt.AccessTokenService;
 import com.meetup.hereandnow.auth.application.jwt.RefreshTokenService;
 import com.meetup.hereandnow.auth.dto.response.LogoutResponse;
@@ -11,7 +10,7 @@ import com.meetup.hereandnow.auth.infrastructure.jwt.JwtProperties;
 import com.meetup.hereandnow.auth.infrastructure.jwt.TokenProvider;
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
-import com.meetup.hereandnow.integration.IntegrationTestSupport;
+import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
 import com.meetup.hereandnow.member.domain.Member;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.transaction.Transactional;
@@ -28,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @Transactional
 class AuthServiceIntegrationTest extends IntegrationTestSupport {

@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.support;
+package com.meetup.hereandnow.integration.support;
 
 import jakarta.transaction.Transactional;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

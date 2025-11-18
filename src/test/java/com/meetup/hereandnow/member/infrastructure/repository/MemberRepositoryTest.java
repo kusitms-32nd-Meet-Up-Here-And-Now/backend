@@ -2,7 +2,7 @@ package com.meetup.hereandnow.member.infrastructure.repository;
 
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
-import com.meetup.hereandnow.support.RepositoryTestSupport;
+import com.meetup.hereandnow.integration.support.RepositoryTestSupport;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

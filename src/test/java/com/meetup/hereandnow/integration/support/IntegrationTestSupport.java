@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.integration;
+package com.meetup.hereandnow.integration.support;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

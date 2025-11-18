@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.integration.core.config;
+package com.meetup.hereandnow.core.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
