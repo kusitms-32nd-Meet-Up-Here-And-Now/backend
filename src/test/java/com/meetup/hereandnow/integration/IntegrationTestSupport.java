@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.integration;
 
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -12,6 +13,7 @@ import org.testcontainers.utility.DockerImageName;
 @SuppressWarnings("resource")
 @Testcontainers
 @SpringBootTest
+@AutoConfigureMockMvc
 public abstract class IntegrationTestSupport {
 
     private static final String POSTGIS_IMAGE = "postgis/postgis:16-3.4";
