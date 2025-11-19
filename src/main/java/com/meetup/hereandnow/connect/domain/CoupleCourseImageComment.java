@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class CoupleCourseImageComment extends CoupleCourseComment {
 
-    @Column(nullable = false)
+    @Column(name = "image_url")
     private String imageUrl;
 
     public static CoupleCourseImageComment of(Course course, Member member, String imageUrl) {
