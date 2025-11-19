@@ -1,14 +1,19 @@
 package com.meetup.hereandnow.connect.infrastructure.strategy;
 
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class CourseImageSelector {
+
+    private final ObjectStorageService objectStorageService;
 
     private static final int MAX_IMAGE_COUNT = 3;
 
@@ -25,7 +30,7 @@ public class CourseImageSelector {
         Collections.shuffle(shuffledImages);
 
         return shuffledImages.stream()
-                .map(PinImage::getImageUrl)
+                .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
                 .limit(MAX_IMAGE_COUNT)
                 .toList();
     }
