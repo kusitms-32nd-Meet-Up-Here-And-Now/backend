@@ -4,7 +4,7 @@ import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseBannerResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleInfoResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
-import com.meetup.hereandnow.connect.repository.CoupleRepository;
+import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;

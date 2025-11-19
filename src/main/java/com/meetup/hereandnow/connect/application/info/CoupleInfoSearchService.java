@@ -4,7 +4,8 @@ import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseBannerResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleInfoResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
-import com.meetup.hereandnow.connect.repository.CoupleRepository;
+import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
@@ -25,6 +26,7 @@ public class CoupleInfoSearchService {
 
     private final CoupleRepository coupleRepository;
     private final CourseRepository courseRepository;
+    private final ObjectStorageService objectStorageService;
 
     @Transactional
     public CoupleInfoResponseDto getCoupleInfoResponse() {
@@ -39,6 +41,10 @@ public class CoupleInfoSearchService {
 
         int placeWithCount = 0;
         int courseWithCount = courseList.size();
+        String imageUrl = couple.getCoupleBannerImageUrl() != null
+                ? objectStorageService.buildImageUrl(couple.getCoupleBannerImageUrl())
+                : null;
+
 
         for (Course c : courseList) {
             List<Pin> pinList = c.getPinList();
@@ -49,7 +55,8 @@ public class CoupleInfoSearchService {
                 couple.getCoupleStartDate(),
                 couple,
                 placeWithCount,
-                courseWithCount
+                courseWithCount,
+                imageUrl
         );
     }
 

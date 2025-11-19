@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.pin.infrastructure.repository;
 
 import com.meetup.hereandnow.pin.domain.entity.PinTag;
-import com.meetup.hereandnow.place.dto.PlaceTagDto;
+import com.meetup.hereandnow.place.dto.request.PlaceTagDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +13,7 @@ import java.util.List;
 public interface PinTagRepository extends JpaRepository<PinTag, Long> {
 
     @Query("""
-                SELECT new com.meetup.hereandnow.place.dto.PlaceTagDto(
+                SELECT new com.meetup.hereandnow.place.dto.request.PlaceTagDto(
                     p.place.id,
                     pt.tag.tagValue.name,
                     COUNT(pt)

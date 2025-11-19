@@ -1,13 +1,15 @@
 package com.meetup.hereandnow.scrap.application.facade;
 
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.util.SecurityUtils;
+import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.application.service.view.CourseCardDtoConverter;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
 import com.meetup.hereandnow.member.domain.Member;
-import com.meetup.hereandnow.place.application.service.PlaceCardDtoConverter;
+import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.application.service.CourseScrapService;
 import com.meetup.hereandnow.scrap.application.service.PlaceScrapService;
 import com.meetup.hereandnow.scrap.domain.CourseScrap;
@@ -46,23 +48,26 @@ class ScrapFacadeTest {
     private CourseCardDtoConverter courseCardDtoConverter;
 
     @Mock
-    private PlaceCardDtoConverter placeCardDtoConverter;
+    private PlaceDtoConverter placeDtoConverter;
 
     @InjectMocks
     private ScrapFacade scrapFacade;
 
     private MockedStatic<SecurityUtils> mockSecurityUtils;
+    private MockedStatic<SortUtils> mockSortUtils;
     private Member mockMember;
 
     @BeforeEach
     void setUp() {
         mockSecurityUtils = mockStatic(SecurityUtils.class);
+        mockSortUtils = mockStatic(SortUtils.class);
         mockMember = Member.builder().id(1L).nickname("nickname").build();
     }
 
     @AfterEach
     void tearDown() {
         mockSecurityUtils.close();
+        mockSortUtils.close();
     }
 
     @Test
@@ -110,7 +115,7 @@ class ScrapFacadeTest {
         // given
         int page = 0;
         int size = 20;
-        String sort = "recent";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
 
@@ -121,7 +126,7 @@ class ScrapFacadeTest {
         List<CourseCardResponseDto> expectedDtos = List.of(mock(CourseCardResponseDto.class));
 
         mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
-        given(courseScrapService.resolveSort(page, size, sort)).willReturn(mockPageable);
+        mockSortUtils.when(() -> SortUtils.resolveCourseSort(page, size, sort)).thenReturn(mockPageable);
         given(courseScrapService.getScrapsByMember(mockMember, mockPageable)).willReturn(scrapPage);
         given(scrap1.getCourse()).willReturn(course1);
         given(courseCardDtoConverter.convert(courses)).willReturn(expectedDtos);
@@ -131,7 +136,7 @@ class ScrapFacadeTest {
 
         // then
         assertThat(result).isEqualTo(expectedDtos);
-        verify(courseScrapService).resolveSort(page, size, sort);
+        mockSortUtils.verify(() -> SortUtils.resolveCourseSort(page, size, sort));
         verify(courseScrapService).getScrapsByMember(mockMember, mockPageable);
         verify(scrap1).getCourse();
         verify(courseCardDtoConverter).convert(courses);
@@ -144,7 +149,7 @@ class ScrapFacadeTest {
         // given
         int page = 0;
         int size = 20;
-        String sort = "recent";
+        SortType sort = SortType.RECENT;
 
         Pageable mockPageable = mock(Pageable.class);
 
@@ -155,19 +160,19 @@ class ScrapFacadeTest {
         List<PlaceCardResponseDto> expectedDtos = List.of(mock(PlaceCardResponseDto.class));
 
         mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
-        given(placeScrapService.resolveSort(page, size, sort)).willReturn(mockPageable);
+        mockSortUtils.when(() -> SortUtils.resolvePlaceSort(page, size, sort)).thenReturn(mockPageable);
         given(placeScrapService.getScrapsByMember(mockMember, mockPageable)).willReturn(scrapPage);
         given(scrap1.getPlace()).willReturn(place1);
-        given(placeCardDtoConverter.convert(places)).willReturn(expectedDtos);
+        given(placeDtoConverter.convert(places)).willReturn(expectedDtos);
 
         // when
         List<PlaceCardResponseDto> result = scrapFacade.getScrappedPlaces(page, size, sort);
 
         // then
         assertThat(result).isEqualTo(expectedDtos);
-        verify(placeScrapService).resolveSort(page, size, sort);
+        mockSortUtils.verify(() -> SortUtils.resolvePlaceSort(page, size, sort));
         verify(placeScrapService).getScrapsByMember(mockMember, mockPageable);
         verify(scrap1).getPlace();
-        verify(placeCardDtoConverter).convert(places);
+        verify(placeDtoConverter).convert(places);
     }
 }

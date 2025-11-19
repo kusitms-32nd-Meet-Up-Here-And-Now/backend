@@ -1,0 +1,6 @@
+dependencies {
+    testImplementation platform('org.testcontainers:testcontainers-bom:2.0.2')
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:postgresql"
+}

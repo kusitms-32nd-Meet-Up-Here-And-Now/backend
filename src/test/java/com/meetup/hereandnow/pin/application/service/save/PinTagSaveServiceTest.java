@@ -4,7 +4,7 @@ import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinTag;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinTagRepository;
-import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import com.meetup.hereandnow.place.dto.request.PlaceSaveDto;
 import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
 import com.meetup.hereandnow.tag.domain.entity.Tag;
 import com.meetup.hereandnow.tag.domain.entity.TagValue;

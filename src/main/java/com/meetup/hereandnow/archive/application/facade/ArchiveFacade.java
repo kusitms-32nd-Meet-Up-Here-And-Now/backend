@@ -3,6 +3,7 @@ package com.meetup.hereandnow.archive.application.facade;
 import com.meetup.hereandnow.archive.application.service.ArchiveCourseService;
 import com.meetup.hereandnow.archive.dto.response.CourseFolderResponseDto;
 import com.meetup.hereandnow.archive.dto.response.RecentArchiveResponseDto;
+import com.meetup.hereandnow.archive.infrastructure.aggregator.CommentCountAggregator;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.search.CourseSearchService;
 import com.meetup.hereandnow.course.domain.entity.Course;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +28,7 @@ public class ArchiveFacade {
 
     private final ArchiveCourseService archiveCourseService;
     private final CourseSearchService courseSearchService;
+    private final CommentCountAggregator commentCountAggregator;
 
     @Transactional(readOnly = true)
     public RecentArchiveResponseDto getRecentArchive() {
@@ -35,7 +36,8 @@ public class ArchiveFacade {
         Optional<Course> course = archiveCourseService.getRecentCourseByMember(member);
         return course.map(c -> RecentArchiveResponseDto.from(
                 c,
-                archiveCourseService.getCourseImages(c.getId())
+                archiveCourseService.getCourseImages(c.getId()),
+                commentCountAggregator.aggregate(c)
         )).orElse(null);
     }
 
@@ -49,7 +51,9 @@ public class ArchiveFacade {
             return Collections.emptyList();
         }
         List<Course> courses = archiveCourseService.getCoursesWithPins(idPage.getContent());
-        return courses.stream().map(CourseFolderResponseDto::from).toList();
+        return courses.stream()
+                .map(course -> CourseFolderResponseDto.from(course, commentCountAggregator.aggregate(course)))
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -67,15 +71,15 @@ public class ArchiveFacade {
                 member, rating, keyword, startDate, endDate, with, region, placeCode, tag, pageRequest
         );
 
-        List<CourseFolderResponseDto> filteredCourses = new ArrayList<>();
-        if (coursePage.hasContent()) {
-            filteredCourses = coursePage.getContent().stream().map(CourseFolderResponseDto::from).toList();
-        }
+        List<CourseFolderResponseDto> courses = coursePage.getContent()
+                .stream()
+                .map(course -> CourseFolderResponseDto.from(course, commentCountAggregator.aggregate(course)))
+                .toList();
 
         SearchFilterDto searchFilterDto = new SearchFilterDto(
                 rating, keyword, startDate, endDate, with, region, placeCode, tag
         );
 
-        return new CourseSearchResponseDto(searchFilterDto, filteredCourses);
+        return new CourseSearchResponseDto(searchFilterDto, courses);
     }
 }

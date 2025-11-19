@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -152,49 +151,5 @@ class CourseScrapServiceTest {
         // then
         assertThat(result).isEqualTo(mockPage);
         verify(courseScrapRepository).findScrapsByMemberWithSort(mockMember, mockPageable);
-    }
-
-    @Test
-    @DisplayName("정렬: scraps는 course.scrapCount로 정렬한다")
-    void resolve_sort_handles_scraps_sort() {
-
-        // given
-        int page = 0;
-        int size = 20;
-        Sort expectedSort = Sort.by(Sort.Direction.DESC, "course.scrapCount");
-
-        // when
-        Pageable resultUpper = courseScrapService.resolveSort(page, size, "SCRAPS");
-        Pageable resultLower = courseScrapService.resolveSort(page, size, "scraps");
-        Pageable resultMixed = courseScrapService.resolveSort(page, size, "Scraps");
-
-        // then
-        assertThat(resultUpper.getSort()).isEqualTo(expectedSort);
-        assertThat(resultLower.getSort()).isEqualTo(expectedSort);
-        assertThat(resultMixed.getSort()).isEqualTo(expectedSort);
-
-        assertThat(resultUpper.getPageNumber()).isEqualTo(page);
-        assertThat(resultUpper.getPageSize()).isEqualTo(size);
-    }
-
-    @Test
-    @DisplayName("정렬: scraps 외에는 createdAt(기본값)으로 정렬한다")
-    void resolve_sort_handles_default_sort() {
-
-        // given
-        int page = 0;
-        int size = 20;
-        Sort expectedSort = Sort.by(Sort.Direction.DESC, "createdAt");
-
-        // when
-        Pageable resultRecent = courseScrapService.resolveSort(page, size, "recent");
-        Pageable resultEmpty = courseScrapService.resolveSort(page, size, "");
-
-        // then
-        assertThat(resultRecent.getSort()).isEqualTo(expectedSort);
-        assertThat(resultEmpty.getSort()).isEqualTo(expectedSort);
-
-        assertThat(resultRecent.getPageNumber()).isEqualTo(page);
-        assertThat(resultRecent.getPageSize()).isEqualTo(size);
     }
 }

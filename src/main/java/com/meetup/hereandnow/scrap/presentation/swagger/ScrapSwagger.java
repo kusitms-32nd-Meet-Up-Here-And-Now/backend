@@ -1,9 +1,10 @@
 package com.meetup.hereandnow.scrap.presentation.swagger;
 
 import com.meetup.hereandnow.core.config.swagger.ApiErrorCode;
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
 import com.meetup.hereandnow.core.presentation.RestResponse;
 import com.meetup.hereandnow.course.dto.response.CourseCardResponseDto;
-import com.meetup.hereandnow.place.dto.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.scrap.dto.response.ScrapResponseDto;
 import com.meetup.hereandnow.scrap.exception.ScrapErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,28 +42,21 @@ public interface ScrapSwagger {
 
     @Operation(
             summary = "저장한 코스 목록 보기 API",
-            operationId = "/scrap/course",
-            description = "정렬 시, sort 값으로 아래 2가지 문자열 중 하나를 전달 가능합니다.<br>" +
-                    "1. recent (최신순)<br>" +
-                    "2. scraps (저장 많은 순)"
+            operationId = "/scrap/course"
     )
     ResponseEntity<RestResponse<List<CourseCardResponseDto>>> getScrappedCourses(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "recent") String sort
+            @RequestParam(defaultValue = "RECENT") SortType sort
     );
 
     @Operation(
             summary = "저장한 장소 목록 보기 API",
-            operationId = "/scrap/place",
-            description = "정렬 시, sort 값으로 아래 3가지 문자열 중 하나를 전달 가능합니다.<br>" +
-                    "1. recent (최신순)<br>" +
-                    "2. scraps (저장 많은 순)<br>" +
-                    "3. reviews (리뷰 많은 순)"
+            operationId = "/scrap/place"
     )
     ResponseEntity<RestResponse<List<PlaceCardResponseDto>>> getScrappedPlaces(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "recent") String sort
+            @RequestParam(defaultValue = "RECENT") SortType sort
     );
 }

@@ -4,7 +4,7 @@ import com.meetup.hereandnow.pin.dto.PinSaveDto;
 import com.meetup.hereandnow.place.application.service.PlaceCreateService;
 import com.meetup.hereandnow.place.application.service.PlaceFindService;
 import com.meetup.hereandnow.place.domain.Place;
-import com.meetup.hereandnow.place.dto.PlaceSaveDto;
+import com.meetup.hereandnow.place.dto.request.PlaceSaveDto;
 import com.meetup.hereandnow.place.infrastructure.factory.PlaceKeyFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class PlaceSaveFacadeTest {
         PlaceSaveDto placeDto2 = new PlaceSaveDto("placeName2", "address2", "number addess 2", 37.456, 127.456, "P03", "여행 > 수목원", "http://place.map.kakao.com/16618597");
 
         PinSaveDto pinSaveDto1 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("야경이 예뻐요"), placeDto1);
-        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("이색 데이트"),  placeDto2);
+        PinSaveDto pinSaveDto2 = new PinSaveDto(4.5, "핀 좋은 점 1", "핀 나쁜점 1", List.of("이색 데이트"), placeDto2);
 
         List<PinSaveDto> pinSaveDtos = List.of(pinSaveDto1, pinSaveDto2);
 

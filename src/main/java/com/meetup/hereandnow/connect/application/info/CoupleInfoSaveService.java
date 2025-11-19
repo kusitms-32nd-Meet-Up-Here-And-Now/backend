@@ -3,7 +3,7 @@ package com.meetup.hereandnow.connect.application.info;
 import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.connect.dto.request.CoupleInfoRequestDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
-import com.meetup.hereandnow.connect.repository.CoupleRepository;
+import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.member.domain.Member;
