@@ -55,7 +55,7 @@ public class TagInitializer implements ApplicationListener<ContextRefreshedEvent
         PlaceGroup ag2 = placeGroupRepository.save(PlaceGroup.builder().code("AG2").name("중개업소").build());
         PlaceGroup ce7 = placeGroupRepository.save(PlaceGroup.builder().code("CE7").name("카페").build());
         PlaceGroup hp8 = placeGroupRepository.save(PlaceGroup.builder().code("HP8").name("병원").build());
-        PlaceGroup pm9 = placeGroupRepository.save(PlaceGroup.builder().code("pm9").name("약국").build());
+        PlaceGroup pm9 = placeGroupRepository.save(PlaceGroup.builder().code("PM9").name("약국").build());
 
         link(ct1, TagGroup.ATMOSPHERE, "분위기 맛집", "사진 찍기 좋아요", "특별한 날 오기 좋아요", "야경이 예뻐요", "뷰가 좋아요", "이색 데이트");
         link(ct1, TagGroup.FACILITY, "산책하기 좋아요", "실내 데이트하기 좋아요", "주차하기 편해요");
