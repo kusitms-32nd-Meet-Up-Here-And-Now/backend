@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class CoupleCourseTextComment extends CoupleCourseComment {
 
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String content;
 
     public static CoupleCourseTextComment of(Course course, Member member, String content) {
