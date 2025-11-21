@@ -3,6 +3,7 @@ package com.meetup.hereandnow.connect.dto.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.meetup.hereandnow.course.domain.entity.Course;
+import com.meetup.hereandnow.pin.domain.entity.PinImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 
@@ -27,15 +28,16 @@ public record CoupleCourseBannerResponseDto(
         @Schema(description = "코스 썸네일 이미지", example = "http://~~")
         String thumbnailImageLink
 ) {
-        public static CoupleCourseBannerResponseDto from(Course course) {
-
+        public static CoupleCourseBannerResponseDto from(
+                Course course, String imageUrl
+        ) {
                 return new CoupleCourseBannerResponseDto(
                         course.getId(),
                         course.getCourseVisitDate(),
                         course.getCourseTitle(),
                         course.getCourseDescription(),
                         course.getPinList().size(),
-                        course.getPinList().getFirst().getPinImages().getFirst().getImageUrl()
+                        imageUrl
                 );
         }
 
