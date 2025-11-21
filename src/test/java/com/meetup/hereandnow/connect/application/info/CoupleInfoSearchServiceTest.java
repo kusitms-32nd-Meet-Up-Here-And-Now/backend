@@ -199,6 +199,8 @@ class CoupleInfoSearchServiceTest {
             assertThat(result).isNotNull();
             assertThat(result.getContent()).isEmpty();
             assertThat(result.hasNext()).isFalse();
+            CoupleCourseBannerResponseDto coupleCourseBannerResponseDto = result.getContent().getFirst();
+            System.out.println(coupleCourseBannerResponseDto.thumbnailImageLink());
 
             verify(coupleRepository).findByMember(member1);
         }

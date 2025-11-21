@@ -27,8 +27,9 @@ public record CoupleCourseBannerResponseDto(
         @Schema(description = "코스 썸네일 이미지", example = "http://~~")
         String thumbnailImageLink
 ) {
-        public static CoupleCourseBannerResponseDto from(Course course) {
-
+        public static CoupleCourseBannerResponseDto from(
+                Course course
+        ) {
                 return new CoupleCourseBannerResponseDto(
                         course.getId(),
                         course.getCourseVisitDate(),

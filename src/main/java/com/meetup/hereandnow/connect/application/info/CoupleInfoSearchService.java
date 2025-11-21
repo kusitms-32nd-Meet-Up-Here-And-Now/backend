@@ -45,7 +45,6 @@ public class CoupleInfoSearchService {
                 ? objectStorageService.buildImageUrl(couple.getCoupleBannerImageUrl())
                 : null;
 
-
         for (Course c : courseList) {
             List<Pin> pinList = c.getPinList();
             placeWithCount += pinList.size();
@@ -76,7 +75,22 @@ public class CoupleInfoSearchService {
         );
 
         List<CoupleCourseBannerResponseDto> bannerList = courseList.stream()
-                .map(CoupleCourseBannerResponseDto::from)
+                .map(course -> {
+                    CoupleCourseBannerResponseDto dto = CoupleCourseBannerResponseDto.from(course);
+
+                    String finalUrl = dto.thumbnailImageLink() != null
+                            ? objectStorageService.buildImageUrl(dto.thumbnailImageLink())
+                            : null;
+
+                    return new CoupleCourseBannerResponseDto(
+                            dto.courseId(),
+                            dto.startDate(),
+                            dto.courseTitle(),
+                            dto.courseDescription(),
+                            dto.placeCount(),
+                            finalUrl
+                    );
+                })
                 .toList();
 
         int fromIndex = Math.min(page * size, bannerList.size());

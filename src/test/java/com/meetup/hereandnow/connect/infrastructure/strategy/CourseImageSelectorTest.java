@@ -1,20 +1,25 @@
 package com.meetup.hereandnow.connect.infrastructure.strategy;
 
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.domain.entity.PinImage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CourseImageSelectorTest {
 
-    private final CourseImageSelector courseImageSelector = new CourseImageSelector();
+    private final CourseImageSelector courseImageSelector = new CourseImageSelector(new ObjectStorageService());
 
     @Test
     @DisplayName("최대 3개의 랜덤 이미지를 선택한다")
