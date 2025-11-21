@@ -5,6 +5,7 @@ import com.meetup.hereandnow.connect.dto.response.CoupleCourseBannerResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleInfoResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
+import com.meetup.hereandnow.connect.infrastructure.strategy.CourseImageSelector;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
@@ -27,6 +28,7 @@ public class CoupleInfoSearchService {
     private final CoupleRepository coupleRepository;
     private final CourseRepository courseRepository;
     private final ObjectStorageService objectStorageService;
+    private final CourseImageSelector courseImageSelector;
 
     @Transactional
     public CoupleInfoResponseDto getCoupleInfoResponse() {
@@ -76,20 +78,8 @@ public class CoupleInfoSearchService {
 
         List<CoupleCourseBannerResponseDto> bannerList = courseList.stream()
                 .map(course -> {
-                    CoupleCourseBannerResponseDto dto = CoupleCourseBannerResponseDto.from(course);
-
-                    String finalUrl = dto.thumbnailImageLink() != null
-                            ? objectStorageService.buildImageUrl(dto.thumbnailImageLink())
-                            : null;
-
-                    return new CoupleCourseBannerResponseDto(
-                            dto.courseId(),
-                            dto.startDate(),
-                            dto.courseTitle(),
-                            dto.courseDescription(),
-                            dto.placeCount(),
-                            finalUrl
-                    );
+                    String thumbnailImageLink = courseImageSelector.selectFirstImage(course);
+                    return CoupleCourseBannerResponseDto.from(course, thumbnailImageLink);
                 })
                 .toList();
 

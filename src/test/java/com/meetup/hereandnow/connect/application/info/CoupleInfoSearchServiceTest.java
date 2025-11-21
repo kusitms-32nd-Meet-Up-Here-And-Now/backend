@@ -5,6 +5,7 @@ import com.meetup.hereandnow.connect.dto.response.CoupleCourseBannerResponseDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleInfoResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
+import com.meetup.hereandnow.connect.infrastructure.strategy.CourseImageSelector;
 import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
@@ -46,6 +47,9 @@ class CoupleInfoSearchServiceTest {
 
     @Mock
     private CourseRepository courseRepository;
+
+    @Mock
+    private CourseImageSelector courseImageSelector;
 
     @InjectMocks
     private CoupleInfoSearchService coupleInfoSearchService;
@@ -164,6 +168,8 @@ class CoupleInfoSearchServiceTest {
             when(coupleRepository.findByMember(member1)).thenReturn(Optional.of(couple));
             when(courseRepository.findByCourseVisitMemberAndMemberIn(eq("연인"), anyList()))
                     .thenReturn(courseList);
+            when(courseImageSelector.selectFirstImage(any(Course.class)))
+                    .thenReturn("course/1/pin_0_image_0.jpg");
 
             // when
             Slice<CoupleCourseBannerResponseDto> result =
@@ -199,8 +205,6 @@ class CoupleInfoSearchServiceTest {
             assertThat(result).isNotNull();
             assertThat(result.getContent()).isEmpty();
             assertThat(result.hasNext()).isFalse();
-            CoupleCourseBannerResponseDto coupleCourseBannerResponseDto = result.getContent().getFirst();
-            System.out.println(coupleCourseBannerResponseDto.thumbnailImageLink());
 
             verify(coupleRepository).findByMember(member1);
         }
@@ -231,6 +235,8 @@ class CoupleInfoSearchServiceTest {
             when(coupleRepository.findByMember(member1)).thenReturn(Optional.of(couple));
             when(courseRepository.findByCourseVisitMemberAndMemberIn(eq("연인"), anyList()))
                     .thenReturn(courseList);
+            when(courseImageSelector.selectFirstImage(any(Course.class)))
+                    .thenReturn("course/1/pin_0_image_0.jpg");
 
             // when
             Slice<CoupleCourseBannerResponseDto> result =
