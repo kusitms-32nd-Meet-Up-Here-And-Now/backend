@@ -34,5 +34,13 @@ public class CourseImageSelector {
                 .limit(MAX_IMAGE_COUNT)
                 .toList();
     }
+
+    public String selectFirstImage(Course course) {
+        return course.getPinList().stream()
+                .flatMap(pin -> pin.getPinImages().stream())
+                .findFirst()
+                .map(pinImage -> objectStorageService.buildImageUrl(pinImage.getImageUrl()))
+                .orElse(null);
+    }
 }
 
