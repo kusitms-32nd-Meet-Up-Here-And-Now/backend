@@ -27,7 +27,13 @@ public record PlaceCardResponseDto(
         long reviewCount,
 
         @Schema(description = "장소 이미지", example = "https://...")
-        String placeImageUrl
+        String placeImageUrl,
+
+        @Schema(description = "장소 위도", example = "37.2384738")
+        double lat,
+
+        @Schema(description = "장소 경도", example = "127.239428")
+        double lon
 ) {
     public static PlaceCardResponseDto from(Place place, String imageUrl) {
         return new PlaceCardResponseDto(
@@ -38,7 +44,9 @@ public record PlaceCardResponseDto(
                 place.getPlaceNumberAddress(),
                 place.getPlaceRating().doubleValue(),
                 place.getPinCount(),
-                imageUrl
+                imageUrl,
+                place.getLocation().getX(),
+                place.getLocation().getY()
         );
     }
 }
