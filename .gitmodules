@@ -1,0 +1,3 @@
+[submodule "src/main/resources/secret"]
+	path = src/main/resources/secret
+	url = https://github.com/kusitms-32nd-Meet-Up-Here-And-Now/secret.git
