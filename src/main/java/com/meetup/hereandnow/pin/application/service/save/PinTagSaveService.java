@@ -87,7 +87,9 @@ public class PinTagSaveService {
             String key = buildTagKey(dto.place().placeGroupCode(), tagName);
             Tag tag = tagMap.get(key);
             if (tag != null) {
-                pinTags.add(PinTag.of(tag, pin));
+                PinTag pinTag = PinTag.of(tag, pin);
+                pin.addPinTag(pinTag);
+                pinTags.add(pinTag);
             }
         }
         return pinTags;
