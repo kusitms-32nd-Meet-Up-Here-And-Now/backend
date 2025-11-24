@@ -1,5 +1,6 @@
 package com.meetup.hereandnow.place.application.service;
 
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
@@ -44,7 +45,7 @@ class PlaceDetailServiceTest {
     private PinRepository pinRepository;
 
     @Mock
-    private CourseRepository courseRepository;
+    private ObjectStorageService objectStorageService;
 
     @InjectMocks
     private PlaceDetailService placeDetailService;
@@ -85,6 +86,7 @@ class PlaceDetailServiceTest {
 
             when(placeRepository.findById(placeId)).thenReturn(Optional.of(place));
             when(pinRepository.findAllByPlace(place)).thenReturn(pinList);
+            when(objectStorageService.buildImageUrl(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
 
             // when
             PlaceInfoResponseDto result = placeDetailService.getPlaceDetail(placeId);
