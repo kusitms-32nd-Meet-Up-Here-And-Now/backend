@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PlaceDetailService 테스트")
+@DisplayName("PlaceDetailService")
 class PlaceDetailServiceTest {
 
     @Mock
@@ -53,7 +53,7 @@ class PlaceDetailServiceTest {
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @Nested
-    @DisplayName("getPlaceDetail 메서드는")
+    @DisplayName("getPlaceDetail 메서드")
     class GetPlaceDetailTest {
 
         @Test

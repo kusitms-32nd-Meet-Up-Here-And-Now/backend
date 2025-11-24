@@ -4,10 +4,8 @@ import com.meetup.hereandnow.core.exception.DomainException;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.save.course.CourseRedisService;
-import com.meetup.hereandnow.course.application.service.save.course.CourseSaveService;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
-import com.meetup.hereandnow.course.dto.response.CommitSaveCourseResponseDto;
 import com.meetup.hereandnow.course.fixture.CourseFixture;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
@@ -16,6 +14,7 @@ import com.meetup.hereandnow.member.domain.value.Provider;
 import com.meetup.hereandnow.member.infrastructure.repository.MemberRepository;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
 import com.meetup.hereandnow.pin.exception.PinErrorCode;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,13 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
 
+@Transactional
 class CourseSaveFacadeIntegrationTest extends IntegrationTestSupport {
 
     @MockBean
     private ObjectStorageService objectStorageService;
-
-    @Autowired
-    private CourseSaveService courseSaveService;
 
     @Autowired
     private CourseSaveFacade courseSaveFacade;
