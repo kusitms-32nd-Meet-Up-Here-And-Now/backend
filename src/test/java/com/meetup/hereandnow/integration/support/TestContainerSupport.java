@@ -24,16 +24,14 @@ public abstract class TestContainerSupport {
         postgreSQLContainer = new PostgreSQLContainer<>(postgisImage)
                 .withDatabaseName("testdb")
                 .withUsername("sa")
-                .withPassword("sa")
-                .withReuse(true);
+                .withPassword("sa");
         postgreSQLContainer.start();
 
         redisContainer = new GenericContainer<>(DockerImageName.parse(REDIS_IMAGE_NAME))
                 .withExposedPorts(6379)
                 .withCommand("redis-server", "--bind", "0.0.0.0", "--protected-mode", "no", "--appendonly", "no")
                 .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*\\n", 1))
-                .withStartupTimeout(Duration.ofMinutes(2))
-                .withReuse(true);
+                .withStartupTimeout(Duration.ofMinutes(2));
         redisContainer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

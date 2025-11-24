@@ -104,7 +104,7 @@ class CourseSaveFacadeIntegrationTest extends IntegrationTestSupport {
             assertThat(courseRedisService.getCourse(member, actualCourseUuid)).isNotNull();
 
             // commit
-            CommitSaveCourseRequestDto request = buildRequest(TEST_PIN_IMAGE_OBJECT_KEY);
+            CommitSaveCourseRequestDto request = requestWithKey(TEST_PIN_IMAGE_OBJECT_KEY);
             var commitResponse = courseSaveFacade.commitSaveCourse(actualCourseUuid, request);
 
             assertThat(commitResponse.courseId()).isNotNull();
@@ -120,7 +120,6 @@ class CourseSaveFacadeIntegrationTest extends IntegrationTestSupport {
             when(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).thenReturn(true);
 
             // when
-            System.out.println(SecurityUtils.getCurrentMember().getClass());
             var res = courseSaveFacade.commitSaveCourse(TEST_COURSE_UUID, request);
 
             // then
@@ -139,11 +138,6 @@ class CourseSaveFacadeIntegrationTest extends IntegrationTestSupport {
             assertThatThrownBy(() -> courseSaveFacade.commitSaveCourse(TEST_COURSE_UUID, request))
                     .isInstanceOf(DomainException.class)
                     .hasMessage(PinErrorCode.NOT_FOUND_PIN_IMAGE.getMessage());
-        }
-
-        private CommitSaveCourseRequestDto buildRequest(String key) {
-            PinImageObjectKeyDto pin = new PinImageObjectKeyDto(0, List.of(key));
-            return new CommitSaveCourseRequestDto(List.of(pin));
         }
     }
 }

@@ -2,7 +2,6 @@ package com.meetup.hereandnow.place.application.service;
 
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
