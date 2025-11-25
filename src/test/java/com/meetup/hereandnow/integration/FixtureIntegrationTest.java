@@ -42,7 +42,7 @@ public class FixtureIntegrationTest extends IntegrationTestSupport {
 
     @Test
     @DisplayName("Fixture로 생성한 엔티티들이 DB에 정상적으로 저장된다.")
-    void fixtureEntitiesShouldBeSavedCorrectly() {
+    void success_fixture_create() {
         // 1. TagInitializer로 생성된 데이터 조회
         PlaceGroup foodPlaceGroup = placeGroupRepository.findByCode("FD6")
                 .orElseThrow(() -> new IllegalStateException("PlaceGroup 'FD6'를 찾을 수 없습니다."));
