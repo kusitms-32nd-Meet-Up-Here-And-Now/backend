@@ -38,6 +38,26 @@ public class PlaceEntityFixture {
                 .build();
     }
 
+    public static Place getPlace(PlaceGroup placeGroup, double latitude, double longitude) {
+        WKTReader wktReader = new WKTReader();
+        Point location;
+        try {
+            String pointWkt = String.format("POINT(%.6f %.6f)", longitude, latitude);
+            location = (Point) wktReader.read(pointWkt);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return Place.builder()
+                .placeName("테스트 장소")
+                .placeStreetNameAddress("테스트 도로명 주소")
+                .placeNumberAddress("테스트 지번 주소")
+                .location(location)
+                .placeGroup(placeGroup)
+                .placeCategory("카페,디저트")
+                .placeUrl("https://test.com")
+                .build();
+    }
+
     public static PlaceGroup getFoodPlaceGroup() {
         // TagInitializer에 의해 생성되는 "음식점" PlaceGroup을 가정
         return PlaceGroup.builder()

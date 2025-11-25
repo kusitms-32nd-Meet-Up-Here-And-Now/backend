@@ -11,7 +11,7 @@ public class CourseEntityFixture {
                 .courseDescription("테스트 설명")
                 .coursePositive("테스트 좋은점")
                 .courseNegative("테스트 나쁜점")
-                .isPublic(false)
+                .isPublic(true)
                 .courseVisitDate(java.time.LocalDate.now())
                 .courseVisitMember("연인")
                 .courseRegion("서울")
