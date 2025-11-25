@@ -13,5 +13,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // --- flyway ---
-    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-core:9.22.3'
 }
