@@ -14,7 +14,8 @@ public enum CourseErrorCode implements BaseErrorCode<DomainException> {
     NOT_FOUND_COURSE_METADATA(HttpStatus.NOT_FOUND, "저장된 코스 메타데이터를 찾을 수 없습니다."),
     NOT_FOUND_COURSE_IMAGE(HttpStatus.NOT_FOUND, "저장된 코스 이미지를 찾을 수 없습니다."),
     NOT_FOUND_COUPLE_COURSE_IMAGE(HttpStatus.NOT_FOUND, "저장된 커플 기록 코스 이미지를 찾을 수 없습니다."),
-    NOT_EQUAL_IMAGE_COUNT(HttpStatus.CONFLICT, "저장을 요청한 이미지 개수가 맞지 않습니다.");
+    NOT_EQUAL_IMAGE_COUNT(HttpStatus.CONFLICT, "저장을 요청한 이미지 개수가 맞지 않습니다."),
+    IS_NOT_YOURS(HttpStatus.BAD_REQUEST, "본인의 코스만 삭제 가능합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
