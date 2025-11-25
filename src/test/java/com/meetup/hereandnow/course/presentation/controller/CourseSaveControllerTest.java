@@ -7,7 +7,7 @@ import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.course.dto.response.CommitSaveCourseResponseDto;
 import com.meetup.hereandnow.course.dto.response.CourseSaveResponseDto;
-import com.meetup.hereandnow.course.fixture.CourseFixture;
+import com.meetup.hereandnow.integration.fixture.course.CourseSaveDtoFixture;
 import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
 import com.meetup.hereandnow.pin.dto.PinDirnameDto;
 import com.meetup.hereandnow.pin.dto.PinImageObjectKeyDto;
@@ -43,7 +43,7 @@ class CourseSaveControllerTest extends IntegrationTestSupport {
     @DisplayName("POST /course/save")
     void saveCourse() throws Exception {
         // given
-        CourseSaveDto courseSaveDto = CourseFixture.course();
+        CourseSaveDto courseSaveDto = CourseSaveDtoFixture.course();
         CourseSaveResponseDto courseSaveResponseDto = new CourseSaveResponseDto(
                 TEST_UUID,
                 List.of(new PinDirnameDto(
