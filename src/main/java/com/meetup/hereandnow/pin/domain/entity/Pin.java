@@ -61,6 +61,18 @@ public class Pin extends BaseEntity {
     @Builder.Default
     private List<PinImage> pinImages = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "pin", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true
+    )
+    @BatchSize(size = 100)
+    @Builder.Default
+    private List<PinTag> pinTags = new ArrayList<>();
+
+    public void addPinTag(PinTag pinTag) {
+        this.pinTags.add(pinTag);
+    }
+
     public void addPinImage(PinImage pinImage) {
         this.pinImages.add(pinImage);
     }

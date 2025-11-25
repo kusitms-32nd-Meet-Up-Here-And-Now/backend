@@ -1,7 +1,6 @@
 package com.meetup.hereandnow.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meetup.hereandnow.auth.application.AuthService;
 import com.meetup.hereandnow.auth.application.jwt.AccessTokenService;
 import com.meetup.hereandnow.auth.application.jwt.RefreshTokenService;
 import com.meetup.hereandnow.auth.dto.request.ReIssueTokenRequest;
@@ -42,8 +41,6 @@ class AuthControllerTest extends IntegrationTestSupport {
     @Autowired
     private AccessTokenService accessTokenService;
 
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private ObjectMapper objectMapper;

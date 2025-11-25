@@ -1,7 +1,7 @@
 package com.meetup.hereandnow.place.application.service;
 
+import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.course.domain.entity.Course;
-import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PlaceDetailService 테스트")
+@DisplayName("PlaceDetailService")
 class PlaceDetailServiceTest {
 
     @Mock
@@ -44,7 +44,7 @@ class PlaceDetailServiceTest {
     private PinRepository pinRepository;
 
     @Mock
-    private CourseRepository courseRepository;
+    private ObjectStorageService objectStorageService;
 
     @InjectMocks
     private PlaceDetailService placeDetailService;
@@ -52,7 +52,7 @@ class PlaceDetailServiceTest {
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @Nested
-    @DisplayName("getPlaceDetail 메서드는")
+    @DisplayName("getPlaceDetail 메서드")
     class GetPlaceDetailTest {
 
         @Test
@@ -85,6 +85,7 @@ class PlaceDetailServiceTest {
 
             when(placeRepository.findById(placeId)).thenReturn(Optional.of(place));
             when(pinRepository.findAllByPlace(place)).thenReturn(pinList);
+            when(objectStorageService.buildImageUrl(anyString())).thenAnswer(invocation -> invocation.getArgument(0));
 
             // when
             PlaceInfoResponseDto result = placeDetailService.getPlaceDetail(placeId);
