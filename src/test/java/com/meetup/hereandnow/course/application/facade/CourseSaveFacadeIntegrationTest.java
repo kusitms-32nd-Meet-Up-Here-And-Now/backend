@@ -6,7 +6,7 @@ import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.application.service.save.course.CourseRedisService;
 import com.meetup.hereandnow.course.dto.request.CommitSaveCourseRequestDto;
 import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
-import com.meetup.hereandnow.course.fixture.CourseFixture;
+import com.meetup.hereandnow.integration.fixture.course.CourseSaveDtoFixture;
 import com.meetup.hereandnow.course.infrastructure.repository.CourseRepository;
 import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
 import com.meetup.hereandnow.member.domain.Member;
@@ -91,7 +91,7 @@ class CourseSaveFacadeIntegrationTest extends IntegrationTestSupport {
         @Test
         @DisplayName("prepare 후 commit 전체 플로우가 정상적으로 동작한다.")
         void success_prepare_then_commit_flow() {
-            CourseSaveDto courseSaveDto = CourseFixture.course();
+            CourseSaveDto courseSaveDto = CourseSaveDtoFixture.course();
 
             when(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).thenReturn(true);
 
@@ -115,7 +115,7 @@ class CourseSaveFacadeIntegrationTest extends IntegrationTestSupport {
         void success_commit_save_with_existing_image() {
             // given
             var request = requestWithKey(TEST_PIN_IMAGE_OBJECT_KEY);
-            courseRedisService.saveCourse(member, TEST_COURSE_UUID, CourseFixture.course());
+            courseRedisService.saveCourse(member, TEST_COURSE_UUID, CourseSaveDtoFixture.course());
 
             when(objectStorageService.exists(TEST_PIN_IMAGE_OBJECT_KEY)).thenReturn(true);
 

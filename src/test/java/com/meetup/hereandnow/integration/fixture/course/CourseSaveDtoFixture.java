@@ -1,4 +1,4 @@
-package com.meetup.hereandnow.course.fixture;
+package com.meetup.hereandnow.integration.fixture.course;
 
 import com.meetup.hereandnow.course.dto.request.CourseSaveDto;
 import com.meetup.hereandnow.pin.dto.PinSaveDto;
@@ -6,7 +6,7 @@ import com.meetup.hereandnow.place.dto.request.PlaceSaveDto;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CourseFixture {
+public class CourseSaveDtoFixture {
 
     public static PlaceSaveDto place() {
         return new PlaceSaveDto(
