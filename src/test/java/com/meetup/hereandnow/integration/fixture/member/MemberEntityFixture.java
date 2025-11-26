@@ -2,6 +2,8 @@ package com.meetup.hereandnow.integration.fixture.member;
 
 import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.member.domain.value.Provider;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberEntityFixture {
 
@@ -28,4 +30,37 @@ public class MemberEntityFixture {
                 .username(email)
                 .build();
     }
+
+    public static Member getMember(int index) {
+
+        return Member.builder()
+                .email("test" + index + "@test.com")
+                .nickname("test" + index + "_member")
+                .profileImage(PROFILE_IMAGE)
+                .providerId(index + "")
+                .provider(getProvider(index))
+                .username("test" + index + "_username")
+                .build();
+    }
+
+    public static List<Member> getMembers(int size) {
+        List<Member> memberList = new ArrayList<>();
+
+        if (size < 0) {
+            return List.of(getMember());
+        }
+
+        for (int i = 0; i < size; i++) {
+            Member member = getMember(i);
+
+            memberList.add(member);
+        }
+
+        return memberList;
+    }
+
+    private static Provider getProvider(int index) {
+        return (index % 2) == 0 ? Provider.KAKAO : Provider.GOOGLE;
+    }
+
 }
