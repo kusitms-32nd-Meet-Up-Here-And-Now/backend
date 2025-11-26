@@ -100,7 +100,6 @@ class PlaceHomeControllerTest extends IntegrationTestSupport {
                     successCount.getAndIncrement();
                 } catch (Exception e) {
                     failCount.getAndIncrement();
-                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
@@ -108,6 +107,7 @@ class PlaceHomeControllerTest extends IntegrationTestSupport {
         }
 
         latch.await();
+        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 

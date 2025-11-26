@@ -132,7 +132,6 @@ class CourseViewControllerTest extends IntegrationTestSupport {
                     successCount.getAndIncrement();
                 } catch (Exception e) {
                     failCount.getAndIncrement();
-                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
@@ -140,6 +139,7 @@ class CourseViewControllerTest extends IntegrationTestSupport {
         }
 
         latch.await();
+        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 

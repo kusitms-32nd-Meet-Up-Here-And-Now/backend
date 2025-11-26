@@ -90,7 +90,6 @@ public class PlaceFindPerformanceIntegrationTest extends TestContainerSupport {
                     }
                 } catch (Exception e) {
                     failCount.getAndIncrement();
-                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
@@ -98,6 +97,7 @@ public class PlaceFindPerformanceIntegrationTest extends TestContainerSupport {
         }
 
         latch.await();
+        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 

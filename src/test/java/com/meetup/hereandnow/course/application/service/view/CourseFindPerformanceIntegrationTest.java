@@ -113,7 +113,6 @@ class CourseFindPerformanceIntegrationTest extends IntegrationTestSupport {
                     }
                 } catch (Exception e) {
                     failCount.getAndIncrement();
-                    e.printStackTrace();
                 } finally {
                     latch.countDown();
                 }
@@ -121,6 +120,7 @@ class CourseFindPerformanceIntegrationTest extends IntegrationTestSupport {
         }
 
         latch.await();
+        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 
