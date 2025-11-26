@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,31 +84,35 @@ class PlaceHomeControllerTest extends IntegrationTestSupport {
         long startTime = System.currentTimeMillis();
 
         // when
-        for (int i = 0; i < threads; i++) {
-            executorService.execute(() -> {
-                try {
-                    mockMvc.perform(get("/place/home/recommended")
-                                    .param("page", "0")
-                                    .param("size", "20")
-                                    .param("sort", SortType.REVIEWS.name())
-                                    .param("lat", String.valueOf(TARGET_LAT))
-                                    .param("lon", String.valueOf(TARGET_LON))
-                                    .contentType(MediaType.APPLICATION_JSON))
-                            .andExpect(status().isOk())
-                            .andExpect(jsonPath("$.data").isArray())
-                            .andExpect(jsonPath("$.data.length()").value(20));
+        try {
+            for (int i = 0; i < threads; i++) {
+                executorService.execute(() -> {
+                    try {
+                        mockMvc.perform(get("/place/home/recommended")
+                                        .param("page", "0")
+                                        .param("size", "20")
+                                        .param("sort", SortType.REVIEWS.name())
+                                        .param("lat", String.valueOf(TARGET_LAT))
+                                        .param("lon", String.valueOf(TARGET_LON))
+                                        .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.data").isArray())
+                                .andExpect(jsonPath("$.data.length()").value(20));
 
-                    successCount.getAndIncrement();
-                } catch (Exception e) {
-                    failCount.getAndIncrement();
-                } finally {
-                    latch.countDown();
-                }
-            });
+                        successCount.getAndIncrement();
+                    } catch (Exception e) {
+                        failCount.getAndIncrement();
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+            boolean completed = latch.await(60, TimeUnit.SECONDS);
+            assertThat(completed).as("스레드가 시간 내에 모두 종료돼야 합니다.").isTrue();
+        } finally {
+            executorService.shutdown();
         }
 
-        latch.await();
-        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 

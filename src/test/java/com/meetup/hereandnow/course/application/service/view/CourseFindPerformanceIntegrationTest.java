@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -102,25 +103,29 @@ class CourseFindPerformanceIntegrationTest extends IntegrationTestSupport {
         long startTime = System.currentTimeMillis();
 
         // when
-        for (int i = 0; i < threads; i++) {
-            executorService.execute(() -> {
-                try {
-                    List<Course> result = courseFindService.getNearbyCourses(
-                            0, 20, SortType.REVIEWS, GANGNAM_LAT, GANGNAM_LON
-                    );
-                    if (!result.isEmpty()) {
-                        successCount.getAndIncrement();
+        try {
+            for (int i = 0; i < threads; i++) {
+                executorService.execute(() -> {
+                    try {
+                        List<Course> result = courseFindService.getNearbyCourses(
+                                0, 20, SortType.REVIEWS, GANGNAM_LAT, GANGNAM_LON
+                        );
+                        if (!result.isEmpty()) {
+                            successCount.getAndIncrement();
+                        }
+                    } catch (Exception e) {
+                        failCount.getAndIncrement();
+                    } finally {
+                        latch.countDown();
                     }
-                } catch (Exception e) {
-                    failCount.getAndIncrement();
-                } finally {
-                    latch.countDown();
-                }
-            });
+                });
+            }
+            boolean completed = latch.await(60, TimeUnit.SECONDS);
+            assertThat(completed).as("스레드가 시간 내에 모두 종료돼야 합니다.").isTrue();
+        } finally {
+            executorService.shutdown();
         }
 
-        latch.await();
-        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 

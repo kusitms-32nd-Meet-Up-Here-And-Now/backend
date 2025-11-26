@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -121,25 +122,29 @@ class CourseViewControllerTest extends IntegrationTestSupport {
         long startTime = System.currentTimeMillis();
 
         // when
-        for (int i = 0; i < threads; i++) {
-            executorService.execute(() -> {
-                try {
-                    mockMvc.perform(get("/course/" + courseId)
-                                    .with(authentication(viewerAuthToken))
-                                    .contentType(MediaType.APPLICATION_JSON))
-                            .andExpect(status().isOk());
+        try {
+            for (int i = 0; i < threads; i++) {
+                executorService.execute(() -> {
+                    try {
+                        mockMvc.perform(get("/course/" + courseId)
+                                        .with(authentication(viewerAuthToken))
+                                        .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk());
 
-                    successCount.getAndIncrement();
-                } catch (Exception e) {
-                    failCount.getAndIncrement();
-                } finally {
-                    latch.countDown();
-                }
-            });
+                        successCount.getAndIncrement();
+                    } catch (Exception e) {
+                        failCount.getAndIncrement();
+                    } finally {
+                        latch.countDown();
+                    }
+                });
+            }
+            boolean completed = latch.await(60, TimeUnit.SECONDS);
+            assertThat(completed).as("스레드가 시간 내에 모두 종료돼야 합니다.").isTrue();
+        } finally {
+            executorService.shutdown();
         }
 
-        latch.await();
-        executorService.shutdown();
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
 
