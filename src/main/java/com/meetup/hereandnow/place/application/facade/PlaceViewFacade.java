@@ -1,8 +1,10 @@
 package com.meetup.hereandnow.place.application.facade;
 
 import com.meetup.hereandnow.core.infrastructure.value.SortType;
+import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.dto.response.SearchFilterDto;
+import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
@@ -13,6 +15,7 @@ import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceSearchResponseDto;
+import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +28,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,12 +39,14 @@ public class PlaceViewFacade {
     private final PlaceDtoConverter placeDtoConverter;
     private final PinRepository pinRepository;
     private final PlaceSearchService placeSearchService;
+    private final PlaceScrapRepository placeScrapRepository;
 
     /*
     홈 화면에서의 랜덤(광고) 장소를 마커+타원형 dto 형태로 반환합니다.
      */
     @Transactional(readOnly = true)
     public List<PlacePointResponseDto> getAdPlaces(double lat, double lon) {
+        Member member = SecurityUtils.getCurrentMember();
         List<Place> places = placeFindService.find2RandomNearbyPlaces(lat, lon);
 
         if (places.isEmpty()) {
@@ -48,13 +54,15 @@ public class PlaceViewFacade {
         }
 
         List<Pin> pinList = pinRepository.find3PinsByPlaceIdsSorted(places.stream().map(Place::getId).toList());
+        Set<Long> scrappedPlaceIds = placeScrapRepository.findScrappedPlaceIdsByMemberAndPlaces(member, places);
 
         Map<Long, List<Pin>> pinsByPlaceId = pinList.stream()
                 .collect(Collectors.groupingBy(pin -> pin.getPlace().getId()));
 
         return places.stream().map(place -> {
             List<Pin> pins = pinsByPlaceId.getOrDefault(place.getId(), Collections.emptyList());
-            return placeDtoConverter.convert(place, pins);
+            boolean scrapped = scrappedPlaceIds.contains(place.getId());
+            return placeDtoConverter.convert(place, pins, scrapped);
         }).toList();
     }
 

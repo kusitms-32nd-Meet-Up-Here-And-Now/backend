@@ -168,10 +168,10 @@ class PlaceDtoConverterTest {
 
         List<String> expectedUrls = List.of("http://img1b.jpg", "http://img2a.jpg", "http://img3a.jpg");
         PlacePointResponseDto mockResponse = mock(PlacePointResponseDto.class);
-        placePointDto.when(() -> PlacePointResponseDto.from(mockPlace, expectedUrls)).thenReturn(mockResponse);
+        placePointDto.when(() -> PlacePointResponseDto.from(mockPlace, expectedUrls, true)).thenReturn(mockResponse);
 
         // when
-        PlacePointResponseDto result = placeDtoConverter.convert(mockPlace, pinList);
+        PlacePointResponseDto result = placeDtoConverter.convert(mockPlace, pinList, true);
 
         // then
         assertThat(result).isEqualTo(mockResponse);
@@ -187,7 +187,7 @@ class PlaceDtoConverterTest {
         verify(img2b, never()).getImageUrl();
 
         verify(objectStorageService, times(3)).buildImageUrl(anyString());
-        placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls));
+        placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls, true));
     }
 
     @Test
@@ -200,16 +200,16 @@ class PlaceDtoConverterTest {
         List<String> expectedUrls = Collections.emptyList();
         PlacePointResponseDto mockResponse = mock(PlacePointResponseDto.class);
 
-        placePointDto.when(() -> PlacePointResponseDto.from(mockPlace, expectedUrls)).thenReturn(mockResponse);
+        placePointDto.when(() -> PlacePointResponseDto.from(mockPlace, expectedUrls, true)).thenReturn(mockResponse);
 
         // when
-        PlacePointResponseDto result = placeDtoConverter.convert(mockPlace, pinList);
+        PlacePointResponseDto result = placeDtoConverter.convert(mockPlace, pinList, true);
 
         // then
         assertThat(result).isEqualTo(mockResponse);
 
         verify(objectStorageService, never()).buildImageUrl(anyString());
-        placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls));
+        placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls, true));
     }
 
     @Test
@@ -233,10 +233,10 @@ class PlaceDtoConverterTest {
 
         List<String> expectedUrls = List.of("http://img1a.jpg");
         PlacePointResponseDto mockResponse = mock(PlacePointResponseDto.class);
-        placePointDto.when(() -> PlacePointResponseDto.from(mockPlace, expectedUrls)).thenReturn(mockResponse);
+        placePointDto.when(() -> PlacePointResponseDto.from(mockPlace, expectedUrls, true)).thenReturn(mockResponse);
 
         // when
-        PlacePointResponseDto result = placeDtoConverter.convert(mockPlace, pinList);
+        PlacePointResponseDto result = placeDtoConverter.convert(mockPlace, pinList, true);
 
         // then
         assertThat(result).isEqualTo(mockResponse);
@@ -244,7 +244,7 @@ class PlaceDtoConverterTest {
         verify(pin1).getPinImages();
         verify(pin2).getPinImages();
         verify(objectStorageService, times(1)).buildImageUrl("img1a.jpg");
-        placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls));
+        placePointDto.verify(() -> PlacePointResponseDto.from(mockPlace, expectedUrls, true));
     }
 
     @Test
