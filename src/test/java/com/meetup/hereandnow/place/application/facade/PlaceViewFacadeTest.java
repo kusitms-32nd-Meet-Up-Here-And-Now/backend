@@ -1,8 +1,10 @@
 package com.meetup.hereandnow.place.application.facade;
 
 import com.meetup.hereandnow.core.infrastructure.value.SortType;
+import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.core.util.SortUtils;
 import com.meetup.hereandnow.course.dto.response.SearchFilterDto;
+import com.meetup.hereandnow.member.domain.Member;
 import com.meetup.hereandnow.pin.domain.entity.Pin;
 import com.meetup.hereandnow.pin.infrastructure.repository.PinRepository;
 import com.meetup.hereandnow.place.application.service.PlaceDtoConverter;
@@ -13,6 +15,7 @@ import com.meetup.hereandnow.place.dto.response.PlaceCardMarkerResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
 import com.meetup.hereandnow.place.dto.response.PlaceSearchResponseDto;
+import com.meetup.hereandnow.scrap.infrastructure.repository.PlaceScrapRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +30,7 @@ import org.springframework.data.domain.*;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,22 +48,30 @@ class PlaceViewFacadeTest {
     private PinRepository pinRepository;
     @Mock
     private PlaceSearchService placeSearchService;
+    @Mock
+    private PlaceScrapRepository placeScrapRepository;
 
     @InjectMocks
     private PlaceViewFacade placeViewFacade;
 
     private MockedStatic<SortUtils> mockedSortUtils;
+    private MockedStatic<SecurityUtils> mockSecurityUtils;
+    private Member mockMember;
+
     private static final double TEST_LAT = 37.5;
     private static final double TEST_LON = 127.0;
 
     @BeforeEach
     void setUp() {
         mockedSortUtils = mockStatic(SortUtils.class);
+        mockSecurityUtils = mockStatic(SecurityUtils.class);
+        mockMember = Member.builder().id(1L).nickname("nickname").build();
     }
 
     @AfterEach
     void tearDown() {
         mockedSortUtils.close();
+        mockSecurityUtils.close();
     }
 
     @Test
@@ -67,6 +79,8 @@ class PlaceViewFacadeTest {
     void get_ad_places() {
 
         // given
+        mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+
         Place mockPlace1 = mock(Place.class);
         Place mockPlace2 = mock(Place.class);
         List<Place> places = List.of(mockPlace1, mockPlace2);
@@ -99,8 +113,10 @@ class PlaceViewFacadeTest {
         List<Pin> pinsForPlace1 = List.of(mockPin1, mockPin2);
         List<Pin> pinsForPlace2 = List.of(mockPin3);
 
-        given(placeDtoConverter.convert(mockPlace1, pinsForPlace1)).willReturn(mockDto1);
-        given(placeDtoConverter.convert(mockPlace2, pinsForPlace2)).willReturn(mockDto2);
+        given(placeScrapRepository.findScrappedPlaceIdsByMemberAndPlaces(mockMember, places)).willReturn(Set.of(1L));
+
+        given(placeDtoConverter.convert(mockPlace1, pinsForPlace1, true)).willReturn(mockDto1);
+        given(placeDtoConverter.convert(mockPlace2, pinsForPlace2, false)).willReturn(mockDto2);
 
         // when
         List<PlacePointResponseDto> result = placeViewFacade.getAdPlaces(TEST_LAT, TEST_LON);
@@ -111,8 +127,8 @@ class PlaceViewFacadeTest {
 
         verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
         verify(pinRepository).find3PinsByPlaceIdsSorted(placeIds);
-        verify(placeDtoConverter).convert(mockPlace1, pinsForPlace1);
-        verify(placeDtoConverter).convert(mockPlace2, pinsForPlace2);
+        verify(placeDtoConverter).convert(mockPlace1, pinsForPlace1, true);
+        verify(placeDtoConverter).convert(mockPlace2, pinsForPlace2, false);
     }
 
     @Test
@@ -120,6 +136,8 @@ class PlaceViewFacadeTest {
     void get_ad_places_empty_pins() {
 
         // given
+        mockSecurityUtils.when(SecurityUtils::getCurrentMember).thenReturn(mockMember);
+
         Place mockPlace1 = mock(Place.class);
         Place mockPlace2 = mock(Place.class);
         List<Place> places = List.of(mockPlace1, mockPlace2);
@@ -145,8 +163,10 @@ class PlaceViewFacadeTest {
         List<Pin> pinsForPlace1 = List.of(mockPin1);
         List<Pin> pinsForPlace2 = Collections.emptyList();
 
-        given(placeDtoConverter.convert(mockPlace1, pinsForPlace1)).willReturn(mockDto1);
-        given(placeDtoConverter.convert(mockPlace2, pinsForPlace2)).willReturn(mockDto2);
+        given(placeScrapRepository.findScrappedPlaceIdsByMemberAndPlaces(mockMember, places)).willReturn(Set.of(1L));
+
+        given(placeDtoConverter.convert(mockPlace1, pinsForPlace1, true)).willReturn(mockDto1);
+        given(placeDtoConverter.convert(mockPlace2, pinsForPlace2, false)).willReturn(mockDto2);
 
         // when
         List<PlacePointResponseDto> result = placeViewFacade.getAdPlaces(TEST_LAT, TEST_LON);
@@ -155,8 +175,8 @@ class PlaceViewFacadeTest {
         assertThat(result).hasSize(2);
         assertThat(result).containsExactly(mockDto1, mockDto2);
 
-        verify(placeDtoConverter).convert(mockPlace1, pinsForPlace1);
-        verify(placeDtoConverter).convert(mockPlace2, pinsForPlace2);
+        verify(placeDtoConverter).convert(mockPlace1, pinsForPlace1, true);
+        verify(placeDtoConverter).convert(mockPlace2, pinsForPlace2, false);
     }
 
     @Test
@@ -174,7 +194,7 @@ class PlaceViewFacadeTest {
 
         verify(placeFindService).find2RandomNearbyPlaces(TEST_LAT, TEST_LON);
         verify(pinRepository, never()).find3PinsByPlaceIdsSorted(Collections.emptyList());
-        verify(placeDtoConverter, never()).convert(any(Place.class), anyList());
+        verify(placeDtoConverter, never()).convert(any(Place.class), anyList(), anyBoolean());
     }
 
     @Test
