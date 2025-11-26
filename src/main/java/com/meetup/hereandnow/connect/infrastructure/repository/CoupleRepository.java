@@ -18,13 +18,6 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
     Optional<Couple> findByMember(@Param("member") Member member);
 
     @Query("""
-                SELECT c
-                FROM Couple c
-                WHERE c.member1 = :member1 OR c.member2 = :member2
-            """)
-    Optional<Couple> findBymember1OrMember2(@Param("member1") Member member1, @Param("member2") Member member2);
-
-    @Query("""
             select c
             from Couple c
             where (c.member1 = :member or c.member2 = :member) and c.coupleStatus = :coupleStatus
