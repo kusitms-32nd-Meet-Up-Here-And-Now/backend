@@ -16,14 +16,18 @@ public record PlacePointResponseDto(
         PlaceMarkerResponseDto placeMarker,
 
         @Schema(description = "장소 사진 리스트", example = "[\"https://...\", \"https://...\"]")
-        List<String> imageUrl
+        List<String> imageUrl,
+
+        @Schema(description = "저장 여부", example = "false")
+        boolean scrapped
 ) {
-    public static PlacePointResponseDto from(Place place, List<String> imageUrl) {
+    public static PlacePointResponseDto from(Place place, List<String> imageUrl, boolean scrapped) {
         return new PlacePointResponseDto(
                 place.getId(),
                 place.getPlaceName(),
                 PlaceMarkerResponseDto.from(place),
-                imageUrl
+                imageUrl,
+                scrapped
         );
     }
 }
