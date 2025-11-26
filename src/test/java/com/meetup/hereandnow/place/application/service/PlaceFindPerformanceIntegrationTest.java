@@ -64,7 +64,7 @@ public class PlaceFindPerformanceIntegrationTest extends TestContainerSupport {
     }
 
     @Test
-    @DisplayName("100명의 사용자가 동시에 홈에서 리뷰순 장소 조회를 요청할 때 소요 시간을 측정한다")
+    @DisplayName("100명의 사용자가 동시에 홈에서 저장 많은 순 장소 조회를 요청할 때 소요 시간을 측정한다")
     void performance_test_find_nearby_places() throws InterruptedException {
 
         // given
