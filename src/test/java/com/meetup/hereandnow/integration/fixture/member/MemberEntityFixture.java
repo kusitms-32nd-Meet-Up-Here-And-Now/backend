@@ -17,4 +17,15 @@ public class MemberEntityFixture {
                 .username("test_username")
                 .build();
     }
+
+    public static Member getMember(String email) {
+        return Member.builder()
+                .email(email)
+                .nickname(email)
+                .profileImage(PROFILE_IMAGE)
+                .providerId(email)
+                .provider(Provider.KAKAO)
+                .username(email)
+                .build();
+    }
 }
