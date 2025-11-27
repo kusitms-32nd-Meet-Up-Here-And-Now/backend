@@ -45,8 +45,8 @@ public record PlaceCardResponseDto(
                 place.getPlaceRating().doubleValue(),
                 place.getPinCount(),
                 imageUrl,
-                place.getLocation().getX(),
-                place.getLocation().getY()
+                place.getLocation().getY(),
+                place.getLocation().getX()
         );
     }
 }
