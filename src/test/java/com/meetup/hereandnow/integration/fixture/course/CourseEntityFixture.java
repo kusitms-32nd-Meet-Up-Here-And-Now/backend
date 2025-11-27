@@ -19,4 +19,18 @@ public class CourseEntityFixture {
                 .build();
     }
 
+    public static Course getCourse(Member member, String region) {
+        return Course.builder()
+                .courseTitle("테스트 제목")
+                .courseDescription("테스트 설명")
+                .coursePositive("테스트 좋은점")
+                .courseNegative("테스트 나쁜점")
+                .isPublic(true)
+                .courseVisitDate(java.time.LocalDate.now())
+                .courseVisitMember("연인")
+                .courseRegion(region)
+                .member(member)
+                .build();
+    }
+
 }
