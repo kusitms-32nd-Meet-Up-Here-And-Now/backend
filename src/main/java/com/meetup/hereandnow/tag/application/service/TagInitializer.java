@@ -9,6 +9,7 @@ import com.meetup.hereandnow.tag.infrastructure.repository.TagRepository;
 import com.meetup.hereandnow.tag.infrastructure.repository.TagValueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Profile("!test")
 @RequiredArgsConstructor
 public class TagInitializer implements ApplicationListener<ContextRefreshedEvent> {
 
