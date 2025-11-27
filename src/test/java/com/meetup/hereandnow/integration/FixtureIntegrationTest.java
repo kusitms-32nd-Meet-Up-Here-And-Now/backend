@@ -57,7 +57,10 @@ public class FixtureIntegrationTest extends IntegrationTestSupport {
     void setupTestData() {
         if (placeGroupRepository.findByCode("FD6").isEmpty()) {
             PlaceGroup fd6 = placeGroupRepository.save(PlaceGroup.builder().code("FD6").name("음식점").build());
-            TagValue tagValue = tagValueRepository.save(TagValue.builder().name("음식이 맛있어요").build());
+
+            TagValue tagValue = tagValueRepository.findByName("음식이 맛있어요")
+                    .orElseGet(() -> tagValueRepository.save(TagValue.builder().name("음식이 맛있어요").build()));
+
             tagRepository.save(Tag.builder().placeGroup(fd6).tagValue(tagValue).tagGroup(TagGroup.FOOD_PRICE).build());
         }
     }

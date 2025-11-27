@@ -30,8 +30,7 @@ public class TestTagInitializer implements ApplicationListener<ApplicationReadyE
 
     @Override
     public void onApplicationEvent(@NotNull ApplicationReadyEvent event) {
-        String placeCode = "FD6";
-        if (placeGroupRepository.findByCode(placeCode).isEmpty()) {
+        if (placeGroupRepository.findByCode("FD6").isEmpty()) {
             PlaceGroup fd6 = placeGroupRepository.save(PlaceGroup.builder().code("FD6").name("음식점").build());
             link(fd6, TagGroup.FOOD_PRICE, "음식이 맛있어요", "메뉴가 다양해요", "특별한 메뉴가 있어요");
             link(fd6, TagGroup.ATMOSPHERE, "분위기 맛집", "데이트하기 좋아요", "로맨틱해요", "특별한 날 오기 좋아요", "고급스러워요", "인테리어가 예뻐요", "사진 찍기 좋아요", "뷰가 좋아요");
