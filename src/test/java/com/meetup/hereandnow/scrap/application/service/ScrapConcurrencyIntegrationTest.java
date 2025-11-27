@@ -184,7 +184,7 @@ class ScrapConcurrencyIntegrationTest extends TestContainerSupport {
         Course updatedCourse = courseRepository.findById(targetCourse.getId()).orElseThrow();
         Integer finalScrapCount = updatedCourse.getScrapCount();
 
-        System.out.println("=== 장소 스크랩 동시성 테스트 ===");
+        System.out.println("=== 코스 스크랩 동시성 테스트 ===");
         System.out.println("성공: " + successCount.get());
         System.out.println("실패: " + failCount.get());
         System.out.println("초기값: " + initialCount);

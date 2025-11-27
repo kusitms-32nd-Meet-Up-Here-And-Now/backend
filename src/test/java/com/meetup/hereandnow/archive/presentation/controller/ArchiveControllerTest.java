@@ -98,7 +98,7 @@ class ArchiveControllerTest extends IntegrationTestSupport {
     }
 
     @Test
-    @DisplayName("GET /archive/recent - 만든 코스가 없으면 data가 null이어야 한다")
+    @DisplayName("GET /archive/recent - 만든 코스가 없으면 data가 비어 있어야 한다")
     void get_recent_archive_empty() throws Exception {
         // given (코스 없음)
         // when, then
