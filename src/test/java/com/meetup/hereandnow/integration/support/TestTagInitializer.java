@@ -56,9 +56,13 @@ public class TestTagInitializer implements ApplicationListener<ApplicationReadyE
         if (tagValue != null) {
             return tagValue;
         }
-        TagValue newTagValue = TagValue.builder().name(name).build();
-        TagValue savedTag = tagValueRepository.save(newTagValue);
+
+        TagValue savedTag = tagValueRepository.findByName(name)
+                .orElseGet(() -> tagValueRepository.save(
+                        TagValue.builder().name(name).build()
+                ));
         tagValueMap.put(name, savedTag);
+
         return savedTag;
     }
 }
