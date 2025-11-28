@@ -1,0 +1,44 @@
+package com.meetup.hereandnow.place.presentation.swagger;
+
+import com.meetup.hereandnow.core.infrastructure.value.SortType;
+import com.meetup.hereandnow.core.presentation.RestResponse;
+import com.meetup.hereandnow.place.dto.response.PlaceCardResponseDto;
+import com.meetup.hereandnow.place.dto.response.PlacePointResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Tag(name = "Home", description = "홈 화면 관련 API")
+public interface PlaceHomeSwagger {
+
+    @Operation(
+            summary = "홈 - 광고 추천 장소 리스트 API",
+            description = "지도에 타원형 및 핀으로 표시되는, DB 내의 현재 위치 근처 장소들이 랜덤으로 반환됩니다.",
+            operationId = "GET /place/home/ads"
+    )
+    ResponseEntity<RestResponse<List<PlacePointResponseDto>>> getAdPlaces(
+            @Schema(description = "현재 위도", example = "37.5709578373114")
+            @RequestParam double lat,
+            @Schema(description = "현재 경도", example = "126.977928770123")
+            @RequestParam double lon
+    );
+
+    @Operation(
+            summary = "홈 - 추천 장소 리스트 API",
+            description = "근처 추천 장소 리스트를 반환합니다.",
+            operationId = "GET /place/home/recommended"
+    )
+    ResponseEntity<RestResponse<List<PlaceCardResponseDto>>> getRecommendedPlaces(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam SortType sort,
+            @Schema(description = "현재 위도", example = "37.5709578373114")
+            @RequestParam double lat,
+            @Schema(description = "현재 경도", example = "126.977928770123")
+            @RequestParam double lon
+    );
+}
