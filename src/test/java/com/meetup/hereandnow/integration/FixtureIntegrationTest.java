@@ -22,8 +22,12 @@ import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
 import com.meetup.hereandnow.tag.domain.entity.PlaceGroup;
 import com.meetup.hereandnow.tag.domain.entity.Tag;
+import com.meetup.hereandnow.tag.domain.entity.TagValue;
+import com.meetup.hereandnow.tag.domain.value.TagGroup;
 import com.meetup.hereandnow.tag.infrastructure.repository.PlaceGroupRepository;
 import com.meetup.hereandnow.tag.infrastructure.repository.TagRepository;
+import com.meetup.hereandnow.tag.infrastructure.repository.TagValueRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +36,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FixtureIntegrationTest extends IntegrationTestSupport {
 
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CourseRepository courseRepository;
-    @Autowired private PlaceRepository placeRepository;
-    @Autowired private PinRepository pinRepository;
-    @Autowired private CourseCommentRepository courseCommentRepository;
-    @Autowired private TagRepository tagRepository;
-    @Autowired private PlaceGroupRepository placeGroupRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private PlaceRepository placeRepository;
+    @Autowired
+    private PinRepository pinRepository;
+    @Autowired
+    private CourseCommentRepository courseCommentRepository;
+    @Autowired
+    private TagRepository tagRepository;
+    @Autowired
+    private TagValueRepository tagValueRepository;
+    @Autowired
+    private PlaceGroupRepository placeGroupRepository;
+
+    @BeforeEach
+    void setupTestData() {
+        if (placeGroupRepository.findByCode("FD6").isEmpty()) {
+            PlaceGroup fd6 = placeGroupRepository.save(PlaceGroup.builder().code("FD6").name("음식점").build());
+
+            TagValue tagValue = tagValueRepository.findByName("음식이 맛있어요")
+                    .orElseGet(() -> tagValueRepository.save(TagValue.builder().name("음식이 맛있어요").build()));
+
+            tagRepository.save(Tag.builder().placeGroup(fd6).tagValue(tagValue).tagGroup(TagGroup.FOOD_PRICE).build());
+        }
+    }
 
     @Test
     @DisplayName("Fixture로 생성한 엔티티들이 DB에 정상적으로 저장된다.")

@@ -1,6 +1,6 @@
 package com.meetup.hereandnow.integration.support;
 
-import java.time.Duration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
@@ -9,7 +9,10 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.Duration;
+
 @Testcontainers
+@ActiveProfiles("test")
 public abstract class TestContainerSupport {
 
     private static final String POSTGIS_IMAGE = "postgis/postgis:16-3.4";
