@@ -59,7 +59,7 @@ public class PlaceEntityFixture {
     }
 
     public static PlaceGroup getFoodPlaceGroup() {
-        // TagInitializer에 의해 생성되는 "음식점" PlaceGroup을 가정
+        // TagInitializer에 의해 생성될 "음식점" PlaceGroup을 표현하는 객체. DB에 저장된 엔티티가 아님.
         return PlaceGroup.builder()
                 .code("FD6")
                 .name("음식점")

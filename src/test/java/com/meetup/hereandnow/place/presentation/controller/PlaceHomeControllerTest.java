@@ -2,7 +2,6 @@ package com.meetup.hereandnow.place.presentation.controller;
 
 import com.meetup.hereandnow.core.config.TestSecurityConfiguration;
 import com.meetup.hereandnow.core.infrastructure.value.SortType;
-import com.meetup.hereandnow.integration.fixture.place.PlaceEntityFixture;
 import com.meetup.hereandnow.integration.support.IntegrationTestSupport;
 import com.meetup.hereandnow.place.domain.Place;
 import com.meetup.hereandnow.place.infrastructure.repository.PlaceRepository;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.meetup.hereandnow.integration.fixture.place.PlaceEntityFixture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,24 +50,18 @@ class PlaceHomeControllerTest extends IntegrationTestSupport {
     private final double TARGET_LAT = 37.5665;
     private final double TARGET_LON = 126.9782;
 
-    private PlaceGroup testPlaceGroup;
+    private List<PlaceGroup> allPlaceGroups;
 
     @BeforeEach
     void setup() {
-        cleanUp();
-        testPlaceGroup = placeGroupRepository.save(PlaceEntityFixture.getFoodPlaceGroup());
+        allPlaceGroups = placeGroupRepository.findAll();
+        assertThat(allPlaceGroups).as("TagInitializer에 의해 PlaceGroup이 생성되어 있어야 합니다.").isNotEmpty();
         createBulkData(1000);
     }
 
     @AfterEach
     void tearDown() {
-        cleanUp();
-    }
-
-    private void cleanUp() {
-        tagRepository.deleteAllInBatch();
         placeRepository.deleteAllInBatch();
-        placeGroupRepository.deleteAllInBatch();
     }
 
     @Test
@@ -131,7 +126,8 @@ class PlaceHomeControllerTest extends IntegrationTestSupport {
     private void createBulkData(int count) {
         List<Place> places = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            Place place = PlaceEntityFixture.getPlace(testPlaceGroup, TARGET_LAT, TARGET_LON);
+            PlaceGroup randomPlaceGroup = allPlaceGroups.get(i % allPlaceGroups.size());
+            Place place = PlaceEntityFixture.getPlace(randomPlaceGroup, TARGET_LAT, TARGET_LON);
             places.add(place);
         }
         placeRepository.saveAll(places);
