@@ -66,7 +66,7 @@ class CourseDeleteServiceIntegrationTest extends IntegrationTestSupport {
     @DisplayName("코스 식별자로 코스 삭제 성공 (IntegrationTest)")
     void success_course_delete_by_course_id() {
         // given
-        PlaceGroup placeGroup = placeGroupRepository.findByCode("FD6").orElseThrow();
+        PlaceGroup placeGroup = placeGroupRepository.findByCode("FD6").orElse(null);
         Place place = PlaceEntityFixture.getPlace(placeGroup);
         placeRepository.save(place);
 
