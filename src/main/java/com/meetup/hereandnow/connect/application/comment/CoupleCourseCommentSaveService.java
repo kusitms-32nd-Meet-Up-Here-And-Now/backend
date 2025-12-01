@@ -34,12 +34,7 @@ public class CoupleCourseCommentSaveService {
         Member member = getCurrentMember();
         Course course = getCourse(dto.courseId());
 
-        Couple couple = coupleRepository.findByMember(member)
-                .orElseThrow(CoupleErrorCode.NOT_FOUND_COUPLE::toException);
-
-        if (course.getMember() != couple.getMember1() && course.getMember() != couple.getMember2()) {
-            throw CoupleCourseCommentErrorCode.NOT_EQUAL_COURSE_COUPLE.toException();
-        }
+        validateCoupleCourse(member, course);
 
         CoupleCourseTextComment comment = CoupleCourseTextComment.of(course, member, dto.content());
 
@@ -50,6 +45,8 @@ public class CoupleCourseCommentSaveService {
     public void addImageComment(CoupleCourseImageCommentRequestDto dto) {
         Member member = getCurrentMember();
         Course course = getCourse(dto.courseId());
+
+        validateCoupleCourse(member, course);
 
         if (!objectStorageService.exists(dto.objectKey())) {
             throw CoupleCourseCommentErrorCode.NOT_SAVED_IMAGE.toException();
@@ -62,10 +59,21 @@ public class CoupleCourseCommentSaveService {
 
     @Transactional
     public CoupleCourseCommentPresignedUrlResponseDto getPresignedDirname(Long courseId) {
-        getCurrentMember();
-        getCourse(courseId);
+        Member member = getCurrentMember();
+        Course course = getCourse(courseId);
+
+        validateCoupleCourse(member, course);
 
         return new CoupleCourseCommentPresignedUrlResponseDto(getDirname(courseId));
+    }
+
+    private void validateCoupleCourse(Member member, Course course) {
+        Couple couple = coupleRepository.findByMember(member)
+                .orElseThrow(CoupleErrorCode.NOT_FOUND_COUPLE::toException);
+
+        if (course.getMember() != couple.getMember1() && course.getMember() != couple.getMember2()) {
+            throw CoupleCourseCommentErrorCode.NOT_EQUAL_COURSE_COUPLE.toException();
+        }
     }
 
     private String getDirname(Long courseId) {
