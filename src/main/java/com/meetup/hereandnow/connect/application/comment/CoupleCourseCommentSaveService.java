@@ -1,12 +1,15 @@
 package com.meetup.hereandnow.connect.application.comment;
 
+import com.meetup.hereandnow.connect.domain.Couple;
 import com.meetup.hereandnow.connect.domain.CoupleCourseImageComment;
 import com.meetup.hereandnow.connect.domain.CoupleCourseTextComment;
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseImageCommentRequestDto;
 import com.meetup.hereandnow.connect.dto.request.CoupleCourseTextCommentRequestDto;
 import com.meetup.hereandnow.connect.dto.response.CoupleCourseCommentPresignedUrlResponseDto;
 import com.meetup.hereandnow.connect.exception.CoupleCourseCommentErrorCode;
+import com.meetup.hereandnow.connect.exception.CoupleErrorCode;
 import com.meetup.hereandnow.connect.infrastructure.repository.CoupleCourseCommentRepository;
+import com.meetup.hereandnow.connect.infrastructure.repository.CoupleRepository;
 import com.meetup.hereandnow.core.infrastructure.objectstorage.ObjectStorageService;
 import com.meetup.hereandnow.core.util.SecurityUtils;
 import com.meetup.hereandnow.course.domain.entity.Course;
@@ -24,11 +27,19 @@ public class CoupleCourseCommentSaveService {
     private final CoupleCourseCommentRepository coupleCourseCommentRepository;
     private final CourseRepository courseRepository;
     private final ObjectStorageService objectStorageService;
+    private final CoupleRepository coupleRepository;
 
     @Transactional
     public void addTextComment(CoupleCourseTextCommentRequestDto dto) {
         Member member = getCurrentMember();
         Course course = getCourse(dto.courseId());
+
+        Couple couple = coupleRepository.findByMember(member)
+                .orElseThrow(CoupleErrorCode.NOT_FOUND_COUPLE::toException);
+
+        if (course.getMember() != couple.getMember1() && course.getMember() != couple.getMember2()) {
+            throw CoupleCourseCommentErrorCode.NOT_EQUAL_COURSE_COUPLE.toException();
+        }
 
         CoupleCourseTextComment comment = CoupleCourseTextComment.of(course, member, dto.content());
 
